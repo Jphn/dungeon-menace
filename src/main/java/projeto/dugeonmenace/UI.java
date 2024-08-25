@@ -8,7 +8,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
+import projeto.dugeonmenace.objectsSprite.SuperObject;
 
 /**
  *
@@ -21,6 +24,10 @@ public class UI {
 
     Font arial_40, arial_80B;
 //    BufferedImage keyImage;
+
+    //PLAYER STATUS HUD HEART IMAGES
+    BufferedImage heartFull, heartHalf, heartBlank;
+
     public boolean messageOn = false;
     int messageCounter = 0;
     public boolean gameFinished = false;
@@ -43,6 +50,11 @@ public class UI {
         arial_80B = new Font("Arial", Font.BOLD, 80);
         //       OBJ_Key key = new OBJ_Key(gp);
 //        keyImage = key.image;
+        //CREATE HUD OBJECT
+        SuperObject heart = new OBJ_Heart(gp);
+        this.heartFull = heart.image;
+        this.heartHalf = heart.image2;
+        this.heartBlank = heart.image3;
 
     }
 
@@ -51,18 +63,57 @@ public class UI {
 
         g2.setFont(arial_40);
         g2.setColor(Color.white);
+        /**
+         * Essa região é diferente ao UI durante
+         *
+         * os diferentes estados de jogo
+         */
         if (gp.gameState == gp.titleState) {
             drawTitleScreen();
 
         } else if (gp.gameState == gp.playState) {
+            drawPlayerLife();
 
         } else if (gp.gameState == gp.pauseState) {
             //game pausado, a tela de espera deve abrir
+            //drawPlayerLife(); decidir se vamos esconder durante o pause
             drawPauseScreen();
 
         } else if (gp.gameState == gp.dialogueState) {
+            drawPlayerLife();
             drawDialogueScreen();
         }
+    }
+
+    public void drawPlayerLife() {
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize / 2;
+        int i = 0;
+
+        //DRAW BLANK HEART
+        while (i < gp.player.maxLife / 2) { //2 lifes = 1 heart
+            g2.drawImage(heartBlank, x, y, null);
+            i++;
+            x += gp.tileSize;
+
+        }
+
+        //RESET
+        x = gp.tileSize / 2;
+        y = gp.tileSize / 2;
+        i = 0;
+        //DRAW CURRENT LIFE
+        while (i < gp.player.life) { //1 lifes = 1/2 heart
+            g2.drawImage(heartHalf, x, y, null);
+            i++;
+            if (i < gp.player.life) {
+                g2.drawImage(heartFull, x, y, null);
+
+            }
+            i++;
+            x += gp.tileSize;
+        }
+
     }
 
     public void drawTitleScreen() {

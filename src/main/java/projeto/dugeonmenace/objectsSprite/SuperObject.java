@@ -16,7 +16,7 @@ import projeto.dugeonmenace.UtilityTools;
  */
 public class SuperObject {
 
-    public BufferedImage image;
+    public BufferedImage image, image2, image3;
     public String name;
     public boolean collision = false;
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // talvez depois utilizar 48 como tile size ?

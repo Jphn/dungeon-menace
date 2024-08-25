@@ -52,6 +52,9 @@ public class Player extends Entity {
         this.speed = 4;
         this.direction = "down";
 
+        //Player status
+        this.maxLife = 6;
+        this.life = maxLife; // 6 de vida = 3 corações
     }
 
     public void getPlayerImage() {
