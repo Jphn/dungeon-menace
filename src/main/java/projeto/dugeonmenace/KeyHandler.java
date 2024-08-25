@@ -13,7 +13,7 @@ import java.awt.event.KeyListener;
  */
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rigthPressed;
+    public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed;
     public boolean checkDrawTime = false;
     GamePanel gp;
 
@@ -28,44 +28,56 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); // retorna o valor inteiro da tecla apertada
-
-        if (code == KeyEvent.VK_W) {
-            this.upPressed = true;
-        }
-
-        if (code == KeyEvent.VK_S) {
-            this.downPressed = true;
-        }
-
-        if (code == KeyEvent.VK_A) {
-            this.leftPressed = true;
-        }
-
-        if (code == KeyEvent.VK_D) {
-            this.rigthPressed = true;
-        }
-
-        if (code == KeyEvent.VK_T) {
-            if (checkDrawTime == false) {
-                checkDrawTime = true;
-
-            } else if (checkDrawTime == true) {
-                checkDrawTime = false;
+        if (gp.gameState == gp.playState) { // PLAY STATE
+            if (code == KeyEvent.VK_W) {
+                this.upPressed = true;
             }
-        }
-        if (code == KeyEvent.VK_P) {
+
+            if (code == KeyEvent.VK_S) {
+                this.downPressed = true;
+            }
+
+            if (code == KeyEvent.VK_A) {
+                this.leftPressed = true;
+            }
+
+            if (code == KeyEvent.VK_D) {
+                this.rigthPressed = true;
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                this.enterPressed = true;
+            }
+
+            //CHECK DRAW TIME
+            if (code == KeyEvent.VK_T) {
+                if (checkDrawTime == false) {
+                    checkDrawTime = true;
+
+                } else if (checkDrawTime == true) {
+                    checkDrawTime = false;
+                }
+
+            }
+
+        } // PAUSE STATE
+        else if (code == KeyEvent.VK_P) {
             if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
 
             } else if (gp.gameState == gp.pauseState) {
                 gp.gameState = gp.playState;
             }
+        } //DIALOGUE STATE
+        else if (gp.gameState == gp.dialogueState) {
+            if (code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
+            }
         }
-
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e
+    ) {
         int code = e.getKeyCode(); // retorna o valor inteiro da tecla solta
 
         if (code == KeyEvent.VK_W) {

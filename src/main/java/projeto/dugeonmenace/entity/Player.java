@@ -141,8 +141,13 @@ public class Player extends Entity {
 
     public void interactNpc(int npcIndex) {
         if (npcIndex != 999) {
-            System.out.println("Você está encostando em um npc");
+            if (gp.keyH.enterPressed == true) {
+                gp.gameState = 3;
+                gp.npc[npcIndex].speak();
+            }
+
         }
+        gp.keyH.enterPressed = false;
     }
 
     public void pickupObject(int objIndex) {
@@ -199,9 +204,11 @@ public class Player extends Entity {
         g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
 
         //Para mostrar colisão com o player !
-        //g2.setColor(Color.red);
-        //g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
-        //g2.dispose(); // boa pratica pra liberar memoria
+        /*
+        g2.setColor(Color.red);
+        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+        g2.dispose(); // boa pratica pra liberar memoria
+         */
     }
 
 }

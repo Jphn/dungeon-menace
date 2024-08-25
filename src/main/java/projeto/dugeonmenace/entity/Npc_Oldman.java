@@ -13,14 +13,13 @@ import projeto.dugeonmenace.GamePanel;
  */
 public class Npc_OldMan extends Entity {
 
-    GamePanel gp;
-
     public Npc_OldMan(GamePanel gp) {
         super(gp);
 
         direction = "down";
         speed = 1;
         getImage();
+        setDialogue();
     }
 
     public void getImage() {
@@ -36,6 +35,23 @@ public class Npc_OldMan extends Entity {
 
     }
 
+    public void setDialogue() {
+        dialogue[0] = "Hello lad.";
+        dialogue[1] = "So you come to this \nisland to find some tresure?";
+        dialogue[2] = "I used to be a great wizard but now... \nI´m a bit too old for taking a adventure.";
+        dialogue[3] = "Well, good luck on you.";
+
+    }
+
+    @Override
+    public void speak() {
+        //Do this caracter specific stuff
+
+        super.speak();
+
+    }
+
+    @Override
     public void setAction() {
         actionLockCounter++;
 
@@ -55,4 +71,5 @@ public class Npc_OldMan extends Entity {
             actionLockCounter = 0;
         }
     }
+
 }
