@@ -32,6 +32,10 @@ public class UI {
 
     public String currentDialogue = "";
 
+    //TITLE SCREEN VARIABLES
+    int comandNum = 0;
+    int titleScreenState = 0; // 0: primeira tela , 1: segunda tela
+
     public UI(GamePanel gp) {
 
         this.gp = gp;
@@ -62,28 +66,111 @@ public class UI {
     }
 
     public void drawTitleScreen() {
+        if (titleScreenState == 0) {
+            //Setting Background color
+            g2.setColor(new Color(70, 120, 80));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        //Setting Background color
-        g2.setColor(new Color(70, 120, 80));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+            // TITLE NAME
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
+            String text = "Blue Boy Adventure";
 
-        // TITLE NAME
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
-        String text = "Blue Boy Adventure";
+            int x = getXforCenteredText(text);
+            int y = gp.tileSize * 3;
 
-        int x = getXforCenteredText(text);
-        int y = gp.tileSize * 3;
+            //SHADOW
+            g2.setColor(new Color(0, 0, 0, 210));
+            g2.drawString(text, x + 5, y + 5);
 
-        //SHADOW
-        g2.setColor(new Color(0, 0, 0, 210));
-        g2.drawString(text, x + 5, y + 5);
+            //MAIN COLOR
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, x, y);
 
-        //MAIN COLOR
-        g2.setColor(Color.WHITE);
-        g2.drawString(text, x, y);
-        //BLUE BOY IMAGE
-        //x=;
+            //BLUE BOY IMAGE
+            x = (gp.screenWidth / 2) - gp.tileSize;
+            y += gp.tileSize * 2;
+            g2.drawImage(gp.player.down1, x, y, gp.tileSize * 2, gp.tileSize * 2, null);
 
+            //MENU
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
+
+            text = "NEW GAME";
+            x = getXforCenteredText(text);
+            y += gp.tileSize * 3;
+            g2.drawString(text, x + 5, y);
+            if (comandNum == 0) {
+                g2.drawString(">", x - 20, y);
+            }
+            text = "CARACTER SELECT";
+            x = getXforCenteredText(text);
+            y += gp.tileSize;
+            g2.drawString(text, x + 5, y);
+            if (comandNum == 1) {
+                g2.drawString(">", x - 20, y);
+            }
+
+            text = "LOAD GAME";
+            x = getXforCenteredText(text);
+            y += gp.tileSize;
+            g2.drawString(text, x + 5, y);
+            if (comandNum == 2) {
+                g2.drawString(">", x - 20, y);
+            }
+            text = "QUIT";
+            x = getXforCenteredText(text);
+            y += gp.tileSize;
+            g2.drawString(text, x + 5, y);
+            if (comandNum == 3) {
+                g2.drawString(">", x - 20, y);
+            }
+        } else if (titleScreenState == 1) {
+
+            //CLASS SELECTION SCREEN
+            g2.setColor(Color.white);
+            g2.setFont(g2.getFont().deriveFont(42F));
+
+            String text = "Select your class";
+            int x = getXforCenteredText(text);
+            int y = gp.tileSize * 3;
+            g2.drawString(text, x, y);
+
+            g2.setColor(Color.white);
+            g2.setFont(g2.getFont().deriveFont(30F));
+
+            text = "Fighter";
+            x = getXforCenteredText(text);
+            y += gp.tileSize * 3;
+            g2.drawString(text, x, y);
+            if (comandNum == 0) {
+
+                g2.drawString(">", x - 22, y);
+            }
+
+            text = "Thief";
+            x = getXforCenteredText(text);
+            y += gp.tileSize;
+            g2.drawString(text, x, y);
+            if (comandNum == 1) {
+                g2.drawString(">", x - 22, y);
+            }
+
+            text = "Sorcerer";
+            x = getXforCenteredText(text);
+            y += gp.tileSize;
+            g2.drawString(text, x, y);
+            if (comandNum == 2) {
+                g2.drawString(">", x - 22, y);
+            }
+
+            text = "Back";
+            x = getXforCenteredText(text);
+            y += gp.tileSize * 2;
+            g2.setFont(g2.getFont().deriveFont(25F));
+            g2.drawString(text, x, y);
+            if (comandNum == 3) {
+                g2.drawString(">", x - 22, y);
+            }
+        }
     }
 
     public void drawDialogueScreen() {

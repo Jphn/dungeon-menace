@@ -28,9 +28,92 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); // retorna o valor inteiro da tecla apertada
-        if (gp.gameState == gp.playState) { // PLAY STATE
+        //TITLE STATE
+        if (gp.gameState == gp.titleState) {
+            if (gp.ui.titleScreenState == 0) {
+                if (code == KeyEvent.VK_W) {
+                    this.upPressed = true;
+                    gp.ui.comandNum -= 1;
+                    if (gp.ui.comandNum < 0) {
+                        gp.ui.comandNum = 3;
+                    }
+                }
+
+                if (code == KeyEvent.VK_S) {
+                    this.downPressed = true;
+                    gp.ui.comandNum += 1;
+                    if (gp.ui.comandNum > 3) {
+                        gp.ui.comandNum = 0;
+                    }
+                }
+                if (code == KeyEvent.VK_ENTER) {
+                    this.enterPressed = true;
+                    gp.playSE(1);
+                    switch (gp.ui.comandNum) {
+                        case 0:
+
+                            gp.gameState = gp.playState;
+                            break;
+                        case 1:
+                            gp.ui.titleScreenState = 1;
+                            gp.ui.comandNum = 0;
+                            break;
+
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            System.exit(0);
+                            break;
+                    }
+
+                }
+            } else if (gp.ui.titleScreenState == 1) {
+                System.out.println(gp.ui.titleScreenState);
+                if (code == KeyEvent.VK_W) {
+                    this.upPressed = true;
+                    gp.ui.comandNum -= 1;
+                    if (gp.ui.comandNum < 0) {
+                        gp.ui.comandNum = 3;
+                    }
+                }
+
+                if (code == KeyEvent.VK_S) {
+                    this.downPressed = true;
+                    gp.ui.comandNum += 1;
+                    if (gp.ui.comandNum > 3) {
+                        gp.ui.comandNum = 0;
+                    }
+                }
+                if (code == KeyEvent.VK_ENTER) {
+                    this.enterPressed = true;
+                    gp.playSE(1);
+                    switch (gp.ui.comandNum) {
+                        case 0:
+
+                            break;
+                        case 1:
+
+                            break;
+
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            gp.ui.titleScreenState = 0;
+
+                            break;
+                    }
+
+                }
+
+            }
+        } else if (gp.gameState == gp.playState) { // PLAY STATE
             if (code == KeyEvent.VK_W) {
                 this.upPressed = true;
+
             }
 
             if (code == KeyEvent.VK_S) {

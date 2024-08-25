@@ -55,7 +55,7 @@ public class Npc_OldMan extends Entity {
     public void setAction() {
         actionLockCounter++;
 
-        if (actionLockCounter == 240) {
+        if (actionLockCounter == 130) {
             Random random = new Random();
 
             int i = random.nextInt(100) + 1; // pick a number from 1 to 100
