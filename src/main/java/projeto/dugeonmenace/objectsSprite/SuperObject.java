@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import projeto.dugeonmenace.GamePanel;
+import projeto.dugeonmenace.UtilityTools;
 
 /**
  *
@@ -21,6 +22,7 @@ public class SuperObject {
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48); // talvez depois utilizar 48 como tile size ?
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
+    UtilityTools uTool = new UtilityTools();
 
     public int worldX, worldY;
 
@@ -37,7 +39,7 @@ public class SuperObject {
                 && worldY + gp.tileSize > gp.player.worldY - gp.player.screenY
                 && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(image, screenX, screenY, null);
 
         }
 

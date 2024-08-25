@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
 import projeto.dugeonmenace.objectsSprite.SuperObject;
 import projeto.dugeonmenace.tile.TileManager;
@@ -44,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
     // Tile manager
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; //
 
     //SOUND
@@ -58,8 +59,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     //UI
     public UI ui = new UI(this);
 
+    //ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10]; // significa que vamos mostrar até 10 objetos ao mesmo tempo
+    public Entity npc[] = new Entity[10];
+
+    // GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogueState = 3;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -79,9 +88,12 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     }
 
     public void setupGame() {
-        aSetter.setObject();
 
+        aSetter.setObject();
+        aSetter.setNPC();
         playMusic(0);
+        gameState = playState;
+
     }
 
     //Run utilizando Delta para a atualização do draw
@@ -113,7 +125,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 drawnCount++;
             }
             if (timer >= 1000000000) {
-                System.out.println("FPS:" + drawnCount);
+                //System.out.println("FPS:" + drawnCount);
                 drawnCount = 0;
                 timer = 0;
             }
@@ -121,8 +133,17 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     }
 
     public void update() {
+        if (gameState == playState) {
+            player.update();
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
 
-        player.update();
+        } else if (gameState == pauseState) {
+            // Nothing
+        }
     }
 
     public void paintComponent(Graphics g) { // isso já ta bild in no java
@@ -134,6 +155,11 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
         Graphics2D g2 = (Graphics2D) g;  // Graphics2D tem mais funções interessantes
 
+        //DEBUG
+        long drawStart = 0;
+        if (keyH.checkDrawTime) {
+            drawStart = System.nanoTime();
+        }
         /**
          * Temos que nos certificar que os tiles serão pintados antes do player,
          * para que o player fique uma camada acima
@@ -148,11 +174,27 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 obj[i].draw(g2, this);
             }
         }
-        //UI
-        ui.draw(g2);
 
+        //NPC
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].draw(g2);
+            }
+        }
         //PLAYER
         player.draw(g2);
+
+        //UI
+        ui.draw(g2);
+        //DEBUG
+
+        if (keyH.checkDrawTime) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.white);
+            g2.drawString("Draw time: " + passed, 10, 400);
+            System.out.println("Draw Time: " + passed);
+        }
 
         g2.dispose();
     }

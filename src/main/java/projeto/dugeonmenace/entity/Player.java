@@ -7,8 +7,6 @@ package projeto.dugeonmenace.entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import projeto.dugeonmenace.*;
 
 /**
@@ -17,17 +15,17 @@ import projeto.dugeonmenace.*;
  */
 public class Player extends Entity {
 
-    GamePanel gp;
     KeyHandler keyH;
 
     //Onde desenha o player na tela
     public final int screenX;
     public final int screenY;
-    public int hasKey = 0;
+    //public int hasKey = 0;
     public int standCounter;
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+        super(gp);
+
         this.keyH = keyH;
         this.collisionOn = true;
 
@@ -57,21 +55,15 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        try {
 
-            up1 = ImageIO.read(getClass().getResource("/player/boy_up_1.png"));
-            up2 = ImageIO.read(getClass().getResource("/player/boy_up_2.png"));
-            down1 = ImageIO.read(getClass().getResource("/player/boy_down_1.png"));
-            down2 = ImageIO.read(getClass().getResource("/player/boy_down_2.png"));
-            left1 = ImageIO.read(getClass().getResource("/player/boy_left_1.png"));
-            left2 = ImageIO.read(getClass().getResource("/player/boy_left_2.png"));
-            right1 = ImageIO.read(getClass().getResource("/player/boy_right_1.png"));
-            right2 = ImageIO.read(getClass().getResource("/player/boy_right_2.png"));
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
+        up1 = setup("/player/" + "boy_up_1");
+        up2 = setup("/player/" + "boy_up_2");
+        down1 = setup("/player/" + "boy_down_1");
+        down2 = setup("/player/" + "boy_down_2");
+        left1 = setup("/player/" + "boy_left_1");
+        left2 = setup("/player/" + "boy_left_2");
+        right1 = setup("/player/" + "boy_right_1");
+        right2 = setup("/player/" + "boy_right_2");
 
     }
 
@@ -103,6 +95,10 @@ public class Player extends Entity {
             //CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
             pickupObject(objIndex);
+
+            //CHECK NPC COLLISION
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            interactNpc(npcIndex);
 
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (collisionOn == false) {
@@ -143,52 +139,27 @@ public class Player extends Entity {
 
     }
 
+    public void interactNpc(int npcIndex) {
+        if (npcIndex != 999) {
+            System.out.println("Você está encostando em um npc");
+        }
+    }
+
     public void pickupObject(int objIndex) {
         if (objIndex != 999) {
             if (gp.obj[objIndex] != null) {
-                String objName = gp.obj[objIndex].name;
-                switch (objName) {
-                    case "Key":
-                        gp.playSE(1);
-                        hasKey++;
-                        gp.obj[objIndex] = null;
-                        gp.ui.showMessage("Você pegou uma chave !");
-                        break;
-                    case "Door":
-                        if (this.hasKey > 0) {
-                            gp.playSE(3);
-                            gp.obj[objIndex] = null;
-                            hasKey--;
-                            gp.ui.showMessage("Você abriu a porta !");
-                        } else {
-                            gp.ui.showMessage("Você precisa de uma chave :(");
 
-                        }
-                        break;
-                    case "Boots":
-                        gp.playSE(2);
-                        speed += 2;
-                        gp.obj[objIndex] = null;
-                        gp.ui.showMessage("velocidadeeeeee ");
-                        break;
-                    case "Chest":
-                        gp.ui.gameFinished = true;
-                        gp.stopMusic();
-                        gp.playSE(4);
-
-                        break;
-
-                }
             }
 
         }
-
     }
 
     public void draw(Graphics2D g2) {
 
         //g2.setColor(Color.white);
-        //g2.fillRect(this.x,this.y,gp.tileSize,gp.tileSize); // estou dizendo que o player é do tamanho do tile size// tile size é uma constante publica logo posso acessar desse pacote
+        //g2.fillRect(this.x,this.y,gp.tileSize,gp.tileSize);
+        // estou dizendo que o player é do tamanho do tile size
+        // tile size é uma constante publica logo posso acessar desse pacote
         BufferedImage image = null;
 
         switch (direction) {
@@ -225,7 +196,7 @@ public class Player extends Entity {
                 break;
         }
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null); // null ali pq aquilo aparentemente n vamos usar
+        g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
 
         //Para mostrar colisão com o player !
         //g2.setColor(Color.red);

@@ -6,6 +6,7 @@ package projeto.dugeonmenace.objectsSprite;
 
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import projeto.dugeonmenace.GamePanel;
 
 /**
  *
@@ -13,10 +14,14 @@ import javax.imageio.ImageIO;
  */
 public class OBJ_Door extends SuperObject {
 
-    public OBJ_Door() {
+    GamePanel gp;
+
+    public OBJ_Door(GamePanel gp) {
+        this.gp = gp;
         name = "Door";
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/objectsSprite/door.png"));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         } catch (IOException e) {
             e.printStackTrace();
         }

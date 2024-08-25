@@ -4,10 +4,16 @@
  */
 package projeto.dugeonmenace.entity;
 
+import projeto.dugeonmenace.GamePanel;
+
 /**
  *
  * @author LucianoNeto
  */
 public class Monster extends Entity {
-    
+
+    public Monster(GamePanel gp) {
+        super(gp);
+    }
+
 }
