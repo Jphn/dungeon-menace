@@ -10,8 +10,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
-import projeto.dugeonmenace.objectsSprite.SuperObject;
 
 /**
  *
@@ -51,7 +51,7 @@ public class UI {
         //       OBJ_Key key = new OBJ_Key(gp);
 //        keyImage = key.image;
         //CREATE HUD OBJECT
-        SuperObject heart = new OBJ_Heart(gp);
+        Entity heart = new OBJ_Heart(gp);
         this.heartFull = heart.image;
         this.heartHalf = heart.image2;
         this.heartBlank = heart.image3;
@@ -124,7 +124,7 @@ public class UI {
 
             // TITLE NAME
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
-            String text = "Blue Boy Adventure";
+            String text = "Dungeon Menace";
 
             int x = getXforCenteredText(text);
             int y = gp.tileSize * 3;
