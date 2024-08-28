@@ -17,8 +17,6 @@ public class OBJ_Key extends Entity {
         super(gp);
         name = "Key";
 
-        down1 = setup("/objectsSprite/key.png");
-
+        down1 = setup("/objectsSprite/key.png", gp.tileSize, gp.tileSize);
     }
-
 }

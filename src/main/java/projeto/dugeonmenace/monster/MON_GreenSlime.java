@@ -14,8 +14,13 @@ import projeto.dugeonmenace.entity.Entity;
  */
 public class MON_GreenSlime extends Entity {
 
+    GamePanel gp;
+    
     public MON_GreenSlime(GamePanel gp) {
         super(gp);
+        
+        this.gp = gp;
+        
         name = "Green Slime";
 
         speed = 1;
@@ -40,17 +45,17 @@ public class MON_GreenSlime extends Entity {
     }
 
     public void getImage() {
-        up1 = setup("/monster/greenslime_down_1.png");
-        up2 = setup("/monster/greenslime_down_2.png");
+        up1 = setup("/monster/greenslime_down_1.png", gp.tileSize, gp.tileSize);
+        up2 = setup("/monster/greenslime_down_2.png", gp.tileSize, gp.tileSize);
 
-        down1 = setup("/monster/greenslime_down_1.png");
-        down2 = setup("/monster/greenslime_down_2.png");
+        down1 = setup("/monster/greenslime_down_1.png", gp.tileSize, gp.tileSize);
+        down2 = setup("/monster/greenslime_down_2.png", gp.tileSize, gp.tileSize);
 
-        left1 = setup("/monster/greenslime_down_1.png");
-        left2 = setup("/monster/greenslime_down_2.png");
+        left1 = setup("/monster/greenslime_down_1.png", gp.tileSize, gp.tileSize);
+        left2 = setup("/monster/greenslime_down_2.png", gp.tileSize, gp.tileSize);
 
-        right1 = setup("/monster/greenslime_down_1.png");
-        right2 = setup("/monster/greenslime_down_2.png");
+        right1 = setup("/monster/greenslime_down_1.png", gp.tileSize, gp.tileSize);
+        right2 = setup("/monster/greenslime_down_2.png", gp.tileSize, gp.tileSize);
 
     }
 

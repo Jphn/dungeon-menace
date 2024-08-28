@@ -17,9 +17,9 @@ public class OBJ_Heart extends Entity {
         super(gp);
         name = "Heart";
 
-        image = setup("/objectsSprite/heart_full.png");
-        image2 = setup("/objectsSprite/heart_half.png");
-        image3 = setup("/objectsSprite/heart_blank.png");
+        image = setup("/objectsSprite/heart_full.png", gp.tileSize, gp.tileSize);
+        image2 = setup("/objectsSprite/heart_half.png", gp.tileSize, gp.tileSize);
+        image3 = setup("/objectsSprite/heart_blank.png", gp.tileSize, gp.tileSize);
 
         this.collision = true;
     }

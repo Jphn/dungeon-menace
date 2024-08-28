@@ -4,6 +4,7 @@
  */
 package projeto.dugeonmenace.entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -22,30 +23,24 @@ public class Entity {
     /**
      * Essa vai ser a classe pai das entidades - NPC - Player - Monster
      */
-    public int worldX, worldY;
+    
     public int speed;
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-
-    public String direction = "down";
+    public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
 
     public int spriteCounter = 0;
-    public int spriteNumber = 1;
+   
 
     public int actionLockCounter = 0; // Contador relevante para os npcs
 
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
     public int solidAreaDefaultX, solidAreaDefaultY;
-
-    public boolean collisionOn = false;
-
-    public boolean invincible = false;
 
     public int invincibleCounter = 0;
 
     String dialogue[] = new String[20];
-
-    public int dialogueIndex = 0;
 
     // CHARACTER STATUS
     public int maxLife;
@@ -56,7 +51,16 @@ public class Entity {
     public String name;
     public int type; // 0 = player, 1 = npc, 2=monster
     public boolean collision = false;
-
+    
+    // STATE
+    public int worldX, worldY;
+    public String direction = "down";
+    public int spriteNumber = 1;
+    public int dialogueIndex = 0;
+    public boolean collisionOn = false;
+    public boolean invincible = false;
+    public boolean attacking = false;
+    
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
@@ -124,6 +128,25 @@ public class Entity {
                     break;
             }
         }
+        
+        spriteCounter++;
+        if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
+            if (spriteNumber == 1) {
+                spriteNumber = 2;
+            } 
+            else if (spriteNumber == 2) {
+                spriteNumber = 1;
+            }
+            spriteCounter = 0;
+        }
+        
+        if (invincible == true) {
+            invincibleCounter++;
+            if (invincibleCounter > 40) { // FRAMES DE INVENCIBILIDADE DO PLAYER
+                invincibleCounter = 0;
+                invincible = false;
+            }
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -176,23 +199,26 @@ public class Entity {
                     break;
             }
 
+            if (invincible == true) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f)); // o player fica levemente
+            //transparente
+            }
+            
             g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
 
         }
     }
 
-    public BufferedImage setup(String imagePath) {
+    public BufferedImage setup(String imagePath, int width, int height) {
         UtilityTools uTool = new UtilityTools();
-
         BufferedImage image = null;
 
         try {
             image = ImageIO.read(getClass().getResource(imagePath));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            image = uTool.scaleImage(image, width, height);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return image;
     }
-
 }

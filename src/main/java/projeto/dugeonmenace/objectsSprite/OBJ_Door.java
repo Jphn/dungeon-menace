@@ -17,7 +17,7 @@ public class OBJ_Door extends Entity {
         super(gp);
         name = "Door";
 
-        down1 = setup("/objectsSprite/door.png");
+        down1 = setup("/objectsSprite/door.png", gp.tileSize, gp.tileSize);
 
         this.collision = true;
         solidArea.x = 0;
@@ -28,5 +28,4 @@ public class OBJ_Door extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
     }
-
 }
