@@ -24,14 +24,14 @@ public class Npc_OldMan extends Entity {
 
     public void getImage() {
 
-        up1 = setup("/npc/" + "oldman_up_1" + ".png");
-        up2 = setup("/npc/" + "oldman_up_2" + ".png");
-        down1 = setup("/npc/" + "oldman_down_1" + ".png");
-        down2 = setup("/npc/" + "oldman_down_2" + ".png");
-        left1 = setup("/npc/" + "oldman_left_1" + ".png");
-        left2 = setup("/npc/" + "oldman_left_2" + ".png");
-        right1 = setup("/npc/" + "oldman_right_1" + ".png");
-        right2 = setup("/npc/" + "oldman_right_2" + ".png");
+        up1 = setup("/npc/" + "oldman_up_1" + ".png", gp.tileSize, gp.tileSize);
+        up2 = setup("/npc/" + "oldman_up_2" + ".png", gp.tileSize, gp.tileSize);
+        down1 = setup("/npc/" + "oldman_down_1" + ".png", gp.tileSize, gp.tileSize);
+        down2 = setup("/npc/" + "oldman_down_2" + ".png", gp.tileSize, gp.tileSize);
+        left1 = setup("/npc/" + "oldman_left_1" + ".png", gp.tileSize, gp.tileSize);
+        left2 = setup("/npc/" + "oldman_left_2" + ".png", gp.tileSize, gp.tileSize);
+        right1 = setup("/npc/" + "oldman_right_1" + ".png", gp.tileSize, gp.tileSize);
+        right2 = setup("/npc/" + "oldman_right_2" + ".png", gp.tileSize, gp.tileSize);
 
     }
 
