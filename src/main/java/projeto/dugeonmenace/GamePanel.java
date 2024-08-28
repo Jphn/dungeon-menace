@@ -8,10 +8,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.JPanel;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
-import projeto.dugeonmenace.objectsSprite.SuperObject;
 import projeto.dugeonmenace.tile.TileManager;
 
 /**
@@ -59,10 +61,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     //UI
     public UI ui = new UI(this);
 
+    //EVENT HANDLER
+    public EventHandler eHandler = new EventHandler(this);
+
     //ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10]; // significa que vamos mostrar até 10 objetos ao mesmo tempo
+    public Entity obj[] = new Entity[10]; // significa que vamos mostrar até 10 objetos ao mesmo tempo
     public Entity npc[] = new Entity[10];
+    public Entity monster[] = new Entity[20];
+
+    ArrayList<Entity> entityList = new ArrayList<>();
 
     // GAME STATE
     public int gameState;
@@ -92,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         playMusic(0);
         gameState = titleState;
 
@@ -136,10 +145,20 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public void update() {
         if (gameState == playState) {
             player.update();
+
+            //NPC "MOVIMENT"
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     npc[i].update();
                 }
+            }
+
+            //MONSTER "MOVIMENT"
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    monster[i].update();
+                }
+
             }
 
         } else if (gameState == pauseState) {
@@ -176,21 +195,49 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             //TILE
             tileM.draw(g2);
 
-            //OBJECT
+            //ADD ENTITY TO LISTS
             for (int i = 0; i < obj.length; i++) {
                 if (obj[i] != null) {
-                    obj[i].draw(g2, this);
+                    entityList.add(obj[i]);
                 }
             }
 
-            //NPC
+            //ADD PLAYER
+            entityList.add(player);
+
+            //ADD NPC
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
-                    npc[i].draw(g2);
+                    entityList.add(npc[i]);
                 }
+
             }
-            //PLAYER
-            player.draw(g2);
+            //ADD MONSTER
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    entityList.add(monster[i]);
+                }
+
+            }
+
+            // SORT
+            Collections.sort(entityList, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity o1, Entity o2) {
+                    int result = Integer.compare(o1.worldY, o2.worldY);
+                    return result;
+                }
+
+            });
+
+            //Draw entitys
+            for (Entity entity : entityList) {
+
+                entity.draw(g2);
+            }
+            //Remove entitys from list
+
+            entityList.clear();
 
             //UI
             ui.draw(g2);

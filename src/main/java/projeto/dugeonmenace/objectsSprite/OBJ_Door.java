@@ -4,28 +4,29 @@
  */
 package projeto.dugeonmenace.objectsSprite;
 
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import projeto.dugeonmenace.GamePanel;
+import projeto.dugeonmenace.entity.Entity;
 
 /**
  *
  * @author LucianoNeto
  */
-public class OBJ_Door extends SuperObject {
-
-    GamePanel gp;
+public class OBJ_Door extends Entity {
 
     public OBJ_Door(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         name = "Door";
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/objectsSprite/door.png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        down1 = setup("/objectsSprite/door.png");
+
         this.collision = true;
+        solidArea.x = 0;
+        solidArea.y = 16;
+        solidArea.width = 48;
+        solidArea.height = 32;
+
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
     }
 
 }

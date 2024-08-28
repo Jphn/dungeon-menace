@@ -2,18 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package projeto.dugeonmenace.entity;
+package projeto.dugeonmenace;
 
-import projeto.dugeonmenace.GamePanel;
+import java.awt.Rectangle;
 
 /**
  *
  * @author LucianoNeto
  */
-public class Monster extends Entity {
+public class EventRect extends Rectangle {
 
-    public Monster(GamePanel gp) {
-        super(gp);
-    }
+    int eventRectDefaultX, eventRectDefaultY;
+    boolean eventDone = false;
 
 }

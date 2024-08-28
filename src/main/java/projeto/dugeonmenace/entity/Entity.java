@@ -27,7 +27,7 @@ public class Entity {
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
 
-    public String direction;
+    public String direction = "down";
 
     public int spriteCounter = 0;
     public int spriteNumber = 1;
@@ -39,6 +39,10 @@ public class Entity {
 
     public boolean collisionOn = false;
 
+    public boolean invincible = false;
+
+    public int invincibleCounter = 0;
+
     String dialogue[] = new String[20];
 
     public int dialogueIndex = 0;
@@ -46,6 +50,12 @@ public class Entity {
     // CHARACTER STATUS
     public int maxLife;
     public int life;
+
+    //NOVOS ATRIBUTOS
+    public BufferedImage image, image2, image3;
+    public String name;
+    public int type; // 0 = player, 1 = npc, 2=monster
+    public boolean collision = false;
 
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -83,7 +93,19 @@ public class Entity {
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
-        gp.cChecker.checkPlayer(this);
+        //FAZENDO A ENTIDADE VERIFICAR SE ESTA PROXIMA DAS OUTRAS
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster);// TEMOS Q TIRAR A PRORPIA ENTIDADE DA LISTA
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
+
+        if (this.type == 2 && contactPlayer == true) {
+            if (!gp.player.invincible) {
+                //Entity can give damage when touching
+
+                gp.player.life -= 1;
+                gp.player.invincible = true;
+            }
+        }
 
         if (collisionOn == false) {
             switch (direction) {
@@ -165,7 +187,7 @@ public class Entity {
         BufferedImage image = null;
 
         try {
-            image = ImageIO.read(getClass().getResource(imagePath + ".png"));
+            image = ImageIO.read(getClass().getResource(imagePath));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,27 +4,20 @@
  */
 package projeto.dugeonmenace.objectsSprite;
 
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import projeto.dugeonmenace.GamePanel;
+import projeto.dugeonmenace.entity.Entity;
 
 /**
  *
  * @author LucianoNeto
  */
-public class OBJ_Chest extends SuperObject {
-
-    GamePanel gp;
+public class OBJ_Chest extends Entity {
 
     public OBJ_Chest(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         name = "Chest";
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/objectsSprite/chest.png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        down1 = setup("/objectsSprite/chest.png");
 
     }
 }

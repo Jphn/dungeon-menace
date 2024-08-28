@@ -4,6 +4,7 @@
  */
 package projeto.dugeonmenace.entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -59,14 +60,14 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
 
-        up1 = setup("/player/" + "boy_up_1");
-        up2 = setup("/player/" + "boy_up_2");
-        down1 = setup("/player/" + "boy_down_1");
-        down2 = setup("/player/" + "boy_down_2");
-        left1 = setup("/player/" + "boy_left_1");
-        left2 = setup("/player/" + "boy_left_2");
-        right1 = setup("/player/" + "boy_right_1");
-        right2 = setup("/player/" + "boy_right_2");
+        up1 = setup("/player/" + "boy_up_1" + ".png");
+        up2 = setup("/player/" + "boy_up_2" + ".png");
+        down1 = setup("/player/" + "boy_down_1" + ".png");
+        down2 = setup("/player/" + "boy_down_2" + ".png");
+        left1 = setup("/player/" + "boy_left_1" + ".png");
+        left2 = setup("/player/" + "boy_left_2" + ".png");
+        right1 = setup("/player/" + "boy_right_1" + ".png");
+        right2 = setup("/player/" + "boy_right_2" + ".png");
 
     }
 
@@ -78,7 +79,8 @@ public class Player extends Entity {
 
         // MARCAÇÃO: talvez esse if seja muito desnecessário, talvez tenha uma maneira mais simples ?
         // mas a ideia é que o contador só aumenta se uma das teclas forem apertadas
-        if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true || this.keyH.rigthPressed == true) {
+        if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
+                || this.keyH.rigthPressed == true || this.keyH.enterPressed == true) {
             if (this.keyH.upPressed == true) {
                 this.direction = "up";
 
@@ -103,8 +105,15 @@ public class Player extends Entity {
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNpc(npcIndex);
 
+            //CHECK MONSTER COLLISION
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            contactMonster(monsterIndex);
+
+            //CHECK EVENT COLLISION
+            gp.eHandler.checkEvent();
+
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
-            if (collisionOn == false) {
+            if (collisionOn == false && keyH.enterPressed == false) {
                 switch (direction) {
                     case "up":
                         this.worldY -= this.speed;    // Em java os valores em X aumentam para a direita,
@@ -122,8 +131,10 @@ public class Player extends Entity {
                 }
             }
 
+            gp.keyH.enterPressed = false;
+
             spriteCounter++;
-            if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
+            if (spriteCounter > 10) { // quando atinge 12 frames ele muda o sprite
                 if (spriteNumber == 1) {
                     spriteNumber = 2;
                 } else if (spriteNumber == 2) {
@@ -139,6 +150,13 @@ public class Player extends Entity {
             }
 
         }
+        if (invincible == true) {
+            invincibleCounter++;
+            if (invincibleCounter > 25) { // FRAMES DE INVENCIBILIDADE DO PLAYER
+                invincibleCounter = 0;
+                invincible = false;
+            }
+        }
 
     }
 
@@ -150,7 +168,7 @@ public class Player extends Entity {
             }
 
         }
-        gp.keyH.enterPressed = false;
+
     }
 
     public void pickupObject(int objIndex) {
@@ -204,14 +222,34 @@ public class Player extends Entity {
                 break;
         }
 
-        g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
+        if (invincible == true) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)); // o player fica levemente
+            //transparente
+        }
 
-        //Para mostrar colisão com o player !
+        g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
+        //reset alpha
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        //DEBUG
+//        g2.setFont(new Font("Arial", Font.PLAIN, 26));
+//        g2.setColor(Color.white);
+//        g2.drawString("Invincible: " + invincibleCounter, 10, 400); //Para mostrar colisão com o player !
         /*
         g2.setColor(Color.red);
         g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
         g2.dispose(); // boa pratica pra liberar memoria
          */
+    }
+
+    private void contactMonster(int index) {
+
+        if (index != 999 && invincible == false) {
+            life -= 1;
+            invincible = true;
+
+        }
+
     }
 
 }
