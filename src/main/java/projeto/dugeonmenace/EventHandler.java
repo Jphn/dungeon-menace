@@ -114,6 +114,7 @@ public class EventHandler {
     public void damagePit(int col, int row, int gameState) {
 
         gp.gameState = gameState; // seta o jogo no modo dialogo
+        gp.player.attackCanceled = true;
         gp.playSE(6);
         gp.ui.currentDialogue = "You fall into a pit !"; //adiciona ao currentDialogue essa string
         gp.player.life -= 1; // diminui a vida do player
@@ -125,7 +126,7 @@ public class EventHandler {
     public void healingPoll(int col, int row, int gameState) {
         if (gp.keyH.enterPressed == true) {
             gp.gameState = gameState;
-            gp.player.attackCanceled=true;
+            gp.player.attackCanceled = true;
             gp.playSE(2);
             gp.ui.currentDialogue = "You drink the wate. \nYour life has been recoved.";
             gp.player.life = gp.player.maxLife;

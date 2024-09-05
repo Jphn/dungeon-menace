@@ -36,8 +36,12 @@ public class KeyHandler implements KeyListener {
         //TITLE STATE
         if (gp.gameState == gp.titleState) {
             titleState(code);
-        } else if (gp.gameState == gp.playState) { // PLAY STATE
+        } 
+        
+        // PLAY STATE
+        else if (gp.gameState == gp.playState) {
             playState(code);
+            
             //CHECK DRAW TIME
             if (code == KeyEvent.VK_T) {
                 if (checkDrawTime == false) {
@@ -47,18 +51,23 @@ public class KeyHandler implements KeyListener {
                     checkDrawTime = false;
                 }
             }
-        } // PAUSE STATE
-        else if (code == KeyEvent.VK_P) {
+        } 
+        
+        // PAUSE STATE
+        else if (gp.gameState == gp.pauseState) {
             pauseState(code);
-        } //DIALOGUE STATE
+        } 
+        
+        //DIALOGUE STATE
         else if (gp.gameState == gp.dialogueState) {
             dialogueState(code);
         }
         // CHARACTER STATE
-        else if (gp.gameState == gp.characterState){
+        else if (gp.gameState == gp.characterState) {
            characterState(code);
         }
     }
+    
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode(); // retorna o valor inteiro da tecla solta
@@ -79,6 +88,7 @@ public class KeyHandler implements KeyListener {
             this.rigthPressed = false;
         }
     }
+    
     public void titleState(int code){
         if (gp.ui.titleScreenState == 0) {
                 if (code == KeyEvent.VK_W) {
@@ -99,25 +109,21 @@ public class KeyHandler implements KeyListener {
                 if (code == KeyEvent.VK_ENTER) {
                     this.enterPressed = true;
                     gp.playSE(1);
+                    
                     switch (gp.ui.comandNum) {
                         case 0:
-
                             gp.gameState = gp.playState;
                             break;
                         case 1:
                             gp.ui.titleScreenState = 1;
                             gp.ui.comandNum = 0;
                             break;
-
                         case 2:
-
                             break;
                         case 3:
-
                             System.exit(0);
                             break;
                     }
-
                 }
             } else if (gp.ui.titleScreenState == 1) {
                 System.out.println(gp.ui.titleScreenState);
@@ -150,16 +156,13 @@ public class KeyHandler implements KeyListener {
                             gp.ui.titleScreenState = 0;
                             break;
                     }
-
                 }
-
             }
-    
     }
-    public void playState(int code){
+    
+    public void playState(int code) {
          if (code == KeyEvent.VK_W) {
                 this.upPressed = true;
-
             }
 
             if (code == KeyEvent.VK_S) {
@@ -174,43 +177,42 @@ public class KeyHandler implements KeyListener {
                 this.rigthPressed = true;
             }
             
-            //CHARACTER STATE
+            // CHARACTER STATE
             if (code == KeyEvent.VK_C) {
-                this.rigthPressed = true;
+                gp.gameState = gp.characterState;
             }
-            
             
             if (code == KeyEvent.VK_ENTER) {
                 this.enterPressed = true;
             }
             
-            
+            // PAUSE STATE
             if (code == KeyEvent.VK_P) {
                 if (gp.gameState == gp.playState) {
                     gp.gameState = gp.pauseState;
-
                 }
             }
-    
     }
-    public void pauseState(int code){
-          if (gp.gameState == gp.playState) {
-                gp.gameState = gp.pauseState;
-
-            } else if (gp.gameState == gp.pauseState) {
-                gp.gameState = gp.playState;
-            }
     
+    public void pauseState(int code) {
+        if (gp.gameState == gp.playState) {
+            gp.gameState = gp.pauseState;
+        } 
+        
+        else if (gp.gameState == gp.pauseState) {
+             gp.gameState = gp.playState;
+        }
     }
-    public void dialogueState(int code){
-         if (code == KeyEvent.VK_ENTER) {
-                gp.gameState = gp.playState;
-            }
+    
+    public void dialogueState(int code) {
+        if (code == KeyEvent.VK_ENTER) {
+            gp.gameState = gp.playState;
+        }
     } 
-    public void characterState(int code){
-           if (code == KeyEvent.VK_C) {
-                gp.gameState = gp.playState;
-            }
     
+    public void characterState(int code) {
+        if (code == KeyEvent.VK_C) {
+            gp.gameState = gp.playState;
+        }
     }
 }

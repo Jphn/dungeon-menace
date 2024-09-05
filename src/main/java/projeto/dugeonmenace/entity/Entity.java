@@ -24,21 +24,14 @@ public class Entity {
     /**
      * Essa vai ser a classe pai das entidades - NPC - Player - Monster
      */
-    
-   
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
     
     public int solidAreaDefaultX, solidAreaDefaultY;
-    
-    
 
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
-    
-    
-   
 
     String dialogue[] = new String[20];
 
@@ -56,6 +49,7 @@ public class Entity {
     public int nextLevelExp;
     
     public int coin;
+    
     // ENTITY WEAPONS
     public Entity currentWeapon;
     public Entity currentShield;
@@ -64,18 +58,13 @@ public class Entity {
     public int attackValue;
     public int defenseValue;
     
-                        
-           
-     
-     
     //COUNTERS
     public int dyingCounter = 0;
     public int spriteCounter = 0;
     public int actionLockCounter = 0; // Contador relevante para os npcs
     public int invincibleCounter = 0;
     public int hpBarCounter = 0;
-    
-    
+
     //NOVOS ATRIBUTOS
     public BufferedImage image, image2, image3;
     public String name;
@@ -91,7 +80,6 @@ public class Entity {
     public boolean invincible = false;
     public boolean attacking = false;
     public boolean hpBarOn = false;
-    
     
     // ALIVE AND DEATH
     public boolean alive = true;

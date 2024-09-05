@@ -67,31 +67,28 @@ public class Player extends Entity {
         //Player status
         this.maxLife = 6;
         this.life = maxLife; // 6 de vida = 3 corações
-        this.level =1;
-        this.strength=1;
-        this.dexterity=1;
-        this.exp=0;
-        this.nextLevelExp=5;
-        this.coin=0;
+        this.level = 1;
+        this.strength = 1;
+        this.dexterity = 1;
+        this.exp = 0;
+        this.nextLevelExp = 5;
+        this.coin = 0;
         
         this.currentWeapon = new OBJ_Sword_Normal(gp);
         this.currentShield= new OBJ_Shield_Wood(gp);
         
         attack = getAttack();
         defense = getDefense();
-        
     }
     
     public int getAttack(){
         return attack = strength  * currentWeapon.attackValue;
-        }
+    }
     
     public int getDefense(){
-        
-        return defense = dexterity  * currentShield.defenseValue;
-    
-    
+        return defense = dexterity * currentShield.defenseValue;
     }
+    
     public void getPlayerImage() {
 
         up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
@@ -178,14 +175,13 @@ public class Player extends Entity {
                         break;
                 }
             }
-            if(keyH.enterPressed && attackCanceled==false){
+            if(keyH.enterPressed && attackCanceled == false){
                 gp.playSE(7);
-                attacking = true;
-                
+                attacking = true; 
                 spriteCounter = 0;
             }
             
-            attackCanceled=false;
+            attackCanceled = false;
             gp.keyH.enterPressed = false;
 
             spriteCounter++;
@@ -222,12 +218,8 @@ public class Player extends Entity {
             if (i != 999) {
                 attackCanceled = true;
                 gp.gameState = gp.dialogueState;
-                gp.npc[i].speak();
-            
-        } else {
-                gp.playSE(7);
-                attacking = true;
-            }
+                gp.npc[i].speak();       
+            } 
         }
     }
     
