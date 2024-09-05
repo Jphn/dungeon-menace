@@ -94,4 +94,12 @@ public class MON_GreenSlime extends Entity {
             }
         }*/
     }
+    
+    public void damageReaction(){
+        actionLockCounter=0;
+        
+        this.direction= gp.player.direction;
+        
+        
+    }
 }

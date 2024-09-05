@@ -14,6 +14,15 @@ import projeto.dugeonmenace.UtilityTools;
  *
  * @author LucianoNeto
  */
+/**
+    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    
+    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO
+    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO
+    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO
+    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO    OBSOLETO   OBSOLETO
+    
+ */
+
 public class SuperObject {
 
     public BufferedImage image, image2, image3;

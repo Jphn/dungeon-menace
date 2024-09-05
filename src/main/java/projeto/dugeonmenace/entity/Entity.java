@@ -5,6 +5,7 @@
 package projeto.dugeonmenace.entity;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -24,28 +25,57 @@ public class Entity {
      * Essa vai ser a classe pai das entidades - NPC - Player - Monster
      */
     
-    public int speed;
+   
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
-
-    public int spriteCounter = 0;
-   
-
-    public int actionLockCounter = 0; // Contador relevante para os npcs
+    
+    public int solidAreaDefaultX, solidAreaDefaultY;
+    
+    
 
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
-    public int solidAreaDefaultX, solidAreaDefaultY;
-
-    public int invincibleCounter = 0;
+    
+    
+   
 
     String dialogue[] = new String[20];
 
-    // CHARACTER STATUS
+    // ENTITY STATUS
     public int maxLife;
     public int life;
-
+    public int speed;
+    public int level;
+    
+    public int strength;
+    public int dexterity;
+    public int attack;
+    public int defense;
+    public int exp;
+    public int nextLevelExp;
+    
+    public int coin;
+    // ENTITY WEAPONS
+    public Entity currentWeapon;
+    public Entity currentShield;
+    
+    //ITEM ATTRIBUTES
+    public int attackValue;
+    public int defenseValue;
+    
+                        
+           
+     
+     
+    //COUNTERS
+    public int dyingCounter = 0;
+    public int spriteCounter = 0;
+    public int actionLockCounter = 0; // Contador relevante para os npcs
+    public int invincibleCounter = 0;
+    public int hpBarCounter = 0;
+    
+    
     //NOVOS ATRIBUTOS
     public BufferedImage image, image2, image3;
     public String name;
@@ -60,6 +90,13 @@ public class Entity {
     public boolean collisionOn = false;
     public boolean invincible = false;
     public boolean attacking = false;
+    public boolean hpBarOn = false;
+    
+    
+    // ALIVE AND DEATH
+    public boolean alive = true;
+    public boolean dying = false;
+    
     
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -67,7 +104,10 @@ public class Entity {
 
     public void setAction() {
     }
-
+    public void damageReaction(){
+    
+    
+    }
     public void speak() {
         if (dialogue[dialogueIndex] == null) {
             dialogueIndex = 0;
@@ -105,7 +145,7 @@ public class Entity {
         if (this.type == 2 && contactPlayer == true) {
             if (!gp.player.invincible) {
                 //Entity can give damage when touching
-
+                gp.playSE(6);
                 gp.player.life -= 1;
                 gp.player.invincible = true;
             }
@@ -198,17 +238,72 @@ public class Entity {
                     }
                     break;
             }
-
+            //Monster health
+            if(type == 2 && hpBarOn){
+                double oneScale = (double)gp.tileSize/this.maxLife;
+                
+                double hpBarValue = oneScale*this.life;
+                
+                g2.setColor(new Color(35,35,35));
+                g2.fillRect(screenX-1, screenY-16, gp.tileSize+2, 12 );
+                
+                g2.setColor(Color.red);
+                g2.fillRect(screenX, screenY-15, (int)hpBarValue, 10 );
+                
+                hpBarCounter++;
+                
+                if(hpBarCounter>600){
+                    hpBarCounter=0;
+                    hpBarOn = false;
+                }
+            }
             if (invincible == true) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f)); // o player fica levemente
+                hpBarOn =true;
+                hpBarCounter=0;
+                changeAlphaValue(g2,0.4F); // o player fica levemente
             //transparente
             }
             
+            if(dying == true){
+                dyingAnimation(g2);
+            
+             }
             g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
-
+            changeAlphaValue(g2,1F); // o player fica levemente
         }
     }
 
+    
+    public void dyingAnimation(Graphics2D g2){
+        dyingCounter++;
+        
+        
+        if(dyingCounter<=5){
+            changeAlphaValue(g2,0);
+        }else if(dyingCounter>5 && dyingCounter<=10){
+            changeAlphaValue(g2,1);
+         }else if(dyingCounter>10 && dyingCounter<=15){
+            changeAlphaValue(g2,0);
+         }else if(dyingCounter>15 && dyingCounter<=20){
+            changeAlphaValue(g2,1);
+         }else if(dyingCounter>25 && dyingCounter<=30){
+            changeAlphaValue(g2,0);
+         }else if(dyingCounter>30 && dyingCounter<=35){
+            changeAlphaValue(g2,1);
+         }else if(dyingCounter>35 && dyingCounter<=40){
+            changeAlphaValue(g2,0);
+         }else if(dyingCounter>40){
+             dying = false;
+             alive=false;
+         }
+        
+    
+    }
+    public void changeAlphaValue(Graphics2D g2, float alphaValue){
+    
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue)); 
+    }
+    
     public BufferedImage setup(String imagePath, int width, int height) {
         UtilityTools uTool = new UtilityTools();
         BufferedImage image = null;
@@ -221,4 +316,7 @@ public class Entity {
         }
         return image;
     }
+    
+    
+    
 }
