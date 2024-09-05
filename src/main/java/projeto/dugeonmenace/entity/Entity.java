@@ -92,10 +92,10 @@ public class Entity {
 
     public void setAction() {
     }
+    
     public void damageReaction(){
-    
-    
     }
+    
     public void speak() {
         if (dialogue[dialogueIndex] == null) {
             dialogueIndex = 0;
@@ -115,7 +115,6 @@ public class Entity {
             case "right":
                 this.direction = "left";
                 break;
-
         }
     }
 
@@ -134,7 +133,12 @@ public class Entity {
             if (!gp.player.invincible) {
                 //Entity can give damage when touching
                 gp.playSE(6);
-                gp.player.life -= 1;
+                
+                int damage = attack - gp.player.defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+                gp.player.life -= damage;
                 gp.player.invincible = true;
             }
         }
@@ -178,7 +182,6 @@ public class Entity {
     }
 
     public void draw(Graphics2D g2) {
-
         BufferedImage image = null;
 
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -254,18 +257,15 @@ public class Entity {
             
             if(dying == true){
                 dyingAnimation(g2);
-            
              }
+            
             g2.drawImage(image, screenX, screenY, null); // null ali pq aquilo aparentemente n vamos usar
             changeAlphaValue(g2,1F); // o player fica levemente
         }
     }
-
     
     public void dyingAnimation(Graphics2D g2){
         dyingCounter++;
-        
-        
         if(dyingCounter<=5){
             changeAlphaValue(g2,0);
         }else if(dyingCounter>5 && dyingCounter<=10){
@@ -284,11 +284,9 @@ public class Entity {
              dying = false;
              alive=false;
          }
-        
-    
     }
-    public void changeAlphaValue(Graphics2D g2, float alphaValue){
     
+    public void changeAlphaValue(Graphics2D g2, float alphaValue){
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue)); 
     }
     
@@ -304,7 +302,4 @@ public class Entity {
         }
         return image;
     }
-    
-    
-    
 }

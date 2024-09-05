@@ -47,7 +47,6 @@ public class EventHandler {
                 row++;
             }
         }
-
     }
 
     public void checkEvent() {
@@ -63,13 +62,14 @@ public class EventHandler {
                 damagePit(27, 16, gp.dialogueState);
             }
         }
+        
         if (hit(27, 17, "right") == true) {
             teleport(gp.dialogueState);
         }
+        
         if (hit(23, 12, "up") == true) {
             healingPoll(23, 12, gp.dialogueState);
         }
-
     }
 
     public void teleport(int gameState) {
@@ -78,7 +78,6 @@ public class EventHandler {
 
         gp.gameState = gameState; // seta o jogo no modo dialogo
         gp.ui.currentDialogue = "Teleport !"; //adiciona ao currentDialogue essa string
-
     }
 
     public boolean hit(int col, int row, String reqDirection) {
@@ -98,28 +97,24 @@ public class EventHandler {
 
                 previousEventX = gp.player.worldX;
                 previousEventY = gp.player.worldY;
-
             }
-
         }
+        
         gp.player.solidArea.x = gp.player.solidAreaDefaultX;
         gp.player.solidArea.y = gp.player.solidAreaDefaultY;
         eventRect[col][row].x = eventRect[col][row].eventRectDefaultX;
         eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
 
         return hit;
-
     }
 
     public void damagePit(int col, int row, int gameState) {
-
         gp.gameState = gameState; // seta o jogo no modo dialogo
         gp.player.attackCanceled = true;
         gp.playSE(6);
         gp.ui.currentDialogue = "You fall into a pit !"; //adiciona ao currentDialogue essa string
         gp.player.life -= 1; // diminui a vida do player
         //eventRect[col][row].eventDone = true; //Isso aqui faz o evento ocorrer somente uma vez
-
         canTouchEvent = false;
     }
 
@@ -130,7 +125,7 @@ public class EventHandler {
             gp.playSE(2);
             gp.ui.currentDialogue = "You drink the wate. \nYour life has been recoved.";
             gp.player.life = gp.player.maxLife;
+            gp.aSetter.setMonster();
         }
-
     }
 }

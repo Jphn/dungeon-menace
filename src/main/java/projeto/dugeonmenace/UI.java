@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
 
@@ -21,26 +22,21 @@ import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
  * @author LucianoNeto
  */
 public class UI {
-
     GamePanel gp;
     Graphics2D g2;
-
     Font pixelOperator;
-//    BufferedImage keyImage;
-
-    //PLAYER STATUS HUD HEART IMAGES
     BufferedImage heartFull, heartHalf, heartBlank;
-
+    
     public boolean messageOn = false;
-    int messageCounter = 0;
+//    int messageCounter = 0;
+//    public String message = "";
+    ArrayList<String> message = new ArrayList<>();
+    ArrayList<Integer> messageCounter = new ArrayList<>();
+    public String currentDialogue = "";
     public boolean gameFinished = false;
 
     double playTime = 0;
     DecimalFormat decimalFormat = new DecimalFormat("#0");
-
-    public String message = "";
-
-    public String currentDialogue = "";
 
     //TITLE SCREEN VARIABLES
     int comandNum = 0;
@@ -90,6 +86,7 @@ public class UI {
         // PLAY STATE
         if (gp.gameState == gp.playState) {
             drawPlayerLife();
+            drawMessage();
         }
         
         // PAUSE STATE
@@ -389,8 +386,34 @@ public class UI {
         return x;
     }
 
-    public void showMessage(String text) {
-        message = text;
-        messageOn = true;
+    public void addMessage(String text) {
+        message.add(text);
+        messageCounter.add(0);
+    }
+    
+    public void drawMessage() {
+        int messageX = gp.tileSize;
+        int messageY = gp.tileSize * 4;
+        g2.setFont(g2.getFont().deriveFont(32F));
+        
+        for (int i = 0; i < message.size(); i++) {
+            if (message.get(i) != null) {
+                // Efeito de sombreamento
+                g2.setColor(Color.black);
+                g2.drawString(message.get(i), messageX + 2, messageY + 2);
+                
+                g2.setColor(Color.white);
+                g2.drawString(message.get(i), messageX, messageY);
+                
+                int counter = messageCounter.get(i) + 1;
+                messageCounter.set(i, counter);
+                messageY += 50;
+                
+                if (messageCounter.get(i) > 180 ) {
+                    message.remove(i);
+                    messageCounter.remove(i);
+                } 
+            }
+        }
     }
 }

@@ -90,7 +90,6 @@ public class Player extends Entity {
     }
     
     public void getPlayerImage() {
-
         up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
         up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
         down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
@@ -110,7 +109,6 @@ public class Player extends Entity {
         attackLeft2 = setup("/player/boy_attack_left_2.png", gp.tileSize * 2, gp.tileSize);
         attackRight1 = setup("/player/boy_attack_right_1.png", gp.tileSize * 2, gp.tileSize);
         attackRight2 = setup("/player/boy_attack_right_2.png", gp.tileSize * 2, gp.tileSize);
-        
     }
 
     /**
@@ -199,8 +197,8 @@ public class Player extends Entity {
                     standCounter = 0;
                 }
             }
-
         }
+        
         if(invincible == true){
             invincibleCounter++;
             if(invincibleCounter > 60){
@@ -208,9 +206,7 @@ public class Player extends Entity {
                 invincibleCounter=0;
             
             }
-        }
-        
-        
+        }   
     }
 
     public void interactNpc(int i) {
@@ -279,11 +275,22 @@ public class Player extends Entity {
     public void damageMonster(int i) {
         if (i != 999) {
             if (gp.monster[i].invincible == false) {
-                gp.monster[i].life -= 1;
+                int damage = attack - gp.monster[i].defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+                gp.monster[i].life -= damage;
+                gp.ui.addMessage(damage + " damage!");
+                
                 gp.monster[i].invincible = true;
                 gp.monster[i].damageReaction();
+                
                 if (gp.monster[i].life <= 0) {
                     gp.monster[i].dying = true;
+                    gp.ui.addMessage("Killed the " + gp.monster[i].name + "!");
+                    gp.ui.addMessage("Exp + " + gp.monster[i].exp);
+                    exp += gp.monster[i].exp;
+                    checkUpLevel();
                 }
             }
         }
@@ -372,10 +379,28 @@ public class Player extends Entity {
 
         if (index != 999 && invincible == false) {
             gp.playSE(5);
-            life -= 1;
+            int damage = gp.monster[i].attack - defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+            life -= damage;
             invincible = true;
         }
     }
     
-    
+    public void checkUpLevel() {
+        if (exp >= nextLevelExp) {
+            level++; 
+            nextLevelExp = nextLevelExp * 2;
+            maxLife += 2;
+            strength++;
+            dexterity++;
+            attack = getAttack();
+            defense = getDefense();
+            
+            gp.gameState = gp.dialogueState;
+            gp.ui.currentDialogue = "You are level: " + level + " now!\n"
+                    + "You feel stronger!";
+        }
+    }
 }
