@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
 
@@ -21,26 +22,21 @@ import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
  * @author LucianoNeto
  */
 public class UI {
-
     GamePanel gp;
     Graphics2D g2;
-
     Font pixelOperator;
-//    BufferedImage keyImage;
-
-    //PLAYER STATUS HUD HEART IMAGES
     BufferedImage heartFull, heartHalf, heartBlank;
-
+    
     public boolean messageOn = false;
-    int messageCounter = 0;
+//    int messageCounter = 0;
+//    public String message = "";
+    ArrayList<String> message = new ArrayList<>();
+    ArrayList<Integer> messageCounter = new ArrayList<>();
+    public String currentDialogue = "";
     public boolean gameFinished = false;
 
     double playTime = 0;
     DecimalFormat decimalFormat = new DecimalFormat("#0");
-
-    public String message = "";
-
-    public String currentDialogue = "";
 
     //TITLE SCREEN VARIABLES
     int comandNum = 0;
@@ -75,25 +71,39 @@ public class UI {
 
         g2.setFont(pixelOperator);
         g2.setColor(Color.white);
+        
         /**
          * Essa região é diferente ao UI durante
          *
          * os diferentes estados de jogo
          */
+        
+        // TITLE STATE
         if (gp.gameState == gp.titleState) {
             drawTitleScreen();
-
-        } else if (gp.gameState == gp.playState) {
+        } 
+        
+        // PLAY STATE
+        if (gp.gameState == gp.playState) {
             drawPlayerLife();
-
-        } else if (gp.gameState == gp.pauseState) {
+            drawMessage();
+        }
+        
+        // PAUSE STATE
+        if (gp.gameState == gp.pauseState) {
             //game pausado, a tela de espera deve abrir
-            //drawPlayerLife(); decidir se vamos esconder durante o pause
+            drawPlayerLife(); //decidir se vamos esconder durante o pause
             drawPauseScreen();
+        }   
 
-        } else if (gp.gameState == gp.dialogueState) {
+        if (gp.gameState == gp.dialogueState) {
             drawPlayerLife();
             drawDialogueScreen();
+        }
+        
+        // CHARACHTER STATE
+        if (gp.gameState == gp.characterState) {
+            drawCharacterScreen();
         }
     }
 
@@ -125,7 +135,6 @@ public class UI {
             i++;
             x += gp.tileSize;
         }
-
     }
 
     public void drawTitleScreen() {
@@ -244,15 +253,107 @@ public class UI {
         int height = gp.tileSize * 4;
         drawSubWindow(x, y, width, height);
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 30F));
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
         x += gp.tileSize;
         y += gp.tileSize;
+        
         for (String line : currentDialogue.split("\n")) {
-
             g2.drawString(line, x, y);
             y += 40;
         }
-
+    }
+    
+    public void drawCharacterScreen() {
+        final int frameX = gp.tileSize;
+        final int frameY = gp.tileSize;
+        final int frameWidth = gp.tileSize * 5;
+        final int frameHeight = gp.tileSize * 10;
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+        
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(32F));
+        
+        int textX = frameX + 20;
+        int textY = frameY + gp.tileSize;
+        final int lineHeight = 35;
+        
+        g2.drawString("Level", textX, textY);  
+        textY += lineHeight;
+        g2.drawString("Life", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Strenght", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Dexterity", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Attack", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Defense", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Exp", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Next Level", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Coin", textX, textY);
+        textY += lineHeight + 20;
+        g2.drawString("Weapon", textX, textY);
+        textY += lineHeight + 15;
+        g2.drawString("Shield", textX, textY);
+        textY += lineHeight;
+        
+        // VALUES
+        int tailX = (frameX + frameWidth) - 30; 
+        textY = frameY + gp.tileSize;
+        String value;
+        
+        value = String.valueOf(gp.player.level);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.life + "/" + gp.player.maxLife);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.strength);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.dexterity);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.attack);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.defense);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.exp);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.nextLevelExp);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        value = String.valueOf(gp.player.coin);
+        textX = getXforAlignToRightText(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+        
+        g2.drawImage(gp.player.currentWeapon.down1, tailX - gp.tileSize, textY - 14, null); 
+        textY += gp.tileSize;
+        
+        g2.drawImage(gp.player.currentShield.down1, tailX - gp.tileSize, textY - 14, null); 
     }
 
     public void drawSubWindow(int x, int y, int width, int height) {
@@ -276,13 +377,43 @@ public class UI {
     public int getXforCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = (gp.screenWidth / 2) - length / 2;
-
+        return x;
+    }
+    
+    public int getXforAlignToRightText(String text, int tailX) {
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int x = tailX - length;
         return x;
     }
 
-    public void showMessage(String text) {
-        message = text;
-        messageOn = true;
+    public void addMessage(String text) {
+        message.add(text);
+        messageCounter.add(0);
     }
-
+    
+    public void drawMessage() {
+        int messageX = gp.tileSize;
+        int messageY = gp.tileSize * 4;
+        g2.setFont(g2.getFont().deriveFont(32F));
+        
+        for (int i = 0; i < message.size(); i++) {
+            if (message.get(i) != null) {
+                // Efeito de sombreamento
+                g2.setColor(Color.black);
+                g2.drawString(message.get(i), messageX + 2, messageY + 2);
+                
+                g2.setColor(Color.white);
+                g2.drawString(message.get(i), messageX, messageY);
+                
+                int counter = messageCounter.get(i) + 1;
+                messageCounter.set(i, counter);
+                messageY += 50;
+                
+                if (messageCounter.get(i) > 180 ) {
+                    message.remove(i);
+                    messageCounter.remove(i);
+                } 
+            }
+        }
+    }
 }

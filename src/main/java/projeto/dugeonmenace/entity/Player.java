@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import projeto.dugeonmenace.*;
+import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Wood;
+import projeto.dugeonmenace.objectsSprite.OBJ_Sword_Normal;
 
 /**
  *
@@ -24,6 +26,8 @@ public class Player extends Entity {
     //public int hasKey = 0;
     public int standCounter;
     public int spriteCounter;
+    public boolean attackCanceled = false; 
+    
     int i;
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -63,10 +67,29 @@ public class Player extends Entity {
         //Player status
         this.maxLife = 6;
         this.life = maxLife; // 6 de vida = 3 corações
+        this.level = 1;
+        this.strength = 1;
+        this.dexterity = 1;
+        this.exp = 0;
+        this.nextLevelExp = 5;
+        this.coin = 0;
+        
+        this.currentWeapon = new OBJ_Sword_Normal(gp);
+        this.currentShield= new OBJ_Shield_Wood(gp);
+        
+        attack = getAttack();
+        defense = getDefense();
+    }
+    
+    public int getAttack(){
+        return attack = strength  * currentWeapon.attackValue;
+    }
+    
+    public int getDefense(){
+        return defense = dexterity * currentShield.defenseValue;
     }
     
     public void getPlayerImage() {
-
         up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
         up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
         down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
@@ -86,7 +109,6 @@ public class Player extends Entity {
         attackLeft2 = setup("/player/boy_attack_left_2.png", gp.tileSize * 2, gp.tileSize);
         attackRight1 = setup("/player/boy_attack_right_1.png", gp.tileSize * 2, gp.tileSize);
         attackRight2 = setup("/player/boy_attack_right_2.png", gp.tileSize * 2, gp.tileSize);
-        
     }
 
     /**
@@ -100,8 +122,7 @@ public class Player extends Entity {
         
         if(attacking == true) {
             attacking();
-        }   
-        if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
+        }else if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
                 || this.keyH.rigthPressed == true || this.keyH.enterPressed == true || keyH.enterPressed == true) {
             if (this.keyH.upPressed == true) {
                 this.direction = "up";
@@ -152,7 +173,13 @@ public class Player extends Entity {
                         break;
                 }
             }
-
+            if(keyH.enterPressed && attackCanceled == false){
+                gp.playSE(7);
+                attacking = true; 
+                spriteCounter = 0;
+            }
+            
+            attackCanceled = false;
             gp.keyH.enterPressed = false;
 
             spriteCounter++;
@@ -170,20 +197,25 @@ public class Player extends Entity {
                     standCounter = 0;
                 }
             }
-
         }
+        
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 60){
+                invincible=false;
+                invincibleCounter=0;
+            
+            }
+        }   
     }
 
     public void interactNpc(int i) {
         if (gp.keyH.enterPressed == true) {
             if (i != 999) {
-            
+                attackCanceled = true;
                 gp.gameState = gp.dialogueState;
-                gp.npc[i].speak();
-            
-        } else {
-                attacking = true;
-            }
+                gp.npc[i].speak();       
+            } 
         }
     }
     
@@ -243,11 +275,22 @@ public class Player extends Entity {
     public void damageMonster(int i) {
         if (i != 999) {
             if (gp.monster[i].invincible == false) {
-                gp.monster[i].life -= 1;
+                int damage = attack - gp.monster[i].defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+                gp.monster[i].life -= damage;
+                gp.ui.addMessage(damage + " damage!");
+                
                 gp.monster[i].invincible = true;
+                gp.monster[i].damageReaction();
                 
                 if (gp.monster[i].life <= 0) {
-                    gp.monster[i] = null;
+                    gp.monster[i].dying = true;
+                    gp.ui.addMessage("Killed the " + gp.monster[i].name + "!");
+                    gp.ui.addMessage("Exp + " + gp.monster[i].exp);
+                    exp += gp.monster[i].exp;
+                    checkUpLevel();
                 }
             }
         }
@@ -314,7 +357,8 @@ public class Player extends Entity {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f)); // o player fica levemente
             //transparente
         }
-
+        
+        
         g2.drawImage(image, tempScreenX, tempScreenY, null); // null ali pq aquilo aparentemente n vamos usar
         //reset alpha
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
@@ -334,8 +378,29 @@ public class Player extends Entity {
     private void contactMonster(int index) {
 
         if (index != 999 && invincible == false) {
-            life -= 1;
+            gp.playSE(5);
+            int damage = gp.monster[i].attack - defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+            life -= damage;
             invincible = true;
+        }
+    }
+    
+    public void checkUpLevel() {
+        if (exp >= nextLevelExp) {
+            level++; 
+            nextLevelExp = nextLevelExp * 2;
+            maxLife += 2;
+            strength++;
+            dexterity++;
+            attack = getAttack();
+            defense = getDefense();
+            
+            gp.gameState = gp.dialogueState;
+            gp.ui.currentDialogue = "You are level: " + level + " now!\n"
+                    + "You feel stronger!";
         }
     }
 }

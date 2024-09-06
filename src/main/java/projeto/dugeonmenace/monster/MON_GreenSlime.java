@@ -18,30 +18,24 @@ public class MON_GreenSlime extends Entity {
     
     public MON_GreenSlime(GamePanel gp) {
         super(gp);
-        
         this.gp = gp;
         
         name = "Green Slime";
-
         speed = 1;
-
         type = 2; //monstro
-
         maxLife = 4;
-
         life = maxLife;
+        attack = 5;
+        defense = 0;
+        exp = 2;
 
         solidArea.x = 3;
-
         solidArea.y = 18;
         solidArea.width = 42;
-
         solidArea.height = 30;
-
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         getImage();
-
     }
 
     public void getImage() {
@@ -93,5 +87,13 @@ public class MON_GreenSlime extends Entity {
                 standCounter = 0;
             }
         }*/
+    }
+    
+    public void damageReaction(){
+        actionLockCounter=0;
+        
+        this.direction= gp.player.direction;
+        
+        
     }
 }
