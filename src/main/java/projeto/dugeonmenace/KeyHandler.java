@@ -16,7 +16,7 @@ import java.util.Map;
 public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed;
-    public boolean checkDrawTime = false;
+    public boolean showDebugText = false;
     GamePanel gp;
     
     private Map<Integer, Boolean> teclasPressionadas = new HashMap<>();
@@ -41,16 +41,6 @@ public class KeyHandler implements KeyListener {
         // PLAY STATE
         else if (gp.gameState == gp.playState) {
             playState(code);
-            
-            //CHECK DRAW TIME
-            if (code == KeyEvent.VK_T) {
-                if (checkDrawTime == false) {
-                    checkDrawTime = true;
-
-                } else if (checkDrawTime == true) {
-                    checkDrawTime = false;
-                }
-            }
         } 
         
         // PAUSE STATE
@@ -161,37 +151,51 @@ public class KeyHandler implements KeyListener {
     }
     
     public void playState(int code) {
-         if (code == KeyEvent.VK_W) {
-                this.upPressed = true;
-            }
+        if (code == KeyEvent.VK_W) {
+            this.upPressed = true;
+        }
 
-            if (code == KeyEvent.VK_S) {
-                this.downPressed = true;
-            }
+        if (code == KeyEvent.VK_S) {
+            this.downPressed = true;
+        }
 
-            if (code == KeyEvent.VK_A) {
-                this.leftPressed = true;
-            }
+        if (code == KeyEvent.VK_A) {
+            this.leftPressed = true;
+        }
 
-            if (code == KeyEvent.VK_D) {
-                this.rigthPressed = true;
-            }
+        if (code == KeyEvent.VK_D) {
+            this.rigthPressed = true;
+        }
             
-            // CHARACTER STATE
-            if (code == KeyEvent.VK_C) {
-                gp.gameState = gp.characterState;
-            }
+        // CHARACTER STATE
+        if (code == KeyEvent.VK_C) {
+            gp.gameState = gp.characterState;
+        }
             
-            if (code == KeyEvent.VK_ENTER) {
-                this.enterPressed = true;
-            }
+        if (code == KeyEvent.VK_ENTER) {
+            this.enterPressed = true;
+        }
             
-            // PAUSE STATE
-            if (code == KeyEvent.VK_P) {
-                if (gp.gameState == gp.playState) {
-                    gp.gameState = gp.pauseState;
-                }
+        // PAUSE STATE
+        if (code == KeyEvent.VK_P) {
+            if (gp.gameState == gp.playState) {
+                gp.gameState = gp.pauseState;
             }
+        }
+            
+        // DEBUG
+        if (code == KeyEvent.VK_T) {
+            if (showDebugText == false) {
+                showDebugText = true;
+
+            } else if (showDebugText == true) {
+                showDebugText = false;
+            }
+         }
+            
+        if (code == KeyEvent.VK_R) {
+            gp.tileM.loadMap("/maps/worldV2.txt");
+        }
     }
     
     public void pauseState(int code) {
@@ -214,5 +218,29 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_C) {
             gp.gameState = gp.playState;
         }
-    }
+        
+        if (code == KeyEvent.VK_W) {
+            if (gp.ui.slotRow != 0) {
+                gp.ui.slotRow--;
+            }
+        }
+        
+        if (code == KeyEvent.VK_A) {
+            if (gp.ui.slotCol != 0) {
+                gp.ui.slotCol--;
+            }
+        }
+        
+        if (code == KeyEvent.VK_S) {
+            if (gp.ui.slotRow != 3) {
+                gp.ui.slotRow++;
+            }
+        }
+        
+        if (code == KeyEvent.VK_D) {
+            if (gp.ui.slotCol != 4) {
+                gp.ui.slotCol++;
+            }
+        }
+    }   
 }

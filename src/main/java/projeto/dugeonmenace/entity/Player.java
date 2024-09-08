@@ -8,7 +8,9 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import projeto.dugeonmenace.*;
+import projeto.dugeonmenace.objectsSprite.OBJ_Key;
 import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Wood;
 import projeto.dugeonmenace.objectsSprite.OBJ_Sword_Normal;
 
@@ -23,11 +25,11 @@ public class Player extends Entity {
     //Onde desenha o player na tela
     public final int screenX;
     public final int screenY;
-    //public int hasKey = 0;
     public int standCounter;
     public int spriteCounter;
     public boolean attackCanceled = false; 
-    
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int inventorySize = 20;
     int i;
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -52,10 +54,9 @@ public class Player extends Entity {
         attackArea.height = 36;
 
         setDefaultValues(); // Será que isso é errado ?
-
         getPlayerImage();
-        
         getPlayerAttackImage();
+        setItems();
     }
 
     public void setDefaultValues() {
@@ -79,6 +80,11 @@ public class Player extends Entity {
         
         attack = getAttack();
         defense = getDefense();
+    }
+    
+    public void setItems() {
+        inventory.add(currentWeapon);
+        inventory.add(currentShield);
     }
     
     public int getAttack(){
