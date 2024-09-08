@@ -6,6 +6,7 @@ package projeto.dugeonmenace;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -88,23 +89,19 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         // resumidamente isso vai melhorar a perfomance da renderização
         this.addKeyListener(keyH);
         this.setFocusable(true); // dessa forma esse game panel pode "focar" em receber key inputs
-
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
-
     }
 
     public void setupGame() {
-
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
         playMusic(0);
         gameState = titleState;
-
     }
 
     //Run utilizando Delta para a atualização do draw
@@ -164,7 +161,6 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                         monster[i]=null;
                     }
                 }
-
             }
 
         } else if (gameState == pauseState) {
@@ -176,14 +172,13 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         /*
             Podemos imaginar esse Graphics como um "pincel"
          */
-
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;  // Graphics2D tem mais funções interessantes
 
         //DEBUG
         long drawStart = 0;
-        if (keyH.checkDrawTime) {
+        if (keyH.showDebugText) {
             drawStart = System.nanoTime();
         }
 
@@ -223,7 +218,6 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 if (monster[i] != null) {
                     entityList.add(monster[i]);
                 }
-
             }
 
             // SORT
@@ -233,32 +227,38 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                     int result = Integer.compare(o1.worldY, o2.worldY);
                     return result;
                 }
-
             });
 
             //Draw entitys
             for (Entity entity : entityList) {
-
                 entity.draw(g2);
             }
+            
             //Remove entitys from list
-
             entityList.clear();
-
+            
             //UI
             ui.draw(g2);
-
         }
 
         //DEBUG
-        if (keyH.checkDrawTime) {
+        if (keyH.showDebugText) {
             long drawEnd = System.nanoTime();
             long passed = drawEnd - drawStart;
+            
+            g2.setFont(new Font("Arial", Font.PLAIN, 20));
             g2.setColor(Color.white);
-            g2.drawString("Draw time: " + passed, 10, 400);
+            int x = 10;
+            int y = 400;
+            int lineHeight = 20;
+            
+            g2.drawString("WorldX: " + player.worldX, x, y); y += lineHeight;
+            g2.drawString("WorldY: " + player.worldY, x, y); y += lineHeight;
+            g2.drawString("Col: " + (player.worldX + player.solidArea.x / tileSize), x, y); y += lineHeight;
+            g2.drawString("Row: " + (player.worldY + player.solidArea.y / tileSize), x, y);  y += lineHeight;
+            g2.drawString("Draw time: " + passed, x, y);
             System.out.println("Draw Time: " + passed);
         }
-
         g2.dispose();
     }
 
@@ -266,19 +266,15 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         music.setFile(i);
         music.play();
         music.loop();
-
     }
 
     public void stopMusic() {
         music.stop();
-
     }
 
     //Play sound effects
     public void playSE(int i) {
         soundEffects.setFile(i);
         soundEffects.play();
-
     }
-
 }
