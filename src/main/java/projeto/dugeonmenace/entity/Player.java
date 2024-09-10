@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import projeto.dugeonmenace.*;
+import projeto.dugeonmenace.objectsSprite.OBJ_Fireball;
 import projeto.dugeonmenace.objectsSprite.OBJ_Key;
 import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Wood;
 import projeto.dugeonmenace.objectsSprite.OBJ_Sword_Normal;
@@ -29,7 +30,7 @@ public class Player extends Entity {
     public int spriteCounter;
     public boolean attackCanceled = false; 
     public ArrayList<Entity> inventory = new ArrayList<>();
-    public final int inventorySize = 20;
+    public final int maxInventorySize = 20;
     int i;
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -50,8 +51,7 @@ public class Player extends Entity {
         screenX = (gp.screenWidth) / 2 - (gp.tileSize / 2);
         screenY = (gp.screenHeight) / 2 - (gp.tileSize / 2);
         
-        attackArea.width = 36;
-        attackArea.height = 36;
+        
 
         setDefaultValues(); // Será que isso é errado ?
         getPlayerImage();
@@ -78,6 +78,9 @@ public class Player extends Entity {
         this.currentWeapon = new OBJ_Sword_Normal(gp);
         this.currentShield= new OBJ_Shield_Wood(gp);
         
+        
+        this.projectile = new OBJ_Fireball(gp);
+        
         attack = getAttack();
         defense = getDefense();
     }
@@ -88,6 +91,8 @@ public class Player extends Entity {
     }
     
     public int getAttack(){
+        
+        attackArea = currentWeapon.attackArea;
         return attack = strength  * currentWeapon.attackValue;
     }
     
@@ -96,25 +101,39 @@ public class Player extends Entity {
     }
     
     public void getPlayerImage() {
-        up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
-        up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
-        down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
-        down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
-        left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
-        left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
-        right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
-        right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
-    }
+
+            up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
+            up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
+            down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
+            down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
+            left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
+            left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
+            right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
+            right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
+        }
+    
     
     public void getPlayerAttackImage() {
-        attackUp1 = setup("/player/boy_attack_up_1.png", gp.tileSize, gp.tileSize * 2);
-        attackUp2 = setup("/player/boy_attack_up_2.png", gp.tileSize, gp.tileSize * 2);
-        attackDown1 = setup("/player/boy_attack_down_1.png", gp.tileSize, gp.tileSize * 2);
-        attackDown2 = setup("/player/boy_attack_down_2.png", gp.tileSize, gp.tileSize * 2);
-        attackLeft1 = setup("/player/boy_attack_left_1.png", gp.tileSize * 2, gp.tileSize);
-        attackLeft2 = setup("/player/boy_attack_left_2.png", gp.tileSize * 2, gp.tileSize);
-        attackRight1 = setup("/player/boy_attack_right_1.png", gp.tileSize * 2, gp.tileSize);
-        attackRight2 = setup("/player/boy_attack_right_2.png", gp.tileSize * 2, gp.tileSize);
+        if(currentWeapon.type == type_sword){
+            attackUp1 = setup("/player/boy_attack_up_1.png", gp.tileSize, gp.tileSize * 2);
+            attackUp2 = setup("/player/boy_attack_up_2.png", gp.tileSize, gp.tileSize * 2);
+            attackDown1 = setup("/player/boy_attack_down_1.png", gp.tileSize, gp.tileSize * 2);
+            attackDown2 = setup("/player/boy_attack_down_2.png", gp.tileSize, gp.tileSize * 2);
+            attackLeft1 = setup("/player/boy_attack_left_1.png", gp.tileSize * 2, gp.tileSize);
+            attackLeft2 = setup("/player/boy_attack_left_2.png", gp.tileSize * 2, gp.tileSize);
+            attackRight1 = setup("/player/boy_attack_right_1.png", gp.tileSize * 2, gp.tileSize);
+            attackRight2 = setup("/player/boy_attack_right_2.png", gp.tileSize * 2, gp.tileSize);
+        }else if(currentWeapon.type == type_axe){
+            
+            attackUp1 = setup("/player/" + "boy_axe_up_1" + ".png", gp.tileSize, gp.tileSize* 2);
+            attackUp2 = setup("/player/" + "boy_axe_up_2" + ".png", gp.tileSize, gp.tileSize* 2);
+            attackDown1 = setup("/player/" + "boy_axe_down_1" + ".png", gp.tileSize, gp.tileSize* 2);
+            attackDown2 = setup("/player/" + "boy_axe_down_2" + ".png", gp.tileSize, gp.tileSize* 2);
+            attackLeft1 = setup("/player/" + "boy_axe_left_1" + ".png", gp.tileSize* 2, gp.tileSize);
+            attackLeft2 = setup("/player/" + "boy_axe_left_2" + ".png", gp.tileSize* 2, gp.tileSize);
+            attackRight1 = setup("/player/" + "boy_axe_right_1" + ".png", gp.tileSize* 2, gp.tileSize);
+            attackRight2 = setup("/player/" + "boy_axe_right_2" + ".png", gp.tileSize* 2, gp.tileSize);
+        }    
     }
 
     /**
@@ -204,6 +223,14 @@ public class Player extends Entity {
                 }
             }
         }
+        ///
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
+            shotAvailableCounter = 0;
+            projectile.set(worldX,worldY,direction,true,this);
+            
+            gp.projectileList.add(projectile);
+            gp.playSE(10);
+        }
         
         if(invincible == true){
             invincibleCounter++;
@@ -212,7 +239,11 @@ public class Player extends Entity {
                 invincibleCounter=0;
             
             }
+            
         }   
+        if(shotAvailableCounter < 30){
+            shotAvailableCounter++;
+        }
     }
 
     public void interactNpc(int i) {
@@ -255,7 +286,7 @@ public class Player extends Entity {
             
             // Check monster collision with the updated worldX, worldY and solidArea
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex);
+            damageMonster(monsterIndex,this.attack);
             
             // After checking collision resotre the original data
             worldX = currentWorldX;
@@ -275,10 +306,23 @@ public class Player extends Entity {
     public void pickupObject(int i) {
         if (i != 999) {
             
+            String text;
+            if(inventory.size()!=maxInventorySize){
+                inventory.add(gp.obj[i]);
+                gp.playSE(1);
+                
+                text = "Got a "+ gp.obj[i].name + "!";
+                gp.obj[i]=null; 
+            }else{
+                text = "You cannot carry any more ! ";
+
+            }
+            
+            gp.ui.addMessage(text);
         }
     }
     
-    public void damageMonster(int i) {
+    public void damageMonster(int i, int attack) {
         if (i != 999) {
             if (gp.monster[i].invincible == false) {
                 int damage = attack - gp.monster[i].defense;
@@ -383,7 +427,7 @@ public class Player extends Entity {
 
     private void contactMonster(int index) {
 
-        if (index != 999 && invincible == false) {
+        if (index != 999 && invincible == false && gp.monster[i].dying == false) {
             gp.playSE(5);
             int damage = gp.monster[i].attack - defense;
                 if (damage < 0) {
@@ -408,5 +452,30 @@ public class Player extends Entity {
             gp.ui.currentDialogue = "You are level: " + level + " now!\n"
                     + "You feel stronger!";
         }
+    }
+    
+    public void selectItem(){
+        int itemIndex = gp.ui.getItemIndexOnSlot();
+        
+        if(itemIndex < inventory.size()){
+            Entity selectedItem = inventory.get(itemIndex);
+            
+            if(selectedItem.type == type_sword || selectedItem.type == type_axe ){
+                currentWeapon = selectedItem;
+                attack = getAttack();// atualiza o ataque do player com o da nova arma
+                getPlayerAttackImage(); // atualiza sprite de ataque do player
+            }
+            
+            if(selectedItem.type == type_shield){
+                currentShield = selectedItem;
+                defense = getDefense();// atualiza o atack do player com o da nova arma
+                
+            }
+            if(selectedItem.type == type_consumable){
+                selectedItem.use(this);
+                inventory.remove(itemIndex);
+            }
+        }
+    
     }
 }
