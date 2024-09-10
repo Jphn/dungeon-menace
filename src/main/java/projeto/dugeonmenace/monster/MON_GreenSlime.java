@@ -7,6 +7,8 @@ package projeto.dugeonmenace.monster;
 import java.util.Random;
 import projeto.dugeonmenace.GamePanel;
 import projeto.dugeonmenace.entity.Entity;
+import projeto.dugeonmenace.entity.Projectile;
+import projeto.dugeonmenace.objectsSprite.OBJ_Rock;
 
 /**
  *
@@ -22,12 +24,14 @@ public class MON_GreenSlime extends Entity {
         
         name = "Green Slime";
         speed = 1;
-        type = 2; //monstro
+        type = type_monster; //monstro
         maxLife = 4;
         life = maxLife;
         attack = 5;
         defense = 0;
         exp = 2;
+        
+        projectile = new OBJ_Rock(gp);
 
         solidArea.x = 3;
         solidArea.y = 18;
@@ -71,6 +75,18 @@ public class MON_GreenSlime extends Entity {
             }
             actionLockCounter = 0;
         }
+        
+        //---- PROJECTILE SHOOT 
+        int i = new Random().nextInt(100)+1;
+        
+        if(i > 99 && projectile.alive == false && shotAvailableCounter == 30){
+            projectile.set(worldX, worldY, direction, true, this); // pra testar o hit da pedra, fixa a direction como gp.player.direction
+            gp.projectileList.add(projectile);
+            shotAvailableCounter = 0;
+        }
+        //---- PROJECTILE SHOOT 
+        
+        
         spriteCounter++;
         if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
             if (spriteNumber == 1) {

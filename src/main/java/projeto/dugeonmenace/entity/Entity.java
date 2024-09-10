@@ -20,7 +20,7 @@ import projeto.dugeonmenace.UtilityTools;
  */
 public class Entity {
 
-    GamePanel gp;
+    public GamePanel gp;
     /**
      * Essa vai ser a classe pai das entidades - NPC - Player - Monster
      */
@@ -41,6 +41,9 @@ public class Entity {
     public int speed;
     public int level;
     
+    public int maxMana;
+    public int mana;
+    
     public int strength;
     public int dexterity;
     public int attack;
@@ -54,6 +57,10 @@ public class Entity {
     public Entity currentWeapon;
     public Entity currentShield;
     
+    //Projectile
+    public Projectile projectile;
+    public int useCost;
+    
     //ITEM ATTRIBUTES
     public int attackValue;
     public int defenseValue;
@@ -65,11 +72,12 @@ public class Entity {
     public int actionLockCounter = 0; // Contador relevante para os npcs
     public int invincibleCounter = 0;
     public int hpBarCounter = 0;
+    public int shotAvailableCounter = 0;
 
     //NOVOS ATRIBUTOS
     public BufferedImage image, image2, image3;
     public String name;
-    public int type; // 0 = player, 1 = npc, 2=monster
+    
     public boolean collision = false;
     
     // STATE
@@ -86,6 +94,19 @@ public class Entity {
     public boolean alive = true;
     public boolean dying = false;
     
+    // TYPE
+    
+    public int type; // 0 = player, 1 = npc, 2=monster
+    
+    public final int type_player= 0;
+    public final int type_npc= 1;
+    public final int type_monster= 2;
+    public final int type_sword= 3;
+    public final int type_axe= 4;
+    public final int type_shield= 5;
+    public final int type_consumable= 6;
+    
+    
     
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -94,7 +115,22 @@ public class Entity {
     public void setAction() {
     }
     
+    public void use(Entity entity){}
+    
     public void damageReaction(){
+    }
+    public void damagePlayer(int attack){
+         if (!gp.player.invincible) {
+                //Entity can give damage when touching
+                gp.playSE(6);
+                
+                int damage = attack - gp.player.defense;
+                if (damage < 0) {
+                    damage = 0;
+                }
+                gp.player.life -= damage;
+                gp.player.invincible = true;
+            }
     }
     
     public void speak() {
@@ -131,17 +167,7 @@ public class Entity {
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
         if (this.type == 2 && contactPlayer == true) {
-            if (!gp.player.invincible) {
-                //Entity can give damage when touching
-                gp.playSE(6);
-                
-                int damage = attack - gp.player.defense;
-                if (damage < 0) {
-                    damage = 0;
-                }
-                gp.player.life -= damage;
-                gp.player.invincible = true;
-            }
+           damagePlayer(attack);
         }
 
         if (collisionOn == false) {
@@ -179,6 +205,9 @@ public class Entity {
                 invincibleCounter = 0;
                 invincible = false;
             }
+        }
+        if(shotAvailableCounter < 30){
+            shotAvailableCounter++;
         }
     }
 
@@ -282,7 +311,6 @@ public class Entity {
          }else if(dyingCounter>35 && dyingCounter<=40){
             changeAlphaValue(g2,0);
          }else if(dyingCounter>40){
-             dying = false;
              alive=false;
          }
     }

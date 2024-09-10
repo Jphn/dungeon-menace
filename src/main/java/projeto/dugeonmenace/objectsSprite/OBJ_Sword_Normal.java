@@ -15,8 +15,12 @@ public class OBJ_Sword_Normal extends Entity{
     public OBJ_Sword_Normal(GamePanel gp) {
         super(gp);
         name = "Normal sword";
+        type = type_sword;
+        
         down1= setup("/objectsSprite/sword_normal.png", gp.tileSize, gp.tileSize);
         attackValue = 1;
+        attackArea.width=36;
+        attackArea.height=36;
         description = "[" + name + "]\nAn old sword.";
     }
 }

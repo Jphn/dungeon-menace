@@ -67,10 +67,11 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
     //ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10]; // significa que vamos mostrar até 10 objetos ao mesmo tempo
+    public Entity obj[] = new Entity[30]; // significa que vamos mostrar até 10 objetos ao mesmo tempo // 10
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
 
+    public ArrayList<Entity> projectileList= new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
     // GAME STATE
@@ -152,6 +153,18 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             }
 
             //MONSTER "MOVIMENT"
+            for (int i = 0; i < projectileList.size(); i++) {
+                if (projectileList.get(i) != null){
+                    if ( projectileList.get(i).alive ) {
+                        projectileList.get(i).update();
+                    }
+                    if(!projectileList.get(i).alive){
+                        projectileList.remove(i);
+                    }
+                }
+            }
+            
+            // PROJECTILE
             for (int i = 0; i < monster.length; i++) {
                 if (monster[i] != null){
                     if ( monster[i].alive && monster[i].dying == false) {
@@ -219,6 +232,12 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                     entityList.add(monster[i]);
                 }
             }
+            //ADD PROJECTILE
+            for (int i = 0; i <projectileList.size(); i++) {
+                if (projectileList.get(i) != null) {
+                    entityList.add(projectileList.get(i));
+                }
+            }
 
             // SORT
             Collections.sort(entityList, new Comparator<Entity>() {
@@ -254,8 +273,8 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             
             g2.drawString("WorldX: " + player.worldX, x, y); y += lineHeight;
             g2.drawString("WorldY: " + player.worldY, x, y); y += lineHeight;
-            g2.drawString("Col: " + (player.worldX + player.solidArea.x / tileSize), x, y); y += lineHeight;
-            g2.drawString("Row: " + (player.worldY + player.solidArea.y / tileSize), x, y);  y += lineHeight;
+            g2.drawString("Col: " + (player.worldX + player.solidArea.x )/ tileSize, x, y); y += lineHeight;
+            g2.drawString("Row: " + (player.worldY + player.solidArea.y )/ tileSize, x, y);  y += lineHeight;
             g2.drawString("Draw time: " + passed, x, y);
             System.out.println("Draw Time: " + passed);
         }

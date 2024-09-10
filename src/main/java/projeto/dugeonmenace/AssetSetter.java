@@ -6,7 +6,11 @@ package projeto.dugeonmenace;
 
 import projeto.dugeonmenace.entity.Npc_OldMan;
 import projeto.dugeonmenace.monster.MON_GreenSlime;
+import projeto.dugeonmenace.objectsSprite.OBJ_Axe;
 import projeto.dugeonmenace.objectsSprite.OBJ_Door;
+import projeto.dugeonmenace.objectsSprite.OBJ_Key;
+import projeto.dugeonmenace.objectsSprite.OBJ_Potion_Red;
+import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Blue;
 
 /**
  *
@@ -21,13 +25,34 @@ public class AssetSetter {
     }
 
     public void setObject() {
-        gp.obj[0] = new OBJ_Door(gp);
-        gp.obj[0].worldX = gp.tileSize * 21;
-        gp.obj[0].worldY = gp.tileSize * 22;
-
-        gp.obj[1] = new OBJ_Door(gp);
-        gp.obj[1].worldX = gp.tileSize * 23;
-        gp.obj[1].worldY = gp.tileSize * 25;
+        int i=0;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize * 21;
+        gp.obj[i].worldY = gp.tileSize * 22;
+        i++;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize * 25;
+        gp.obj[i].worldY = gp.tileSize * 19;
+        i++;
+        gp.obj[i] = new OBJ_Key(gp);
+        gp.obj[i].worldX = gp.tileSize * 21;
+        gp.obj[i].worldY = gp.tileSize * 23;
+        i++;
+        gp.obj[i] = new OBJ_Axe(gp);
+        gp.obj[i].worldX = gp.tileSize * 34;
+        gp.obj[i].worldY = gp.tileSize * 20;
+        i++;
+        
+        gp.obj[i] = new OBJ_Shield_Blue(gp);
+        gp.obj[i].worldX = gp.tileSize * 35;
+        gp.obj[i].worldY = gp.tileSize * 21;
+        i++;
+        
+        gp.obj[i] = new OBJ_Potion_Red(gp);
+        gp.obj[i].worldX = gp.tileSize * 32;
+        gp.obj[i].worldY = gp.tileSize * 21;
+        i++;
+        
     }
 
     public void setNPC() {

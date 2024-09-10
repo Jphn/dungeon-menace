@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed;
+    public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed, shotKeyPressed;
     public boolean showDebugText = false;
     GamePanel gp;
     
@@ -77,6 +77,15 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_D) {
             this.rigthPressed = false;
         }
+        
+        if (code == KeyEvent.VK_F) {
+            this.shotKeyPressed = false;
+        }
+        
+        if (code == KeyEvent.VK_ENTER) {
+            this.enterPressed = false;
+        }
+        
     }
     
     public void titleState(int code){
@@ -166,7 +175,13 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_D) {
             this.rigthPressed = true;
         }
-            
+        
+        if (code == KeyEvent.VK_F) {
+            this.shotKeyPressed = true;
+        }
+        
+        
+        
         // CHARACTER STATE
         if (code == KeyEvent.VK_C) {
             gp.gameState = gp.characterState;
@@ -222,25 +237,34 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_W) {
             if (gp.ui.slotRow != 0) {
                 gp.ui.slotRow--;
+                gp.playSE(9);
             }
         }
         
         if (code == KeyEvent.VK_A) {
             if (gp.ui.slotCol != 0) {
                 gp.ui.slotCol--;
+                gp.playSE(9);
             }
         }
         
         if (code == KeyEvent.VK_S) {
             if (gp.ui.slotRow != 3) {
                 gp.ui.slotRow++;
+                gp.playSE(9);
             }
         }
         
         if (code == KeyEvent.VK_D) {
             if (gp.ui.slotCol != 4) {
                 gp.ui.slotCol++;
+                gp.playSE(9);
             }
         }
+        
+        if (code == KeyEvent.VK_ENTER){
+            gp.player.selectItem();
+        }
+        
     }   
 }
