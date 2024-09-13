@@ -71,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
 
-    public ArrayList<Entity> projectileList= new ArrayList<>();
+    public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
     // GAME STATE
@@ -145,37 +145,37 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         if (gameState == playState) {
             player.update();
 
-            //NPC "MOVIMENT"
+            // NPC "MOVIMENT"
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     npc[i].update();
                 }
             }
 
-            //MONSTER "MOVIMENT"
-            for (int i = 0; i < projectileList.size(); i++) {
-                if (projectileList.get(i) != null){
-                    if ( projectileList.get(i).alive ) {
-                        projectileList.get(i).update();
+            // MONSTER "MOVIMENT"
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (monster[i].alive == true && monster[i].dying == false) {
+                        monster[i].update();
                     }
-                    if(!projectileList.get(i).alive){
-                        projectileList.remove(i);
+                    if (monster[i].alive == false) {
+                        monster[i] = null;
                     }
                 }
             }
             
             // PROJECTILE
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null){
-                    if ( monster[i].alive && monster[i].dying == false) {
-                        monster[i].update();
+            for (int i = 0; i < projectileList.size(); i++) {
+                if (projectileList.get(i) != null){
+                    if (projectileList.get(i).alive == true) {
+                        projectileList.get(i).update();
                     }
-                    if(!monster[i].alive){
-                        monster[i]=null;
+                    if(projectileList.get(i).alive == false) {
+                        projectileList.remove(i);
                     }
                 }
             }
-
+            
         } else if (gameState == pauseState) {
             // Nothing
         }
@@ -232,8 +232,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                     entityList.add(monster[i]);
                 }
             }
+            
             //ADD PROJECTILE
-            for (int i = 0; i <projectileList.size(); i++) {
+            for (int i = 0; i < projectileList.size(); i++) {
                 if (projectileList.get(i) != null) {
                     entityList.add(projectileList.get(i));
                 }

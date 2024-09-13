@@ -12,12 +12,14 @@ import projeto.dugeonmenace.entity.Projectile;
  * @author T-GAMER
  */
 public class OBJ_Fireball extends Projectile {
+    
     GamePanel gp;
+    
     public OBJ_Fireball(GamePanel gp) {
         super(gp);
         this.gp = gp;
         
-        name ="Fireball";
+        name = "Fireball";
         speed = 5;
         maxLife = 80;
         life = maxLife;
@@ -25,12 +27,10 @@ public class OBJ_Fireball extends Projectile {
         useCost = 1; // 1 de mana é gasto quando atira
         alive = false;
         getImage();
-        
     }
     
     
-    public void getImage(){
-        
+    public void getImage() {
             up1 = setup("/projectile/" + "fireball_up_1" + ".png", gp.tileSize, gp.tileSize);
             up2 = setup("/projectile/" + "fireball_up_2" + ".png", gp.tileSize, gp.tileSize);
             down1 = setup("/projectile/" + "fireball_down_1" + ".png", gp.tileSize, gp.tileSize);

@@ -78,7 +78,6 @@ public class Player extends Entity {
         this.currentWeapon = new OBJ_Sword_Normal(gp);
         this.currentShield= new OBJ_Shield_Wood(gp);
         
-        
         this.projectile = new OBJ_Fireball(gp);
         
         attack = getAttack();
@@ -223,8 +222,8 @@ public class Player extends Entity {
                 }
             }
         }
-        ///
-        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
+        
+        if (gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
             shotAvailableCounter = 0;
             projectile.set(worldX,worldY,direction,true,this);
             
@@ -232,16 +231,15 @@ public class Player extends Entity {
             gp.playSE(10);
         }
         
-        if(invincible == true){
+        if (invincible == true){
             invincibleCounter++;
             if(invincibleCounter > 60){
-                invincible=false;
-                invincibleCounter=0;
-            
+                invincible = false;
+                invincibleCounter = 0;
             }
-            
         }   
-        if(shotAvailableCounter < 30){
+        
+        if (shotAvailableCounter < 30){
             shotAvailableCounter++;
         }
     }
@@ -425,16 +423,17 @@ public class Player extends Entity {
         
     }
 
-    private void contactMonster(int index) {
-
-        if (index != 999 && invincible == false && gp.monster[i].dying == false) {
-            gp.playSE(5);
-            int damage = gp.monster[i].attack - defense;
+    private void contactMonster(int i) {
+        if (i != 999) {
+            if (invincible == false && gp.monster[i].dying == false){
+                gp.playSE(5);
+                int damage = gp.monster[i].attack - defense;
                 if (damage < 0) {
                     damage = 0;
                 }
-            life -= damage;
-            invincible = true;
+                life -= damage;
+                invincible = true;
+            }   
         }
     }
     

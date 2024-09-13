@@ -176,11 +176,10 @@ public class KeyHandler implements KeyListener {
             this.rigthPressed = true;
         }
         
+        // FIREBALL
         if (code == KeyEvent.VK_F) {
             this.shotKeyPressed = true;
         }
-        
-        
         
         // CHARACTER STATE
         if (code == KeyEvent.VK_C) {

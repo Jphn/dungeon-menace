@@ -57,7 +57,7 @@ public class Entity {
     public Entity currentWeapon;
     public Entity currentShield;
     
-    //Projectile
+    // Projectile
     public Projectile projectile;
     public int useCost;
     
@@ -95,9 +95,7 @@ public class Entity {
     public boolean dying = false;
     
     // TYPE
-    
     public int type; // 0 = player, 1 = npc, 2=monster
-    
     public final int type_player= 0;
     public final int type_npc= 1;
     public final int type_monster= 2;
@@ -106,19 +104,17 @@ public class Entity {
     public final int type_shield= 5;
     public final int type_consumable= 6;
     
-    
-    
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
-
+                                                                                              ;
     public void setAction() {
     }
     
     public void use(Entity entity){}
     
-    public void damageReaction(){
-    }
+    public void damageReaction(){}
+    
     public void damagePlayer(int attack){
          if (!gp.player.invincible) {
                 //Entity can give damage when touching
@@ -296,23 +292,19 @@ public class Entity {
     
     public void dyingAnimation(Graphics2D g2){
         dyingCounter++;
-        if(dyingCounter<=5){
-            changeAlphaValue(g2,0);
-        }else if(dyingCounter>5 && dyingCounter<=10){
-            changeAlphaValue(g2,1);
-         }else if(dyingCounter>10 && dyingCounter<=15){
-            changeAlphaValue(g2,0);
-         }else if(dyingCounter>15 && dyingCounter<=20){
-            changeAlphaValue(g2,1);
-         }else if(dyingCounter>25 && dyingCounter<=30){
-            changeAlphaValue(g2,0);
-         }else if(dyingCounter>30 && dyingCounter<=35){
-            changeAlphaValue(g2,1);
-         }else if(dyingCounter>35 && dyingCounter<=40){
-            changeAlphaValue(g2,0);
-         }else if(dyingCounter>40){
-             alive=false;
-         }
+        int i = 5;
+        
+        if (dyingCounter <= i) {changeAlphaValue(g2, 0f);}
+        if (dyingCounter > i && dyingCounter <= i * 2) {changeAlphaValue(g2, 1f);}
+        if (dyingCounter > i * 2 && dyingCounter <= i * 3) {changeAlphaValue(g2, 0f);}
+        if (dyingCounter > i * 3 && dyingCounter <= i * 4) {changeAlphaValue(g2, 1f);}
+        if (dyingCounter > i * 4 && dyingCounter <= i * 5) {changeAlphaValue(g2, 0f);}
+        if (dyingCounter > i * 5 && dyingCounter <= i * 6) {changeAlphaValue(g2, 1f);}
+        if (dyingCounter > i * 6 && dyingCounter <= i * 7) {changeAlphaValue(g2, 0f);}
+        if (dyingCounter > i * 7 && dyingCounter <= i * 8) {changeAlphaValue(g2, 1f);}
+        if (dyingCounter > i * 8) {
+            alive = false;
+        }
     }
     
     public void changeAlphaValue(Graphics2D g2, float alphaValue){
