@@ -86,7 +86,6 @@ public class MON_GreenSlime extends Entity {
         }
         //---- PROJECTILE SHOOT 
         
-        
         spriteCounter++;
         if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
             if (spriteNumber == 1) {
@@ -105,11 +104,8 @@ public class MON_GreenSlime extends Entity {
         }*/
     }
     
-    public void damageReaction(){
-        actionLockCounter=0;
-        
+    public void damageReaction() {
+        actionLockCounter=0;       
         this.direction= gp.player.direction;
-        
-        
     }
 }

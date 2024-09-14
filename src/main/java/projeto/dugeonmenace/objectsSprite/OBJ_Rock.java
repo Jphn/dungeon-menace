@@ -18,7 +18,7 @@ public class OBJ_Rock extends Projectile {
         super(gp);
         this.gp = gp;
         
-        name ="Rock";
+        name = "Rock";
         speed = 8;
         maxLife = 80;
         life = maxLife;
@@ -26,12 +26,9 @@ public class OBJ_Rock extends Projectile {
         useCost = 1; // 1 de mana é gasto quando atira
         alive = false;
         getImage();
-        
     }
     
-    
     public void getImage(){
-        
             up1 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);
             up2 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);
             down1 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);

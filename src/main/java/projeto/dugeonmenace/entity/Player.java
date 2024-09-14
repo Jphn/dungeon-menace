@@ -50,8 +50,6 @@ public class Player extends Entity {
          */
         screenX = (gp.screenWidth) / 2 - (gp.tileSize / 2);
         screenY = (gp.screenHeight) / 2 - (gp.tileSize / 2);
-        
-        
 
         setDefaultValues(); // Será que isso é errado ?
         getPlayerImage();
@@ -69,6 +67,8 @@ public class Player extends Entity {
         this.maxLife = 6;
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
+        this.maxMana = 4;
+        this.mana = maxMana;
         this.strength = 1;
         this.dexterity = 1;
         this.exp = 0;
@@ -90,7 +90,6 @@ public class Player extends Entity {
     }
     
     public int getAttack(){
-        
         attackArea = currentWeapon.attackArea;
         return attack = strength  * currentWeapon.attackValue;
     }
@@ -100,17 +99,15 @@ public class Player extends Entity {
     }
     
     public void getPlayerImage() {
-
-            up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
-            up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
-            down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
-            down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
-            left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
-            left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
-            right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
-            right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
-        }
-    
+        up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
+        up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
+        down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
+        down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
+        left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
+        left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
+        right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
+        right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
+    }
     
     public void getPlayerAttackImage() {
         if(currentWeapon.type == type_sword){
@@ -223,11 +220,13 @@ public class Player extends Entity {
             }
         }
         
-        if (gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
-            shotAvailableCounter = 0;
-            projectile.set(worldX,worldY,direction,true,this);
+        if (gp.keyH.shotKeyPressed == true && projectile.alive == false 
+                && shotAvailableCounter == 30 && projectile.haveResource(this) == true){
             
+            projectile.set(worldX, worldY, direction, true, this);
+            projectile.subtractResource(this);
             gp.projectileList.add(projectile);
+            shotAvailableCounter = 0;
             gp.playSE(10);
         }
         
@@ -291,9 +290,8 @@ public class Player extends Entity {
             worldY = currentWorldY;
             solidArea.width = solidAreaWidth;
             solidArea.height = solidAreaHeight;
-            
-         
         }
+        
         if (spriteCounter > 25) {
             spriteNumber = 1;
             spriteCounter = 0;
@@ -311,11 +309,9 @@ public class Player extends Entity {
                 
                 text = "Got a "+ gp.obj[i].name + "!";
                 gp.obj[i]=null; 
-            }else{
+            } else{
                 text = "You cannot carry any more ! ";
-
             }
-            
             gp.ui.addMessage(text);
         }
     }

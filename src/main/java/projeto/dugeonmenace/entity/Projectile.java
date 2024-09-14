@@ -39,9 +39,9 @@ public class Projectile extends Entity {
             if(gp.player.invincible == false && contactPlayer == true){
                 damagePlayer(this.attack);
                 alive = false;
-            
             }
         }
+        
         switch (direction) {
                     case "up":
                         this.worldY -= this.speed;    // Em java os valores em X aumentam para a direita,
@@ -75,4 +75,11 @@ public class Projectile extends Entity {
             spriteCounter = 0;
         }
     }
+    
+    public boolean haveResource(Entity user) {
+        boolean haveResource = false;
+        return haveResource;
+    }
+    
+    public void subtractResource(Entity user) {}
 }
