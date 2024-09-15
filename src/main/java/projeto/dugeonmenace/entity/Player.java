@@ -143,7 +143,7 @@ public class Player extends Entity {
         
         if(attacking == true) {
             attacking();
-        }else if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
+        } else if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
                 || this.keyH.rigthPressed == true || this.keyH.enterPressed == true || keyH.enterPressed == true) {
             if (this.keyH.upPressed == true) {
                 this.direction = "up";
@@ -172,6 +172,9 @@ public class Player extends Entity {
             //CHECK MONSTER COLLISION
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             contactMonster(monsterIndex);
+            
+            // CHECK INTERACTIVE TILE COLLISION
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
             //CHECK EVENT COLLISION
             gp.eHandler.checkEvent();
@@ -292,6 +295,9 @@ public class Player extends Entity {
             // Check monster collision with the updated worldX, worldY and solidArea
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex,this.attack);
+            
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            damageInteractiveTile(iTileIndex);
             
             // After checking collision resotre the original data
             worldX = currentWorldX;
@@ -486,6 +492,18 @@ public class Player extends Entity {
                 inventory.remove(itemIndex);
             }
         }
+    }
     
+    public void damageInteractiveTile(int i) {
+        if (i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == true
+                && gp.iTile[i].invincible == false) {
+            gp.iTile[i].playSE();
+            gp.iTile[i].life--;
+            gp.iTile[i].invincible = true;
+            
+            if (gp.iTile[i].life == 0) {
+                gp.iTile[i] = gp.iTile[i].getDestroyedForm();
+            }
+        }
     }
 }

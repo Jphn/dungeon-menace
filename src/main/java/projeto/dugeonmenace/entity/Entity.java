@@ -110,9 +110,8 @@ public class Entity {
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
-                                                                                              ;
-    public void setAction() {
-    }
+    
+    public void setAction() {}
     
     public void use(Entity entity){}
     
@@ -176,6 +175,7 @@ public class Entity {
         //FAZENDO A ENTIDADE VERIFICAR SE ESTA PROXIMA DAS OUTRAS
         gp.cChecker.checkEntity(this, gp.npc);
         gp.cChecker.checkEntity(this, gp.monster);// TEMOS Q TIRAR A PRORPIA ENTIDADE DA LISTA
+        gp.cChecker.checkEntity(this, gp.iTile);
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
         if (this.type == 2 && contactPlayer == true) {
@@ -218,6 +218,7 @@ public class Entity {
                 invincible = false;
             }
         }
+        
         if (shotAvailableCounter < 30) {
             shotAvailableCounter++;
         }
