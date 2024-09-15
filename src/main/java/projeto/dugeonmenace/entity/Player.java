@@ -68,6 +68,7 @@ public class Player extends Entity {
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
         this.maxMana = 4;
+        this.ammo = 10;
         this.mana = maxMana;
         this.strength = 1;
         this.dexterity = 1;
@@ -77,7 +78,6 @@ public class Player extends Entity {
         
         this.currentWeapon = new OBJ_Sword_Normal(gp);
         this.currentShield= new OBJ_Shield_Wood(gp);
-        
         this.projectile = new OBJ_Fireball(gp);
         
         attack = getAttack();
@@ -241,6 +241,14 @@ public class Player extends Entity {
         if (shotAvailableCounter < 30){
             shotAvailableCounter++;
         }
+        
+        if (life > maxLife) {
+            life = maxLife;
+        }
+        
+        if (mana > maxMana) {
+            mana = maxMana;
+        }
     }
 
     public void interactNpc(int i) {
@@ -302,17 +310,24 @@ public class Player extends Entity {
     public void pickupObject(int i) {
         if (i != 999) {
             
-            String text;
-            if(inventory.size()!=maxInventorySize){
-                inventory.add(gp.obj[i]);
-                gp.playSE(1);
-                
-                text = "Got a "+ gp.obj[i].name + "!";
-                gp.obj[i]=null; 
-            } else{
-                text = "You cannot carry any more ! ";
+            // PICKUP ONLY ITEMS
+            if (gp.obj[i].type == type_pickupOnly) {
+                gp.obj[i].use(this);
+                gp.obj[i] = null;
             }
-            gp.ui.addMessage(text);
+            // INVENTORY ITEMS
+            else {
+                String text;
+                if(inventory.size() != maxInventorySize) {
+                    inventory.add(gp.obj[i]);
+                    gp.playSE(1);
+                    text = "Got a "+ gp.obj[i].name + "!";
+                } else{
+                    text = "You cannot carry any more ! ";
+                }
+                gp.ui.addMessage(text); 
+                gp.obj[i] = null; 
+            }
         }
     }
     

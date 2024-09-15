@@ -5,6 +5,7 @@
 package projeto.dugeonmenace.objectsSprite;
 
 import projeto.dugeonmenace.GamePanel;
+import projeto.dugeonmenace.entity.Entity;
 
 import projeto.dugeonmenace.entity.Projectile;
 
@@ -37,5 +38,17 @@ public class OBJ_Rock extends Projectile {
             left2 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);
             right1 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);
             right2 = setup("/projectile/" + "rock_down_1" + ".png", gp.tileSize, gp.tileSize);
+    }
+    
+    public boolean haveResource(Entity user) {
+        boolean haveResource = false;
+        if (user.ammo >= useCost) {
+            haveResource = true;
+        }
+        return haveResource;
+    }
+    
+    public void subtractResource(Entity user) {
+        user.ammo -= useCost;
     }
 }

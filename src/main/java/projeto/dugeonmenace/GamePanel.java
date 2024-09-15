@@ -159,6 +159,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                         monster[i].update();
                     }
                     if (monster[i].alive == false) {
+                        monster[i].checkDrop();
                         monster[i] = null;
                     }
                 }
