@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; //
 
-    //SOUND
+    // SOUND
     Sound music = new Sound();
     Sound soundEffects = new Sound();
 
@@ -60,19 +60,19 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
 
-    //UI
+    // UI
     public UI ui = new UI(this);
 
-    //EVENT HANDLER
+    // EVENT HANDLER
     public EventHandler eHandler = new EventHandler(this);
 
-    //ENTITY AND OBJECT
+    // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public Entity obj[] = new Entity[30]; // significa que vamos mostrar até 10 objetos ao mesmo tempo // 10
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
     public InteractiveTile iTile[] = new InteractiveTile[50];
-
+    public ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -180,6 +180,18 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 }
             }
             
+            // PARTICLE
+            for (int i = 0; i < particleList.size(); i++) {
+                if (particleList.get(i) != null){
+                    if (particleList.get(i).alive == true) {
+                        particleList.get(i).update();
+                    }
+                    if(particleList.get(i).alive == false) {
+                        particleList.remove(i);
+                    }
+                }
+            }
+            
             for (int i = 0; i < iTile.length; i++) {
                 if (iTile [i] != null) {
                     iTile[i].update();
@@ -216,7 +228,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
              * player, para que o player fique uma camada acima
              *
              */
-            //TILE
+            // TILE
             tileM.draw(g2);
             
             // INTERACTIVE TILE
@@ -226,7 +238,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 }
             }
             
-            //ADD PLAYER
+            // ADD PLAYER
             entityList.add(player);
 
             //ADD ENTITY TO LISTS
@@ -236,24 +248,31 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 }
             }
             
-            //ADD NPC
+            // ADD NPC
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     entityList.add(npc[i]);
                 }
 
             }
-            //ADD MONSTER
+            // ADD MONSTER
             for (int i = 0; i < monster.length; i++) {
                 if (monster[i] != null) {
                     entityList.add(monster[i]);
                 }
             }
             
-            //ADD PROJECTILE
+            // ADD PROJECTILE
             for (int i = 0; i < projectileList.size(); i++) {
                 if (projectileList.get(i) != null) {
                     entityList.add(projectileList.get(i));
+                }
+            }
+            
+            // ADD PARTICLE
+            for (int i = 0; i < particleList.size(); i++) {
+                if (particleList.get(i) != null) {
+                    entityList.add(particleList.get(i));
                 }
             }
 
