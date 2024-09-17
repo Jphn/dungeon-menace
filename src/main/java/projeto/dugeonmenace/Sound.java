@@ -33,7 +33,7 @@ public class Sound {
         soundURL[9] = getClass().getResource("/sound/cursor.wav");
         soundURL[10] = getClass().getResource("/sound/burning.wav");
         
-
+        soundURL[11] = getClass().getResource("/sound/cuttree.wav");
     }
 
     public void setFile(int i) {

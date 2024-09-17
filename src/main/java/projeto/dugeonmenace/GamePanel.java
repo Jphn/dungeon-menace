@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
 import projeto.dugeonmenace.tile.TileManager;
+import tile_interactive.InteractiveTile;
 
 /**
  *
@@ -70,8 +71,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public Entity obj[] = new Entity[30]; // significa que vamos mostrar até 10 objetos ao mesmo tempo // 10
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
+    public InteractiveTile iTile[] = new InteractiveTile[50];
 
-    public ArrayList<Entity> projectileList= new ArrayList<>();
+    public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
     // GAME STATE
@@ -101,6 +103,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        aSetter.setInteractiveTile();
         playMusic(0);
         gameState = titleState;
     }
@@ -145,37 +148,44 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         if (gameState == playState) {
             player.update();
 
-            //NPC "MOVIMENT"
+            // NPC "MOVIMENT"
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     npc[i].update();
                 }
             }
 
-            //MONSTER "MOVIMENT"
-            for (int i = 0; i < projectileList.size(); i++) {
-                if (projectileList.get(i) != null){
-                    if ( projectileList.get(i).alive ) {
-                        projectileList.get(i).update();
+            // MONSTER "MOVIMENT"
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (monster[i].alive == true && monster[i].dying == false) {
+                        monster[i].update();
                     }
-                    if(!projectileList.get(i).alive){
-                        projectileList.remove(i);
+                    if (monster[i].alive == false) {
+                        monster[i].checkDrop();
+                        monster[i] = null;
                     }
                 }
             }
             
             // PROJECTILE
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null){
-                    if ( monster[i].alive && monster[i].dying == false) {
-                        monster[i].update();
+            for (int i = 0; i < projectileList.size(); i++) {
+                if (projectileList.get(i) != null){
+                    if (projectileList.get(i).alive == true) {
+                        projectileList.get(i).update();
                     }
-                    if(!monster[i].alive){
-                        monster[i]=null;
+                    if(projectileList.get(i).alive == false) {
+                        projectileList.remove(i);
                     }
                 }
             }
-
+            
+            for (int i = 0; i < iTile.length; i++) {
+                if (iTile [i] != null) {
+                    iTile[i].update();
+                }
+            }
+            
         } else if (gameState == pauseState) {
             // Nothing
         }
@@ -208,6 +218,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
              */
             //TILE
             tileM.draw(g2);
+            
+            // INTERACTIVE TILE
+            for (int i = 0; i < iTile.length; i++) {
+                if (iTile[i] != null) {
+                    iTile[i].draw(g2);
+                }
+            }
+            
+            //ADD PLAYER
+            entityList.add(player);
 
             //ADD ENTITY TO LISTS
             for (int i = 0; i < obj.length; i++) {
@@ -215,10 +235,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                     entityList.add(obj[i]);
                 }
             }
-
-            //ADD PLAYER
-            entityList.add(player);
-
+            
             //ADD NPC
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
@@ -232,8 +249,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                     entityList.add(monster[i]);
                 }
             }
+            
             //ADD PROJECTILE
-            for (int i = 0; i <projectileList.size(); i++) {
+            for (int i = 0; i < projectileList.size(); i++) {
                 if (projectileList.get(i) != null) {
                     entityList.add(projectileList.get(i));
                 }

@@ -50,8 +50,6 @@ public class Player extends Entity {
          */
         screenX = (gp.screenWidth) / 2 - (gp.tileSize / 2);
         screenY = (gp.screenHeight) / 2 - (gp.tileSize / 2);
-        
-        
 
         setDefaultValues(); // Será que isso é errado ?
         getPlayerImage();
@@ -69,6 +67,9 @@ public class Player extends Entity {
         this.maxLife = 6;
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
+        this.maxMana = 4;
+        this.ammo = 10;
+        this.mana = maxMana;
         this.strength = 1;
         this.dexterity = 1;
         this.exp = 0;
@@ -77,8 +78,6 @@ public class Player extends Entity {
         
         this.currentWeapon = new OBJ_Sword_Normal(gp);
         this.currentShield= new OBJ_Shield_Wood(gp);
-        
-        
         this.projectile = new OBJ_Fireball(gp);
         
         attack = getAttack();
@@ -91,7 +90,6 @@ public class Player extends Entity {
     }
     
     public int getAttack(){
-        
         attackArea = currentWeapon.attackArea;
         return attack = strength  * currentWeapon.attackValue;
     }
@@ -101,17 +99,15 @@ public class Player extends Entity {
     }
     
     public void getPlayerImage() {
-
-            up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
-            up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
-            down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
-            down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
-            left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
-            left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
-            right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
-            right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
-        }
-    
+        up1 = setup("/player/" + "boy_up_1" + ".png", gp.tileSize, gp.tileSize);
+        up2 = setup("/player/" + "boy_up_2" + ".png", gp.tileSize, gp.tileSize);
+        down1 = setup("/player/" + "boy_down_1" + ".png", gp.tileSize, gp.tileSize);
+        down2 = setup("/player/" + "boy_down_2" + ".png", gp.tileSize, gp.tileSize);
+        left1 = setup("/player/" + "boy_left_1" + ".png", gp.tileSize, gp.tileSize);
+        left2 = setup("/player/" + "boy_left_2" + ".png", gp.tileSize, gp.tileSize);
+        right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
+        right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
+    }
     
     public void getPlayerAttackImage() {
         if(currentWeapon.type == type_sword){
@@ -147,7 +143,7 @@ public class Player extends Entity {
         
         if(attacking == true) {
             attacking();
-        }else if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
+        } else if (this.keyH.upPressed == true || this.keyH.leftPressed == true || this.keyH.downPressed == true
                 || this.keyH.rigthPressed == true || this.keyH.enterPressed == true || keyH.enterPressed == true) {
             if (this.keyH.upPressed == true) {
                 this.direction = "up";
@@ -176,6 +172,9 @@ public class Player extends Entity {
             //CHECK MONSTER COLLISION
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             contactMonster(monsterIndex);
+            
+            // CHECK INTERACTIVE TILE COLLISION
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
             //CHECK EVENT COLLISION
             gp.eHandler.checkEvent();
@@ -223,26 +222,35 @@ public class Player extends Entity {
                 }
             }
         }
-        ///
-        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
-            shotAvailableCounter = 0;
-            projectile.set(worldX,worldY,direction,true,this);
+        
+        if (gp.keyH.shotKeyPressed == true && projectile.alive == false 
+                && shotAvailableCounter == 30 && projectile.haveResource(this) == true){
             
+            projectile.set(worldX, worldY, direction, true, this);
+            projectile.subtractResource(this);
             gp.projectileList.add(projectile);
+            shotAvailableCounter = 0;
             gp.playSE(10);
         }
         
-        if(invincible == true){
+        if (invincible == true){
             invincibleCounter++;
             if(invincibleCounter > 60){
-                invincible=false;
-                invincibleCounter=0;
-            
+                invincible = false;
+                invincibleCounter = 0;
             }
-            
         }   
-        if(shotAvailableCounter < 30){
+        
+        if (shotAvailableCounter < 30){
             shotAvailableCounter++;
+        }
+        
+        if (life > maxLife) {
+            life = maxLife;
+        }
+        
+        if (mana > maxMana) {
+            mana = maxMana;
         }
     }
 
@@ -288,14 +296,16 @@ public class Player extends Entity {
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             damageMonster(monsterIndex,this.attack);
             
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            damageInteractiveTile(iTileIndex);
+            
             // After checking collision resotre the original data
             worldX = currentWorldX;
             worldY = currentWorldY;
             solidArea.width = solidAreaWidth;
             solidArea.height = solidAreaHeight;
-            
-         
         }
+        
         if (spriteCounter > 25) {
             spriteNumber = 1;
             spriteCounter = 0;
@@ -306,19 +316,24 @@ public class Player extends Entity {
     public void pickupObject(int i) {
         if (i != 999) {
             
-            String text;
-            if(inventory.size()!=maxInventorySize){
-                inventory.add(gp.obj[i]);
-                gp.playSE(1);
-                
-                text = "Got a "+ gp.obj[i].name + "!";
-                gp.obj[i]=null; 
-            }else{
-                text = "You cannot carry any more ! ";
-
+            // PICKUP ONLY ITEMS
+            if (gp.obj[i].type == type_pickupOnly) {
+                gp.obj[i].use(this);
+                gp.obj[i] = null;
             }
-            
-            gp.ui.addMessage(text);
+            // INVENTORY ITEMS
+            else {
+                String text;
+                if(inventory.size() != maxInventorySize) {
+                    inventory.add(gp.obj[i]);
+                    gp.playSE(1);
+                    text = "Got a "+ gp.obj[i].name + "!";
+                } else{
+                    text = "You cannot carry any more ! ";
+                }
+                gp.ui.addMessage(text); 
+                gp.obj[i] = null; 
+            }
         }
     }
     
@@ -425,16 +440,17 @@ public class Player extends Entity {
         
     }
 
-    private void contactMonster(int index) {
-
-        if (index != 999 && invincible == false && gp.monster[i].dying == false) {
-            gp.playSE(5);
-            int damage = gp.monster[i].attack - defense;
+    private void contactMonster(int i) {
+        if (i != 999) {
+            if (invincible == false && gp.monster[i].dying == false){
+                gp.playSE(5);
+                int damage = gp.monster[i].attack - defense;
                 if (damage < 0) {
                     damage = 0;
                 }
-            life -= damage;
-            invincible = true;
+                life -= damage;
+                invincible = true;
+            }   
         }
     }
     
@@ -476,6 +492,18 @@ public class Player extends Entity {
                 inventory.remove(itemIndex);
             }
         }
+    }
     
+    public void damageInteractiveTile(int i) {
+        if (i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == true
+                && gp.iTile[i].invincible == false) {
+            gp.iTile[i].playSE();
+            gp.iTile[i].life--;
+            gp.iTile[i].invincible = true;
+            
+            if (gp.iTile[i].life == 0) {
+                gp.iTile[i] = gp.iTile[i].getDestroyedForm();
+            }
+        }
     }
 }

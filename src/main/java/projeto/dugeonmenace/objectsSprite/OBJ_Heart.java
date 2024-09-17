@@ -15,12 +15,20 @@ public class OBJ_Heart extends Entity {
 
     public OBJ_Heart(GamePanel gp) {
         super(gp);
+        this.gp = gp;
+        
+        type = type_pickupOnly;
         name = "Heart";
-
+        value = 2;
+        down1 = setup("/objectsSprite/heart_full.png", gp.tileSize, gp.tileSize);
         image = setup("/objectsSprite/heart_full.png", gp.tileSize, gp.tileSize);
         image2 = setup("/objectsSprite/heart_half.png", gp.tileSize, gp.tileSize);
         image3 = setup("/objectsSprite/heart_blank.png", gp.tileSize, gp.tileSize);
-
-        this.collision = true;
+    }
+    
+    public void use(Entity entity) {
+        gp.playSE(2);
+        gp.ui.addMessage("Life +" + value);
+        entity.life += value;
     }
 }
