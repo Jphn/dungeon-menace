@@ -29,9 +29,13 @@ public class Player extends Entity {
     public int standCounter;
     public int spriteCounter;
     public boolean attackCanceled = false; 
+    public boolean lightUpdated = false;
+    
     public ArrayList<Entity> inventory = new ArrayList<>();
     public final int maxInventorySize = 20;
     int i;
+    
+    
 
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
@@ -161,6 +165,7 @@ public class Player extends Entity {
             //CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);//Como o player é sub de entity o metodo checktile pode receber o player
+            
             //CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
             pickupObject(objIndex);
@@ -491,6 +496,16 @@ public class Player extends Entity {
                 selectedItem.use(this);
                 inventory.remove(itemIndex);
             }
+            if(selectedItem.type == type_light){
+                if(currentLight == selectedItem){
+                    currentLight = null;
+                }else{
+                    currentLight = selectedItem;
+                }
+                lightUpdated =true;
+                
+            }
+            
         }
     }
     

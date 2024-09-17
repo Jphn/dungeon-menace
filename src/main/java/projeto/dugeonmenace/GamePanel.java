@@ -15,6 +15,7 @@ import java.util.Comparator;
 import javax.swing.JPanel;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
+import projeto.dugeonmenace.enviroment.EnviromentManager;
 import projeto.dugeonmenace.tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -23,7 +24,9 @@ import tile_interactive.InteractiveTile;
  * @author LucianoNeto
  */
 public class GamePanel extends JPanel implements Runnable { // A ideia é funcionar como uma Game Screen
-
+    
+    //COR TESTE
+    Color CORTESTE = new Color(0,0,0,0.93f);
     // Game settings
     final int originalTileSize = 16; // significa que o Tile vai ser 16x16
     //16x16 fica muito pequeno por conta do tamanho atual das resoluções das telas
@@ -51,6 +54,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; //
+    
+    
+    
 
     //SOUND
     Sound music = new Sound();
@@ -72,7 +78,11 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
     public InteractiveTile iTile[] = new InteractiveTile[50];
-
+    
+    //EnviromentManager
+    EnviromentManager eManager = new EnviromentManager(this);
+    
+    
     public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -104,6 +114,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         aSetter.setNPC();
         aSetter.setMonster();
         aSetter.setInteractiveTile();
+        eManager.setup();
         playMusic(0);
         gameState = titleState;
     }
@@ -273,6 +284,24 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             
             //Remove entitys from list
             entityList.clear();
+            
+            
+            
+            ///
+                // Precisa ser revisado
+            ///
+            
+            if(false || player.currentLight != null){
+            //Draw light
+            eManager.draw(g2);
+            } else{
+                g2.setColor(CORTESTE);
+                g2.fillRect(0, 0, screenWidth, screenHeight);
+            }
+            
+            ///
+                // Precisa ser revisado
+            ///
             
             //UI
             ui.draw(g2);
