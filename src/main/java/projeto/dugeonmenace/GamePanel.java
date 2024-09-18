@@ -9,6 +9,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,17 +29,21 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
     // Game settings
     final int originalTileSize = 16; // significa que o Tile vai ser 16x16
-    //16x16 fica muito pequeno por conta do tamanho atual das resoluções das telas
+    // 16x16 fica muito pequeno por conta do tamanho atual das resoluções das telas
     // Scaling
     final int scale = 3; // dessa forma o tile vai poder ser aumentado
-
-    public final int tileSize = originalTileSize * scale;//para 16 x 3= 48x48
-
-    public final int maxScreenCol = 16;
+    public final int tileSize = originalTileSize * scale;//para 16 x 3 = 48x48
+    public final int maxScreenCol = 20;
     public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+    public final int screenWidth = tileSize * maxScreenCol; // maxScreenCol = 16 (768 pixels), se  for 20 (960 pixels) 
     public final int screenHeight = tileSize * maxScreenRow; //576 pixels
     // o Ratio disso é 4:3
+    
+    // FOR FULL SCREEN
+    int screenWidth2 = screenWidth;
+    int screenHeight2 = screenHeight;
+    BufferedImage tempScreen;
+    Graphics2D g2;
 
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
@@ -44,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
-    //FPS
+    // FPS
     int FPS = 60;
 
     // Tile manager
@@ -106,6 +113,10 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         aSetter.setInteractiveTile();
         playMusic(0);
         gameState = titleState;
+        
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2 = (Graphics2D) tempScreen.getGraphics();
+//        setFullScreen(); // Coloca em tela cheia
     }
 
     //Run utilizando Delta para a atualização do draw
@@ -132,7 +143,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             /* 1 Update; update informations such as caracter position*/
             if (delta >= 1) {
                 update();
-                repaint(); // é assim que chama o metodo paintComponent
+//                repaint(); // é assim que chama o metodo paintComponent
+                drawFullScreen(); // draw everything to the buffered image
+                drawToFullScreen(); // draw the buffered image to the screen
                 delta--;
                 drawnCount++;
             }
@@ -202,15 +215,20 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             // Nothing
         }
     }
-
-    public void paintComponent(Graphics g) { // isso já ta bild in no java
-        /*
-            Podemos imaginar esse Graphics como um "pincel"
-         */
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;  // Graphics2D tem mais funções interessantes
-
+    
+    public void setFullScreen() {
+        // GET LOCAL SCREEN DEVICE
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.setFullScreenWindow(DugeonMenace.window);
+        
+        // GET FULL SCREEN WIDTH AND HEIGHT
+        screenWidth2 = DugeonMenace.window.getWidth();
+        screenHeight2 = DugeonMenace.window.getHeight();
+    }
+    
+    // Ele chama essa classe de drawToTempScreen()
+    public void drawFullScreen() { 
         //DEBUG
         long drawStart = 0;
         if (keyH.showDebugText) {
@@ -315,8 +333,128 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             g2.drawString("Draw time: " + passed, x, y);
             System.out.println("Draw Time: " + passed);
         }
-        g2.dispose();
     }
+    
+    // Ele chama essa classe de drawToScreen()
+    public void drawToFullScreen () { 
+        Graphics g = getGraphics();
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+        g.dispose();
+    } 
+
+//    public void paintComponent(Graphics g) { // isso já ta bild in no java
+//        /*
+//            Podemos imaginar esse Graphics como um "pincel"
+//         */
+//        super.paintComponent(g);
+//        Graphics2D g2 = (Graphics2D) g;  // Graphics2D tem mais funções interessantes
+//
+//        //DEBUG
+//        long drawStart = 0;
+//        if (keyH.showDebugText) {
+//            drawStart = System.nanoTime();
+//        }
+//
+//        // TITLE SCREEN
+//        if (gameState == titleState) {
+//            // titleScreen.draw(g2);
+//            ui.draw(g2);
+//
+//        } else {
+//            /**
+//             * Temos que nos certificar que os tiles serão pintados antes do
+//             * player, para que o player fique uma camada acima
+//             *
+//             */
+//            // TILE
+//            tileM.draw(g2);
+//            
+//            // INTERACTIVE TILE
+//            for (int i = 0; i < iTile.length; i++) {
+//                if (iTile[i] != null) {
+//                    iTile[i].draw(g2);
+//                }
+//            }
+//            
+//            // ADD PLAYER
+//            entityList.add(player);
+//
+//            //ADD ENTITY TO LISTS
+//            for (int i = 0; i < obj.length; i++) {
+//                if (obj[i] != null) {
+//                    entityList.add(obj[i]);
+//                }
+//            }
+//            
+//            // ADD NPC
+//            for (int i = 0; i < npc.length; i++) {
+//                if (npc[i] != null) {
+//                    entityList.add(npc[i]);
+//                }
+//
+//            }
+//            // ADD MONSTER
+//            for (int i = 0; i < monster.length; i++) {
+//                if (monster[i] != null) {
+//                    entityList.add(monster[i]);
+//                }
+//            }
+//            
+//            // ADD PROJECTILE
+//            for (int i = 0; i < projectileList.size(); i++) {
+//                if (projectileList.get(i) != null) {
+//                    entityList.add(projectileList.get(i));
+//                }
+//            }
+//            
+//            // ADD PARTICLE
+//            for (int i = 0; i < particleList.size(); i++) {
+//                if (particleList.get(i) != null) {
+//                    entityList.add(particleList.get(i));
+//                }
+//            }
+//
+//            // SORT
+//            Collections.sort(entityList, new Comparator<Entity>() {
+//                @Override
+//                public int compare(Entity o1, Entity o2) {
+//                    int result = Integer.compare(o1.worldY, o2.worldY);
+//                    return result;
+//                }
+//            });
+//
+//            //Draw entitys
+//            for (Entity entity : entityList) {
+//                entity.draw(g2);
+//            }
+//            
+//            //Remove entitys from list
+//            entityList.clear();
+//            
+//            //UI
+//            ui.draw(g2);
+//        }
+//
+//        //DEBUG
+//        if (keyH.showDebugText) {
+//            long drawEnd = System.nanoTime();
+//            long passed = drawEnd - drawStart;
+//            
+//            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+//            g2.setColor(Color.white);
+//            int x = 10;
+//            int y = 400;
+//            int lineHeight = 20;
+//            
+//            g2.drawString("WorldX: " + player.worldX, x, y); y += lineHeight;
+//            g2.drawString("WorldY: " + player.worldY, x, y); y += lineHeight;
+//            g2.drawString("Col: " + (player.worldX + player.solidArea.x )/ tileSize, x, y); y += lineHeight;
+//            g2.drawString("Row: " + (player.worldY + player.solidArea.y )/ tileSize, x, y);  y += lineHeight;
+//            g2.drawString("Draw time: " + passed, x, y);
+//            System.out.println("Draw Time: " + passed);
+//        }
+//        g2.dispose();
+//    }
 
     public void playMusic(int i) {
         music.setFile(i);
