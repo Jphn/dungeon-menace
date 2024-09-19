@@ -4,6 +4,7 @@
  */
 package projeto.dugeonmenace.objectsSprite;
 
+import java.awt.Color;
 import projeto.dugeonmenace.GamePanel;
 import projeto.dugeonmenace.entity.Entity;
 
@@ -50,5 +51,25 @@ public class OBJ_Rock extends Projectile {
     
     public void subtractResource(Entity user) {
         user.ammo -= useCost;
+    }
+    
+    public Color getParticleColor() {
+        Color color = new Color(40, 50, 0);
+        return color;
+    }
+
+    public int getParticleSize() {
+        int size = 10; // as partículas teram 6 pixels de tamanho
+        return size;
+    }
+    
+    public int getParticleSpeed() {
+        int speed = 1;
+        return speed;
+    }
+    
+    public int getParticleMaxLife() {
+        int maxLife = 20;
+        return maxLife;
     }
 }
