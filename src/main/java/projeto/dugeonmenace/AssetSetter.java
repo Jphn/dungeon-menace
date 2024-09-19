@@ -11,6 +11,7 @@ import projeto.dugeonmenace.objectsSprite.OBJ_Coin_Bronze;
 import projeto.dugeonmenace.objectsSprite.OBJ_Door;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
 import projeto.dugeonmenace.objectsSprite.OBJ_Key;
+import projeto.dugeonmenace.objectsSprite.OBJ_Lantern;
 import projeto.dugeonmenace.objectsSprite.OBJ_ManaCrystal;
 import projeto.dugeonmenace.objectsSprite.OBJ_Potion_Red;
 import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Blue;
@@ -41,6 +42,11 @@ public class AssetSetter {
         gp.obj[i].worldX = gp.tileSize * 26;
         gp.obj[i].worldY = gp.tileSize * 21;
         i++;
+        gp.obj[i] = new OBJ_Lantern(gp);
+        gp.obj[i].worldX = gp.tileSize * 24;
+        gp.obj[i].worldY = gp.tileSize * 25;
+        
+        
         i++;
         gp.obj[i] = new OBJ_Key(gp);
         gp.obj[i].worldX = gp.tileSize * 21;

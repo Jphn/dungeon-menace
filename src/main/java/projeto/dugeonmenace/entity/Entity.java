@@ -57,6 +57,7 @@ public class Entity {
     // ENTITY WEAPONS
     public Entity currentWeapon;
     public Entity currentShield;
+    public Entity currentLight;
     
     // Projectile
     public Projectile projectile;
@@ -67,6 +68,8 @@ public class Entity {
     public int attackValue;
     public int defenseValue;
     public String description = "";
+    
+    public int lightRadius; // aqui é para o caso de diferentes fontes de luz gerarem diferentes areas luminosas (teremos isso)
     
     //COUNTERS
     public int dyingCounter = 0;
@@ -106,6 +109,8 @@ public class Entity {
     public final int type_shield = 5;
     public final int type_consumable = 6;
     public final int type_pickupOnly = 7;
+    
+    public final int type_light = 9;
     
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -250,7 +255,7 @@ public class Entity {
         
         if (invincible == true) {
             invincibleCounter++;
-            if (invincibleCounter > 40) { // FRAMES DE INVENCIBILIDADE DO PLAYER
+            if (invincibleCounter > 60) { // FRAMES DE INVENCIBILIDADE DO PLAYER
                 invincibleCounter = 0;
                 invincible = false;
             }
