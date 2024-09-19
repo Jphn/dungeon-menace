@@ -113,11 +113,13 @@ public class KeyHandler implements KeyListener {
                 }
                 if (code == KeyEvent.VK_ENTER) {
                     this.enterPressed = true;
-                    gp.playSE(1);
+                    gp.playSE(1); // coin sound
+                    
                     
                     switch (gp.ui.commandNum) {
                         case 0:
                             gp.gameState = gp.playState;
+                            gp.stopMusic(); // pausa a música Porque está entrando no jogo 
                             gp.playMusic(0);
                             break;
                         case 1:

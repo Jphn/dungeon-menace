@@ -171,10 +171,12 @@ public class UI {
     }
 
     public void drawTitleScreen() {
-        if (titleScreenState == 0) {
             //Setting Background color
             g2.setColor(new Color(70, 120, 80));
             g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        
+        if (titleScreenState == 0) {
+            
 
             // TITLE NAME
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
@@ -232,7 +234,7 @@ public class UI {
 
             //CLASS SELECTION SCREEN
             g2.setColor(Color.white);
-            g2.setFont(g2.getFont().deriveFont(42F));
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
 
             String text = "Select your class";
             int x = getXforCenteredText(text);
