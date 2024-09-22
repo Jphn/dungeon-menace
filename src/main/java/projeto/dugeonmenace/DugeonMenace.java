@@ -20,7 +20,12 @@ public class DugeonMenace {
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel); // como o gamePanel herda o JPanel, eu posso fazer isso e adicionar um JPanel ao JFrame
-
+        
+        gamePanel.config.loadConfig();
+        if(gamePanel.fullScreenOn == true){
+            window.setUndecorated(true);
+        
+        }
         window.pack();
 
         window.setLocationRelativeTo(null); // A tela vai ser iniciada no centro da tela por conta do null

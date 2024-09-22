@@ -52,9 +52,12 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
+    public final int maxMap=10;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
-
+    
+    public int currentMap=0; 
+           
     // FPS
     int FPS = 60;
 
@@ -76,13 +79,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
     // EVENT HANDLER
     public EventHandler eHandler = new EventHandler(this);
-
+    
+    // CONFIG
+    Config config = new Config(this); 
+    
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[30]; // significa que vamos mostrar até 10 objetos ao mesmo tempo // 10
-    public Entity npc[] = new Entity[10];
-    public Entity monster[] = new Entity[20];
-    public InteractiveTile iTile[] = new InteractiveTile[50];
+    public Entity obj[][] = new Entity[this.maxMap][30]; // significa que vamos mostrar até 30 objetos ao mesmo tempo // 10
+    public Entity npc[][] = new Entity[this.maxMap][10];
+    public Entity monster[][] = new Entity[this.maxMap][20];
+    public InteractiveTile iTile[][] = new InteractiveTile[this.maxMap][50];
     public ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
@@ -98,6 +104,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int dialogueState = 3;
     public final int characterState = 4;
     public final int optionsState = 5;
+    public final int gameOverState = 6;
+    public final int trasitionState = 7;
+    public final int tradeState = 8;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -125,7 +134,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D) tempScreen.getGraphics();
-//        setFullScreen(); // Coloca em tela cheia
+        if(this.fullScreenOn==true){
+        setFullScreen(); // Coloca em tela cheia
+        }
     }
 
     //Run utilizando Delta para a atualização do draw
@@ -171,21 +182,21 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             player.update();
 
             // NPC "MOVIMENT"
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null) {
-                    npc[i].update();
+            for (int i = 0; i < npc[currentMap].length; i++) {
+                if (npc[currentMap][i] != null) {
+                    npc[currentMap][i].update();
                 }
             }
 
             // MONSTER "MOVIMENT"
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null) {
-                    if (monster[i].alive == true && monster[i].dying == false) {
-                        monster[i].update();
+            for (int i = 0; i < monster[currentMap].length; i++) {
+                if (monster[currentMap][i] != null) {
+                    if (monster[currentMap][i].alive == true && monster[currentMap][i].dying == false) {
+                        monster[currentMap][i].update();
                     }
-                    if (monster[i].alive == false) {
-                        monster[i].checkDrop();
-                        monster[i] = null;
+                    if (monster[currentMap][i].alive == false) {
+                        monster[currentMap][i].checkDrop();
+                        monster[currentMap][i] = null;
                     }
                 }
             }
@@ -214,9 +225,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
                 }
             }
             
-            for (int i = 0; i < iTile.length; i++) {
-                if (iTile [i] != null) {
-                    iTile[i].update();
+            for (int i = 0; i < iTile[currentMap].length; i++) {
+                if (iTile[currentMap][i] != null) {
+                    iTile[currentMap][i].update();
                 }
             }
             
@@ -259,9 +270,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             tileM.draw(g2);
             
             // INTERACTIVE TILE
-            for (int i = 0; i < iTile.length; i++) {
-                if (iTile[i] != null) {
-                    iTile[i].draw(g2);
+            for (int i = 0; i < iTile[currentMap].length; i++) {
+                if (iTile[currentMap][i] != null) {
+                    iTile[currentMap][i].draw(g2);
                 }
             }
             
@@ -269,23 +280,23 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             entityList.add(player);
 
             //ADD ENTITY TO LISTS
-            for (int i = 0; i < obj.length; i++) {
-                if (obj[i] != null) {
-                    entityList.add(obj[i]);
+            for (int i = 0; i < obj[currentMap].length; i++) {
+                if (obj[currentMap][i] != null) {
+                    entityList.add(obj[currentMap][i]);
                 }
             }
             
             // ADD NPC
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null) {
-                    entityList.add(npc[i]);
+            for (int i = 0; i < npc[currentMap].length; i++) {
+                if (npc[currentMap][i] != null) {
+                    entityList.add(npc[currentMap][i]);
                 }
 
             }
             // ADD MONSTER
-            for (int i = 0; i < monster.length; i++) {
-                if (monster[i] != null) {
-                    entityList.add(monster[i]);
+            for (int i = 0; i < monster[currentMap].length; i++) {
+                if (monster[currentMap][i] != null) {
+                    entityList.add(monster[currentMap][i]);
                 }
             }
             
@@ -482,7 +493,25 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 //        }
 //        g2.dispose();
 //    }
-
+    public void retry(){
+        player.setDefaultPositions();
+        player.restoreLifeAndMana();
+        //dessa forma so reseta os npcs , mas status e itens se mantem
+        //player.setDefaultValues();
+        //player.setItems();
+        aSetter.setNPC();
+        //aSetter.setMonster();
+    
+    }
+    
+    public void restart(){
+        player.restoreLifeAndMana();
+        player.setDefaultPositions();
+        aSetter.setObject();
+        aSetter.setNPC();
+        aSetter.setMonster();
+        aSetter.setInteractiveTile();
+    }
     public void playMusic(int i) {
         music.setFile(i);
         music.play();

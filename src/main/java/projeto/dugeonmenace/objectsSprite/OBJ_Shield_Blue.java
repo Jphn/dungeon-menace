@@ -20,6 +20,8 @@ public class OBJ_Shield_Blue extends Entity{
         type = type_shield;
         down1= setup("/objectsSprite/shield_blue.png", gp.tileSize, gp.tileSize);
         defenseValue =2;
+        
+        price = 150;
         description = "[" + name + "]\nA shiny blue shield.";
     }
     

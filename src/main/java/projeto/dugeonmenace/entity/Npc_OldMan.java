@@ -4,6 +4,7 @@
  */
 package projeto.dugeonmenace.entity;
 
+import java.awt.Rectangle;
 import java.util.Random;
 import projeto.dugeonmenace.GamePanel;
 
@@ -18,8 +19,18 @@ public class Npc_OldMan extends Entity {
 
         direction = "down";
         speed = 1;
+        
+        solidArea = new Rectangle();
+        solidArea.x=8;
+        solidArea.y=16;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        solidArea.width=32;
+        solidArea.height=32;
         getImage();
         setDialogue();
+        
+        
     }
 
     public void getImage() {
@@ -32,7 +43,6 @@ public class Npc_OldMan extends Entity {
         left2 = setup("/npc/" + "oldman_left_2" + ".png", gp.tileSize, gp.tileSize);
         right1 = setup("/npc/" + "oldman_right_1" + ".png", gp.tileSize, gp.tileSize);
         right2 = setup("/npc/" + "oldman_right_2" + ".png", gp.tileSize, gp.tileSize);
-
     }
 
     public void setDialogue() {
@@ -40,6 +50,7 @@ public class Npc_OldMan extends Entity {
         dialogue[1] = "So you come to this \nisland to find some treasure?";
         dialogue[2] = "I used to be a great wizard but now... \nI´m a bit too old for taking a adventure.";
         dialogue[3] = "Well, good luck on you.";
+        
 
     }
 

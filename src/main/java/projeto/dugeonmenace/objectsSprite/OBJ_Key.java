@@ -15,6 +15,7 @@ public class OBJ_Key extends Entity {
     public OBJ_Key(GamePanel gp) {
         super(gp);
         name = "Key";
+        price = 100;
         down1 = setup("/objectsSprite/key.png", gp.tileSize, gp.tileSize);
         description = "[" + name + "]\nIr opens a door.";
     }
