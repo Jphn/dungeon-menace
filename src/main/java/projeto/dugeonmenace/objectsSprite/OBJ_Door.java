@@ -16,7 +16,7 @@ public class OBJ_Door extends Entity {
     public OBJ_Door(GamePanel gp) {
         super(gp);
         name = "Door";
-
+        type = type_unpickable;
         down1 = setup("/objectsSprite/door.png", gp.tileSize, gp.tileSize);
 
         this.collision = true;

@@ -18,5 +18,7 @@ public class OBJ_Chest extends Entity {
         name = "Chest";
 
         down1 = setup("/objectsSprite/chest.png", gp.tileSize, gp.tileSize);
+        
+        
     }
 }

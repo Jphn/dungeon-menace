@@ -18,6 +18,7 @@ public class OBJ_Shield_Wood extends Entity {
         type = type_shield;
         down1= setup("/objectsSprite/shield_wood.png", gp.tileSize, gp.tileSize);
         defenseValue =1;
+        price =45;
         description = "[" + name + "]\nMade by wood.";
     }
 }

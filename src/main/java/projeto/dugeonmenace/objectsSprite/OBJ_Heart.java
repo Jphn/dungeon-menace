@@ -20,6 +20,7 @@ public class OBJ_Heart extends Entity {
         type = type_pickupOnly;
         name = "Heart";
         value = 2;
+        
         down1 = setup("/objectsSprite/heart_full.png", gp.tileSize, gp.tileSize);
         image = setup("/objectsSprite/heart_full.png", gp.tileSize, gp.tileSize);
         image2 = setup("/objectsSprite/heart_half.png", gp.tileSize, gp.tileSize);

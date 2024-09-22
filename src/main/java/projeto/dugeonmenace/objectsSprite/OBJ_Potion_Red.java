@@ -20,6 +20,7 @@ public class OBJ_Potion_Red extends Entity {
         type = type_consumable;
         name = "Red potion";
         value = 5;
+        price = 25;
         down1 = setup("/objectsSprite/potion_red.png", gp.tileSize, gp.tileSize);
         description = "[" + name + "]\nHeals your life by "+ value+".";
         
