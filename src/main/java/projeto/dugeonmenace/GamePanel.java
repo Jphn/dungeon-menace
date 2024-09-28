@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.JPanel;
+import projeto.dugeonmenace.ai.PathFinder;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
 import projeto.dugeonmenace.enviroment.EnviromentManager;
@@ -62,7 +63,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     int FPS = 60;
 
     // Tile manager
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; //
     
@@ -92,8 +93,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public ArrayList<Entity> particleList = new ArrayList<>();
     public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
+    public PathFinder pFinder = new PathFinder(this);
     
-    //EnviromentManager
+    // EnviromentManager
     EnviromentManager eManager = new EnviromentManager(this);
 
     // GAME STATE

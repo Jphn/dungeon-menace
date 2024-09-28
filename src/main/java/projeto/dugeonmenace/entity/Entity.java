@@ -89,8 +89,7 @@ public class Entity {
     
     // ENTITY INVENTORY
     public ArrayList<Entity> inventory = new ArrayList<>();
-    public final int maxInventorySize=20; 
-    
+    public final int maxInventorySize = 20;
     
     // STATE
     public int worldX, worldY;
@@ -101,6 +100,7 @@ public class Entity {
     public boolean invincible = false;
     public boolean attacking = false;
     public boolean hpBarOn = false;
+    public boolean onPath = false;
     
     // ALIVE AND DEATH
     public boolean alive = true;
@@ -218,9 +218,7 @@ public class Entity {
         gp.particleList.add(p4);
     }
             
-    public void update() {
-        setAction();
-
+    public void checkCollision() {
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
@@ -233,7 +231,12 @@ public class Entity {
         if (this.type == 2 && contactPlayer == true) {
            damagePlayer(attack);
         }
-
+    }
+    
+    public void update() {
+        setAction();
+        checkCollision();
+        
         if (collisionOn == false) {
             switch (direction) {
                 case "up":
@@ -391,5 +394,98 @@ public class Entity {
             e.printStackTrace();
         }
         return image;
+    }
+    
+    public void searchPath(int goalCol, int goalRow)
+    {
+        int startCol = (worldX + solidArea.x) / gp.tileSize;
+        int startRow = (worldY + solidArea.y) / gp.tileSize;
+        gp.pFinder.setNodes(startCol,startRow,goalCol,goalRow,this);
+        if(gp.pFinder.search() == true)
+        {
+            //Next WorldX and WorldY
+            int nextX = gp.pFinder.pathList.get(0).col * gp.tileSize;
+            int nextY = gp.pFinder.pathList.get(0).row * gp.tileSize;
+
+            //Entity's solidArea position
+            int enLeftX = worldX + solidArea.x;
+            int enRightX = worldX + solidArea.x + solidArea.width;
+            int enTopY = worldY + solidArea.y;
+            int enBottomY = worldY + solidArea.y + solidArea.height;
+
+            // TOP PATH
+            if(enTopY > nextY && enLeftX >= nextX && enRightX < nextX + gp.tileSize)
+            {
+                direction = "up";
+            }
+            // BOTTOM PATH
+            else if(enTopY < nextY && enLeftX >= nextX && enRightX < nextX + gp.tileSize)
+            {
+                direction = "down";
+            }
+            // RIGHT - LEFT PATH
+            else if(enTopY >= nextY && enBottomY < nextY + gp.tileSize)
+            {
+                //either left or right
+                // LEFT PATH
+                if(enLeftX > nextX)
+                {
+                    direction = "left";
+                }
+                // RIGHT PATH
+                if(enLeftX < nextX)
+                {
+                    direction = "right";
+                }
+            }
+            //OTHER EXCEPTIONS
+            else if(enTopY > nextY && enLeftX > nextX)
+            {
+                // up or left
+                direction = "up";
+                checkCollision();
+                if(collisionOn == true)
+                {
+                    direction = "left";
+                }
+            }
+            else if(enTopY > nextY && enLeftX < nextX)
+            {
+                // up or right
+                direction = "up";
+                checkCollision();
+                if(collisionOn == true)
+                {
+                    direction = "right";
+                }
+            }
+            else if(enTopY < nextY && enLeftX > nextX)
+            {
+                // down or left
+                direction = "down";
+                checkCollision();
+                if(collisionOn == true)
+                {
+                    direction = "left";
+                }
+            }
+            else if(enTopY < nextY && enLeftX < nextX)
+            {
+                // down or right
+                direction = "down";
+                checkCollision();
+                if(collisionOn == true)
+                {
+                    direction = "right";
+                }
+            }
+            // for following player, disable this. It should be enabled when npc walking to specified location
+//            int nextCol = gp.pFinder.pathList.get(0).col;
+//            int nextRow = gp.pFinder.pathList.get(0).row;
+//            if(nextCol == goalCol && nextRow == goalRow)
+//            {
+//                onPath = false;
+//            }
+        }
     }
 }

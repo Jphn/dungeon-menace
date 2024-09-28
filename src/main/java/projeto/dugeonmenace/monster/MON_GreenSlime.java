@@ -57,59 +57,69 @@ public class MON_GreenSlime extends Entity {
 
         right1 = setup("/monster/greenslime_down_1.png", gp.tileSize, gp.tileSize);
         right2 = setup("/monster/greenslime_down_2.png", gp.tileSize, gp.tileSize);
-
+    }
+    
+    public void update() {
+        super.update();
+        
+        int xDistance = Math.abs(worldX - gp.player.worldX);
+        int yDistance = Math.abs(worldY - gp.player.worldY);
+        int tileDistance = (xDistance + yDistance) / gp.tileSize;
+        
+        if (onPath == false && tileDistance < 5) {
+            int i = new Random().nextInt(100) + 1;
+            if ( i > 50) {
+                onPath = true;
+            }    
+        }
+        
+        // Para de seguir o player
+//        if (onPath == true && tileDistance > 20) {
+//            onPath = false;
+//        }
     }
 
     public void setAction() {
-        actionLockCounter++;
+        if (onPath == true) {
+            // Assim ele segue o player
+            int goalCol = (gp.player.worldX + gp.player.solidArea.x) / gp.tileSize;
+            int goalRow = (gp.player.worldY + gp.player.solidArea.y) / gp.tileSize;
+            
+            searchPath(goalCol, goalRow);
+            
+            //---- PROJECTILE SHOOT 
+            int i = new Random().nextInt(200) + 1;
+        
+            if(i > 197 && projectile.alive == false && shotAvailableCounter == 30) {
+                projectile.set(worldX, worldY, direction, true, this); // pra testar o hit da pedra, fixa a direction como gp.player.direction
+                gp.projectileList.add(projectile);
+                shotAvailableCounter = 0;
+            }
+        } else {
+            actionLockCounter++;
 
-        if (actionLockCounter == 130) {
-            Random random = new Random();
+            if (actionLockCounter == 120) {
+                Random random = new Random();
 
-            int i = random.nextInt(100) + 1; // pick a number from 1 to 100
-            if (i <= 25) {
-                direction = "up";
-            } else if (i > 25 && i <= 50) {
-                direction = "down";
-            } else if (i > 50 && i <= 75) {
-                direction = "left";
-            } else if (i > 75 && i <= 100) {
-                direction = "right";
+                int i = random.nextInt(100) + 1; // pick a number from 1 to 100
+                if (i <= 25) {
+                    direction = "up";
+                } else if (i > 25 && i <= 50) {
+                    direction = "down";
+                } else if (i > 50 && i <= 75) {
+                    direction = "left";
+                } else if (i > 75 && i <= 100) {
+                    direction = "right";
+                }
+                actionLockCounter = 0;
             }
-            actionLockCounter = 0;
         }
-        
-        //---- PROJECTILE SHOOT 
-        int i = new Random().nextInt(100)+1;
-        
-        if(i > 99 && projectile.alive == false && shotAvailableCounter == 30){
-            projectile.set(worldX, worldY, direction, true, this); // pra testar o hit da pedra, fixa a direction como gp.player.direction
-            gp.projectileList.add(projectile);
-            shotAvailableCounter = 0;
-        }
-        //---- PROJECTILE SHOOT 
-        
-        spriteCounter++;
-        if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
-            if (spriteNumber == 1) {
-                spriteNumber = 2;
-            } else if (spriteNumber == 2) {
-                spriteNumber = 1;
-            }
-            spriteCounter = 0;
-        }/*
-        else {
-            standCounter++;
-            if (standCounter == 20) {
-                spriteNumber = 1;
-                standCounter = 0;
-            }
-        }*/
     }
     
     public void damageReaction() {
         actionLockCounter=0;       
         this.direction= gp.player.direction;
+        onPath = true;
     }
     
     public void checkDrop() {

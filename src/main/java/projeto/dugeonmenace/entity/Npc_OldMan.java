@@ -21,20 +21,17 @@ public class Npc_OldMan extends Entity {
         speed = 1;
         
         solidArea = new Rectangle();
-        solidArea.x=8;
-        solidArea.y=16;
+        solidArea.x = 8;
+        solidArea.y = 16;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width=32;
-        solidArea.height=32;
+        solidArea.width = 32;
+        solidArea.height = 32;
         getImage();
         setDialogue();
-        
-        
     }
 
     public void getImage() {
-
         up1 = setup("/npc/" + "oldman_up_1" + ".png", gp.tileSize, gp.tileSize);
         up2 = setup("/npc/" + "oldman_up_2" + ".png", gp.tileSize, gp.tileSize);
         down1 = setup("/npc/" + "oldman_down_1" + ".png", gp.tileSize, gp.tileSize);
@@ -50,53 +47,46 @@ public class Npc_OldMan extends Entity {
         dialogue[1] = "So you come to this \nisland to find some treasure?";
         dialogue[2] = "I used to be a great wizard but now... \nI´m a bit too old for taking a adventure.";
         dialogue[3] = "Well, good luck on you.";
-        
-
     }
 
     @Override
     public void speak() {
-        //Do this caracter specific stuff
-
+        // Do this caracter specific stuff
         super.speak();
-
+        onPath = true;
     }
 
     @Override
     public void setAction() {
-        actionLockCounter++;
+        
+        if (onPath == true) {
+            // Assim ele vai para a casa
+//            int goalCol = 12;
+//            int goalRow = 9;
 
-        if (actionLockCounter == 130) {
-            Random random = new Random();
+            // Assim ele segue o player
+            int goalCol = (gp.player.worldX + gp.player.solidArea.x) / gp.tileSize;
+            int goalRow = (gp.player.worldY + gp.player.solidArea.y) / gp.tileSize;
+            
+            searchPath(goalCol, goalRow);
+        } else {
+            actionLockCounter++;
 
-            int i = random.nextInt(100) + 1; // pick a number from 1 to 100
-            if (i <= 25) {
-                direction = "up";
-            } else if (i > 25 && i <= 50) {
-                direction = "down";
-            } else if (i > 50 && i <= 75) {
-                direction = "left";
-            } else if (i > 75 && i <= 100) {
-                direction = "right";
+            if (actionLockCounter == 120) {
+                Random random = new Random();
+
+                int i = random.nextInt(100) + 1; // pick a number from 1 to 100
+                if (i <= 25) {
+                    direction = "up";
+                } else if (i > 25 && i <= 50) {
+                    direction = "down";
+                } else if (i > 50 && i <= 75) {
+                    direction = "left";
+                } else if (i > 75 && i <= 100) {
+                    direction = "right";
+                }
+                actionLockCounter = 0;
             }
-            actionLockCounter = 0;
         }
-        spriteCounter++;
-        if (spriteCounter > 12) { // quando atinge 12 frames ele muda o sprite
-            if (spriteNumber == 1) {
-                spriteNumber = 2;
-            } else if (spriteNumber == 2) {
-                spriteNumber = 1;
-            }
-            spriteCounter = 0;
-        }/*
-        else {
-            standCounter++;
-            if (standCounter == 20) {
-                spriteNumber = 1;
-                standCounter = 0;
-            }
-        }*/
     }
-
 }
