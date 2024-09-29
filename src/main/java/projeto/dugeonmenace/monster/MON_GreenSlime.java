@@ -26,7 +26,8 @@ public class MON_GreenSlime extends Entity {
         this.gp = gp;
         
         name = "Green Slime";
-        speed = 1;
+        defaultSpeed = 1;
+        speed = defaultSpeed;
         type = type_monster; //monstro
         maxLife = 4;
         life = maxLife;
@@ -92,7 +93,13 @@ public class MON_GreenSlime extends Entity {
         
             if(i > 197 && projectile.alive == false && shotAvailableCounter == 30) {
                 projectile.set(worldX, worldY, direction, true, this); // pra testar o hit da pedra, fixa a direction como gp.player.direction
-                gp.projectileList.add(projectile);
+                
+                for(int ii = 0; ii < gp.projectile[1].length; ii++) {
+                    if (gp.projectile[gp.currentMap][ii] == null) {
+                        gp.projectile[gp.currentMap][ii] = projectile;
+                        break;
+                    }
+                }
                 shotAvailableCounter = 0;
             }
         } else {

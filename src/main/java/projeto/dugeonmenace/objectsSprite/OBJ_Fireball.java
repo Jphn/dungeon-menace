@@ -28,6 +28,7 @@ public class OBJ_Fireball extends Projectile {
         attack = 2;
         useCost = 1; // 1 de mana é gasto quando atira
         alive = false;
+        knockBackPower = 0;
         getImage();
     }
     

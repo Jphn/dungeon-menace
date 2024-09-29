@@ -29,18 +29,10 @@ public class Player extends Entity {
     public int standCounter;
     public int spriteCounter;
     public boolean attackCanceled = false; 
-    public boolean lightUpdated = false;
-    
-    
-    
-    
-    
+    public boolean lightUpdated = false;    
 
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
-        
-        
-        
         this.keyH = keyH;
         this.collisionOn = true;
 
@@ -65,7 +57,8 @@ public class Player extends Entity {
     public void setDefaultValues() {
         this.worldX = gp.tileSize * 23; // essa é a posição do player no mapa mundi
         this.worldY = gp.tileSize * 21; // posso definir só números aqui se eu quiser
-        this.speed = 4;
+        this.defaultSpeed = 4;
+        this.speed = defaultSpeed;
         this.direction = "down";
 
         //Player status
@@ -244,8 +237,6 @@ public class Player extends Entity {
                     standCounter = 0;
                 }
             }
-            
-            
         }
         
         if (gp.keyH.shotKeyPressed == true && projectile.alive == false 
@@ -253,7 +244,15 @@ public class Player extends Entity {
             
             projectile.set(worldX, worldY, direction, true, this);
             projectile.subtractResource(this);
-            gp.projectileList.add(projectile);
+            
+            // Checa a vacância
+            for(int i = 0; i < gp.projectile[1].length; i++) {
+                if (gp.projectile[gp.currentMap][i] == null) {
+                    gp.projectile[gp.currentMap][i] = projectile;
+                    break;
+                }
+            }
+            
             shotAvailableCounter = 0;
             gp.playSE(10);
         }
@@ -326,10 +325,13 @@ public class Player extends Entity {
             
             // Check monster collision with the updated worldX, worldY and solidArea
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex,this.attack);
+            damageMonster(monsterIndex, this.attack, currentWeapon.knockBackPower);
             
             int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
             damageInteractiveTile(iTileIndex);
+            
+            int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
+            damageProjectile(projectileIndex);
             
             // After checking collision resotre the original data
             worldX = currentWorldX;
@@ -369,9 +371,16 @@ public class Player extends Entity {
         }
     }
     
-    public void damageMonster(int i, int attack) {
+    public void damageMonster(int i, int attack, int knockBackPower) {
         if (i != 999) {
             if (gp.monster[gp.currentMap][i].invincible == false) {
+                
+                gp.playSE(5);
+                
+                if (knockBackPower > 0) {
+                    knockBack(gp.monster[gp.currentMap][i], knockBackPower);
+                }
+                
                 int damage = attack - gp.monster[gp.currentMap][i].defense;
                 if (damage < 0) {
                     damage = 0;
@@ -514,25 +523,23 @@ public class Player extends Entity {
                 getPlayerAttackImage(); // atualiza sprite de ataque do player
             }
             
-            if(selectedItem.type == type_shield){
+            if (selectedItem.type == type_shield){
                 currentShield = selectedItem;
                 defense = getDefense();// atualiza o atack do player com o da nova arma
                 
             }
-            if(selectedItem.type == type_consumable){
+            if (selectedItem.type == type_consumable){
                 selectedItem.use(this);
                 inventory.remove(itemIndex);
             }
-            if(selectedItem.type == type_light){
-                if(currentLight == selectedItem){
+            if (selectedItem.type == type_light) {
+                if (currentLight == selectedItem) {
                     currentLight = null;
-                }else{
+                } else {
                     currentLight = selectedItem;
                 }
-                lightUpdated =true;
-                
+                lightUpdated = true;   
             }
-            
         }
     }
     
@@ -550,5 +557,19 @@ public class Player extends Entity {
                 gp.iTile[gp.currentMap][i] = gp.iTile[gp.currentMap][i].getDestroyedForm();
             }
         }
+    }
+    
+    public void damageProjectile (int i) {
+        if (i != 999) {
+            Entity projectile = gp.projectile[gp.currentMap][i];
+            projectile.alive = false;
+            generateParticle(projectile, projectile);
+        }
+    }
+    
+    public void knockBack(Entity entity, int knockBackPower) {
+        entity.direction = direction;
+        entity.speed += knockBackPower;
+        entity.knockBack = true;
     }
 }

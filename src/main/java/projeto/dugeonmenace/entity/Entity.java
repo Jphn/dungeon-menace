@@ -39,6 +39,7 @@ public class Entity {
     // ENTITY STATUS
     public int maxLife;
     public int life;
+    public int defaultSpeed;
     public int speed;
     public int level;
     
@@ -70,18 +71,19 @@ public class Entity {
     public int attackValue;
     public int defenseValue;
     public String description = "";
-    
+    public int knockBackPower = 0;
     public int lightRadius; // aqui é para o caso de diferentes fontes de luz gerarem diferentes areas luminosas (teremos isso)
     
-    //COUNTERS
+    // COUNTERS
     public int dyingCounter = 0;
     public int spriteCounter = 0;
     public int actionLockCounter = 0; // Contador relevante para os npcs
     public int invincibleCounter = 0;
     public int hpBarCounter = 0;
     public int shotAvailableCounter = 0;
+    int knockBackCounter = 0;
 
-    //NOVOS ATRIBUTOS
+    // NOVOS ATRIBUTOS
     public BufferedImage image, image2, image3;
     public String name;
     
@@ -101,6 +103,7 @@ public class Entity {
     public boolean attacking = false;
     public boolean hpBarOn = false;
     public boolean onPath = false;
+    public boolean knockBack = false;
     
     // ALIVE AND DEATH
     public boolean alive = true;
@@ -116,10 +119,7 @@ public class Entity {
     public final int type_shield = 5;
     public final int type_consumable = 6;
     public final int type_pickupOnly = 7;
-    
-    
     public final int type_light = 9;
-    
     public final int type_unpickable = 10; // Eu que fiz esse para o caso da porta
     
     public Entity(GamePanel gp) {
@@ -234,27 +234,45 @@ public class Entity {
     }
     
     public void update() {
-        setAction();
-        checkCollision();
         
-        if (collisionOn == false) {
-            switch (direction) {
-                case "up":
-                    this.worldY -= this.speed;    // Em java os valores em X aumentam para a direita,
-                    //e em Y aumentam quando diminui
-                    break;
-                case "down":
-                    this.worldY += this.speed;
-                    break;
-                case "left":
-                    this.worldX -= this.speed;
-                    break;
-                case "right":
-                    this.worldX += this.speed;
-                    break;
+        if (knockBack == true) {
+            checkCollision();
+            
+            if (collisionOn == true) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
+            
+            else if (collisionOn == false) {
+                switch (direction) {
+                case "up": this.worldY -= this.speed; break;
+                case "down": this.worldY += this.speed; break;
+                case "left": this.worldX -= this.speed; break;
+                case "right": this.worldX += this.speed; break;
+                }
+            }    
+                
+            knockBackCounter++;    
+            if (knockBackCounter == 10) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }    
+        }
+        else {
+            setAction();
+            checkCollision();
+        
+            if (collisionOn == false) {
+                switch (direction) {
+                case "up": this.worldY -= this.speed; break;
+                case "down": this.worldY += this.speed; break;
+                case "left": this.worldX -= this.speed; break;
+                case "right": this.worldX += this.speed; break;
+                }
             }
         }
-        
         spriteCounter++;
         if (spriteCounter > 24) { // quando atinge 12 frames ele muda o sprite
             if (spriteNumber == 1) {
