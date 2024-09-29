@@ -108,6 +108,7 @@ public class Player extends Entity {
         return attack = strength  * currentWeapon.attackValue;
     }
     
+    
     public int getDefense(){
         return defense = dexterity * currentShield.defenseValue;
     }
@@ -122,7 +123,17 @@ public class Player extends Entity {
         right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
         right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
     }
-    
+    public void getSleepingImage(BufferedImage image){
+        up1 = image;
+        up2 = image;
+        down1 = image;
+        down2 = image;
+        left1 = image;
+        left2 = image;
+        right1 = image;
+        right2 = image;
+        
+    }
     public void getPlayerAttackImage() {
         if(currentWeapon.type == type_sword){
             attackUp1 = setup("/player/boy_attack_up_1.png", gp.tileSize, gp.tileSize * 2);
@@ -347,6 +358,49 @@ public class Player extends Entity {
         }
     }
     
+    public int searchItemInInventory(String itemName){
+        
+        
+        int itemIndex= 999;
+        
+        for(int i=0;i<gp.player.inventory.size();i++){
+            if(inventory.get(i).name.equals(itemName)){
+               itemIndex = i;
+               break;
+            }
+        }
+        
+        
+        return itemIndex;
+    }
+    
+    public boolean canObtainItem(Entity item){
+        
+        boolean canObtain = false;
+        
+        if(item.stackable==true){
+            int index = searchItemInInventory(item.name);
+            
+            if(index != 999){
+                inventory.get(index).amount++;
+                canObtain = true;
+            }else{ // New item need to check inventory
+                if(inventory.size() != maxInventorySize){
+                    inventory.add(item);
+                    canObtain = true;
+                }
+            }
+            
+        }else{ //NOT stackable
+            if(inventory.size() != maxInventorySize){
+                    inventory.add(item);
+                    canObtain = true;
+                }
+        }
+        
+        return canObtain;
+    }
+    
     public void pickupObject(int i) {
         if (i != 999) {
             
@@ -354,12 +408,17 @@ public class Player extends Entity {
             if (gp.obj[gp.currentMap][i].type == type_pickupOnly) {
                 gp.obj[gp.currentMap][i].use(this);
                 gp.obj[gp.currentMap][i] = null;
+            }else if (gp.obj[gp.currentMap][i].type == type_obstacle){
+                if(keyH.enterPressed == true){
+                    attackCanceled = true;
+                    gp.obj[gp.currentMap][i].interact();
+                }
             }
             // INVENTORY ITEMS
-            else if (gp.obj[gp.currentMap][i].type != type_unpickable){
+            else if (gp.obj[gp.currentMap][i].unpickable == false){
                 String text;
-                if(inventory.size() != maxInventorySize) {
-                    inventory.add(gp.obj[gp.currentMap][i]);
+                if(canObtainItem(gp.obj[gp.currentMap][i]) == true) {
+                    
                     gp.playSE(1);
                     text = "Got a "+ gp.obj[gp.currentMap][i].name + "!";
                 } else{
@@ -529,8 +588,14 @@ public class Player extends Entity {
                 
             }
             if (selectedItem.type == type_consumable){
-                selectedItem.use(this);
-                inventory.remove(itemIndex);
+                
+                if(selectedItem.use(this) == true){
+                    if(selectedItem.amount>1){
+                        selectedItem.amount--;
+                    }else{
+                        inventory.remove(itemIndex);
+                    }
+                }
             }
             if (selectedItem.type == type_light) {
                 if (currentLight == selectedItem) {

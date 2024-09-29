@@ -73,6 +73,9 @@ public class Entity {
     public String description = "";
     public int knockBackPower = 0;
     public int lightRadius; // aqui é para o caso de diferentes fontes de luz gerarem diferentes areas luminosas (teremos isso)
+    public boolean stackable= false;
+    public int amount = 1;
+    
     
     // COUNTERS
     public int dyingCounter = 0;
@@ -119,18 +122,19 @@ public class Entity {
     public final int type_shield = 5;
     public final int type_consumable = 6;
     public final int type_pickupOnly = 7;
+    public final int type_obstacle = 8; 
     public final int type_light = 9;
-    public final int type_unpickable = 10; // Eu que fiz esse para o caso da porta
+    
+    
+    
+    public boolean unpickable = false; // Eu que fiz esse para o caso da porta
+   
     
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
     
-    public void setAction() {}
-    
-    public void use(Entity entity){}
-    
-    public void damageReaction(){}
+   
     
     public void damagePlayer(int attack){
          if (!gp.player.invincible) {
@@ -199,6 +203,40 @@ public class Entity {
     public int getParticleMaxLife() {
         int maxLife = 0;
         return maxLife;
+    }
+    
+    public int getLeftX(){
+    
+        return worldX + solidArea.x;
+        
+    }
+    
+    public int getRightX(){
+    
+        return worldX + solidArea.x + solidArea.width;
+        
+    }
+    
+     public int getTopY(){
+    
+        return worldY + solidArea.y;
+        
+    }
+    
+    public int getBottomY(){
+    
+        return worldY + solidArea.y + solidArea.height;
+        
+    }
+    
+    public int getCol(){
+    
+        return (worldX + solidArea.x)/gp.tileSize;
+    }
+    
+    public int getRow(){
+    
+        return (worldY + solidArea.y)/gp.tileSize;
     }
     
     public void generateParticle(Entity generator, Entity target) {
@@ -296,7 +334,7 @@ public class Entity {
             shotAvailableCounter++;
         }
     }
-
+    
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
 
@@ -380,6 +418,55 @@ public class Entity {
         }
     }
     
+    public void interact(){}
+    
+    public void setAction() {}
+    
+    public int getDetected(Entity user,Entity[][] target,String targetName){
+        
+        int index = 999;
+    
+    
+        //check th surrounding object
+        int nextWorldX = user.getLeftX();
+        int nextWorldY = user.getTopY();
+        
+        switch(user.direction){
+            case "up": nextWorldY = user.getTopY()-1;break;
+            case "down": nextWorldY= user.getBottomY()+1;break;
+            case "left": nextWorldX = user.getLeftX()-1;break;
+            case "right": nextWorldX = user.getRightX()+1;break;
+            
+            
+                
+                
+        }
+        int col = nextWorldX/gp.tileSize;
+        
+        int row = nextWorldY/gp.tileSize;
+        
+        // Mexi no for troquei 1 por currentMap
+        for(int i=0; i<target[gp.currentMap].length;i++){
+            if(target[gp.currentMap][i]!= null){
+                if(target[gp.currentMap][i].getCol() == col &&
+                    target[gp.currentMap][i].getRow() == row &&
+                    target[gp.currentMap][i].name.equals(targetName)){
+                
+                 index = i;
+                 break;
+                }          
+            }
+        }
+        
+        return index;
+    }
+    
+    public boolean use(Entity entity){
+    return false;
+    }
+    
+    public void damageReaction(){}
+
     public void dyingAnimation(Graphics2D g2){
         dyingCounter++;
         int i = 5;

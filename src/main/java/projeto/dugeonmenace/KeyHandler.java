@@ -71,6 +71,12 @@ public class KeyHandler implements KeyListener {
            
            tradeState(code);
         }
+        // MAP STATE
+        else if (gp.gameState == gp.mapState) {
+           
+           mapState(code);
+        }
+        
     }
     
     @Override
@@ -100,6 +106,8 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_ENTER) {
             this.enterPressed = false;
         }
+        
+        
         
     }
     
@@ -219,6 +227,22 @@ public class KeyHandler implements KeyListener {
                 gp.gameState = gp.pauseState;
             }
         }
+        
+        //MAP STATE
+        if (code == KeyEvent.VK_M) {
+            gp.gameState = gp.mapState;
+            this.enterPressed = false;
+        }
+        
+        if(code == KeyEvent.VK_X){
+            if(gp.map.miniMapOn == false){
+                gp.map.miniMapOn = true;
+            }else{
+                gp.map.miniMapOn = false;
+            }
+        
+        }
+        
             
         // DEBUG
         if (code == KeyEvent.VK_T) {
@@ -335,6 +359,13 @@ public class KeyHandler implements KeyListener {
         }
     }   
     
+    public void mapState(int code){
+        
+        if(code == KeyEvent.VK_M){
+            gp.gameState = gp.playState;
+        }
+    }
+    
     public void playerInventory(int code){
         if (code == KeyEvent.VK_W) {
             if (gp.ui.playerSlotRow != 0) {
@@ -365,8 +396,7 @@ public class KeyHandler implements KeyListener {
         }
     
     }
-    
-    
+     
     public void npcInventory(int code){
         if (code == KeyEvent.VK_W) {
             if (gp.ui.npcSlotRow != 0) {

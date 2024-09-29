@@ -26,7 +26,7 @@ import projeto.dugeonmenace.objectsSprite.OBJ_ManaCrystal;
 public class UI {
     GamePanel gp;
     Graphics2D g2;
-    Font pixelOperator;
+    public Font pixelOperator;
     BufferedImage heartFull, heartHalf, heartBlank, crystalFull, crystalBlank, coinImage;
     
     public boolean messageOn = false;
@@ -150,13 +150,17 @@ public class UI {
         if(gp.gameState == gp.tradeState){
             drawTradeScreen();
         }
+        // SLEEP STATE
+        if(gp.gameState == gp.sleepState){
+            drawSleepScreen();
+        }
+        
     }
     
-     public int getItemIndexOnSlot(int slotCol, int slotRow) {
+    public int getItemIndexOnSlot(int slotCol, int slotRow) {
         int itemIndex = slotCol + (slotRow * 5);
         return itemIndex;
     }
-    
     
     public void drawPlayerLife() {
         int x = gp.tileSize / 2;
@@ -359,6 +363,34 @@ public class UI {
         }
     }
     
+    public void drawSleepScreen(){
+        counter++;
+        
+        if (counter < 120){
+            gp.eManager.lighting.filterAlpha +=0.01f;
+            if(gp.eManager.lighting.filterAlpha>1f){
+                gp.eManager.lighting.filterAlpha = 1f;
+            
+            }
+        }
+        if(counter >= 120){
+            gp.eManager.lighting.filterAlpha-=0.01f;
+            if(gp.eManager.lighting.filterAlpha<0f){
+                gp.eManager.lighting.filterAlpha=0f;
+                counter = 0;
+                gp.eManager.lighting.dayState = gp.eManager.lighting.day;
+                
+                gp.eManager.lighting.dayCounter=0;
+                
+                gp.gameState = gp.playState;
+                
+                gp.player.getPlayerImage();
+            }
+        
+        }
+    
+    }
+    
     public void drawInventory(Entity entity,boolean cursor){
          // FRAME
         int frameX = 0;
@@ -410,6 +442,27 @@ public class UI {
             }
             
             g2.drawImage(entity.inventory.get(i).down1, slotX, slotY, null);
+            
+            
+            // DISPLAY AMOUNT
+            if(entity == gp.player && entity.inventory.get(i).amount >1){
+                int amountX;
+                int amountY;
+                
+                String s = ""+entity.inventory.get(i).amount;
+                
+                amountX = getXforAlignToRightText(s,slotX+44); 
+                amountY = slotY+gp.tileSize;
+                //shadow 
+                g2.setColor(new Color(60,60,60));
+                g2.drawString(s, amountX, amountY);
+                
+                //Number
+                
+                g2.setColor(Color.white);
+                g2.drawString(s, amountX-3, amountY-3);
+            
+            }
             slotX += slotSize;
             
             if (i == 4 || i == 9 || i == 14) {
@@ -560,18 +613,29 @@ public class UI {
                     currentDialogue = "You need more coins to buy that !";
                     drawDialogueScreen();
                     gp.gameState = gp.tradeState;
-                }
-                else if(gp.player.inventory.size() == gp.player.maxInventorySize){
+                }else if(gp.player.canObtainItem(npc.inventory.get(itemIndex))==true){
+                    gp.player.coin -= npc.inventory.get(itemIndex).price;
+                        
+                    
+                
+                }else{
                     subState=0;
                     gp.gameState = gp.dialogueState;
                     currentDialogue = "You inventory is full !";
                     drawDialogueScreen();
                     gp.gameState = gp.tradeState;
-
-                }else{
-                    gp.player.coin -= npc.inventory.get(itemIndex).price;
-                    gp.player.inventory.add(npc.inventory.get(itemIndex));
                 }
+//                else if(gp.player.inventory.size() == gp.player.maxInventorySize){
+//                    
+//                    gp.gameState = gp.dialogueState;
+//                    currentDialogue = "You inventory is full !";
+//                    drawDialogueScreen();
+//                    gp.gameState = gp.tradeState;
+//
+//                }else{
+//                    gp.player.coin -= npc.inventory.get(itemIndex).price;
+//                    gp.player.inventory.add(npc.inventory.get(itemIndex));
+//                }
             
         }
         
@@ -633,30 +697,28 @@ public class UI {
                 gp.gameState = gp.tradeState;
                 
             
-            }else{
-                
-                gp.player.inventory.remove(itemIndex);
-                gp.player.coin += price; 
-                
-            
-            }
-            
+            }else{ 
+                if(gp.player.inventory.get(itemIndex).amount> 1){
+                    gp.player.inventory.get(itemIndex).amount--;
+                    
+                }else{
+                     gp.player.inventory.remove(itemIndex);
+                }
+                gp.player.coin += price;
         }
   
         }
     
+    }
     }
     
     public void drawGameOverScreen(){
        g2.setColor(new Color(0,0,0,150));
        g2.fillRect(0, 0, gp.screenWidth,gp.screenHeight);
        
-       
-       
        String text =  "Game Over";
        int x ;
        int y;
-       
        
        // Texto
        g2.setColor(Color.white);
@@ -1063,4 +1125,5 @@ public class UI {
             }
         }
     }
+    
 }

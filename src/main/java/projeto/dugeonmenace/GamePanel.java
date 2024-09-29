@@ -15,11 +15,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import javax.swing.JPanel;
 import projeto.dugeonmenace.ai.PathFinder;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
 import projeto.dugeonmenace.enviroment.EnviromentManager;
+import projeto.dugeonmenace.tile.Map;
 import projeto.dugeonmenace.tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -94,7 +96,12 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 //    public ArrayList<Entity> projectileList = new ArrayList<>();
     public ArrayList<Entity> particleList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
+    
+    //PATHFINDER
     public PathFinder pFinder = new PathFinder(this);
+    
+    //MAP
+    Map map = new Map(this);
     
     // EnviromentManager
     EnviromentManager eManager = new EnviromentManager(this);
@@ -110,6 +117,8 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int gameOverState = 6;
     public final int trasitionState = 7;
     public final int tradeState = 8;
+    public final int sleepState = 9;
+    public final int mapState = 10;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -263,7 +272,10 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             // titleScreen.draw(g2);
             ui.draw(g2);
 
-        } else {
+        } else if(gameState == mapState){
+            map.drawFullMapScreen(g2);
+         
+        }else {
             /**
              * Temos que nos certificar que os tiles serão pintados antes do
              * player, para que o player fique uma camada acima
@@ -351,6 +363,10 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             ///
                 // Precisa ser revisado
             ///
+            
+            // MAP
+            map.drawMiniMap(g2);
+            
             
             //UI
             ui.draw(g2);

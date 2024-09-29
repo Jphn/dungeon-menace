@@ -41,6 +41,8 @@ public class Sound {
         soundURL[12] = getClass().getResource("/sound/gameover.wav");
         soundURL[13] = getClass().getResource("/sound/stairs.wav");
         
+        soundURL[14] = getClass().getResource("/sound/sleep.wav");
+        
     }
 
     public void setFile(int i) {

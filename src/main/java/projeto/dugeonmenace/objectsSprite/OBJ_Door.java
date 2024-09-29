@@ -16,7 +16,10 @@ public class OBJ_Door extends Entity {
     public OBJ_Door(GamePanel gp) {
         super(gp);
         name = "Door";
-        type = type_unpickable;
+        
+        type = type_obstacle;
+        
+        unpickable = true;
         down1 = setup("/objectsSprite/door.png", gp.tileSize, gp.tileSize);
 
         this.collision = true;
@@ -27,5 +30,11 @@ public class OBJ_Door extends Entity {
 
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
+    }
+    @Override
+    public void interact(){
+        gp.gameState = gp.dialogueState;
+        gp.ui.currentDialogue = "You need a key to open this";
+    
     }
 }
