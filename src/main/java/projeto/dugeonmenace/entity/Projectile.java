@@ -29,7 +29,7 @@ public class Projectile extends Entity {
         if(user == gp.player){
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
             if (monsterIndex != 999) {
-                gp.player.damageMonster(monsterIndex, this.attack, knockBackPower);
+                gp.player.damageMonster(monsterIndex,this, this.attack, knockBackPower);
                 generateParticle(user.projectile, gp.monster[gp.currentMap][monsterIndex]);
                 alive = false; /// Projectiile hit the target and disapear
             }
@@ -39,7 +39,7 @@ public class Projectile extends Entity {
             boolean contactPlayer = gp.cChecker.checkPlayer(this);
             if(gp.player.invincible == false && contactPlayer == true){
                 damagePlayer(this.attack);
-                generateParticle(user.projectile, gp.player);
+                generateParticle(user.projectile, user.projectile);
                 alive = false;
             }
         }

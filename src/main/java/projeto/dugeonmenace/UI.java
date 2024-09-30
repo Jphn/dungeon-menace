@@ -384,7 +384,7 @@ public class UI {
                 
                 gp.gameState = gp.playState;
                 
-                gp.player.getPlayerImage();
+                gp.player.getImage();
             }
         
         }
@@ -1047,6 +1047,7 @@ public class UI {
             if(gp.keyH.enterPressed == true) {
                 optionsSubState = 0;
                 gp.gameState = gp.titleState;
+                gp.resetGame(true);
             }
         } 
         

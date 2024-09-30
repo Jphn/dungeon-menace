@@ -6,7 +6,7 @@ package projeto.dugeonmenace;
 
 import projeto.dugeonmenace.entity.Npc_Merchant;
 import projeto.dugeonmenace.entity.Npc_OldMan;
-import projeto.dugeonmenace.monster.MON_GreenSlime;
+import projeto.dugeonmenace.monster.*;
 import projeto.dugeonmenace.objectsSprite.*;
 
 import tile_interactive.IT_DryTree;
@@ -96,7 +96,8 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldY = gp.tileSize * 12;
         i++;
         
-        gp.obj[mapNum][i] = new OBJ_Chest(gp,new OBJ_Key(gp));
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].setLoot(new OBJ_Key(gp));
         gp.obj[mapNum][i].worldX = gp.tileSize * 12;
         gp.obj[mapNum][i].worldY = gp.tileSize * 9;
         i++;
@@ -143,6 +144,11 @@ public class AssetSetter {
         gp.monster[mapNum][i] = new MON_GreenSlime(gp);
         gp.monster[mapNum][i].worldX = gp.tileSize * 38;
         gp.monster[mapNum][i].worldY = gp.tileSize * 42;
+        i++;
+        
+        gp.monster[mapNum][i] = new MON_Orc(gp);
+        gp.monster[mapNum][i].worldX = gp.tileSize * 12;
+        gp.monster[mapNum][i].worldY = gp.tileSize * 33;
         i++;
         
         mapNum = 1;

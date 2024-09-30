@@ -61,11 +61,11 @@ public class Map extends TileManager {
                 
                 
                 
-                
+               
             }
-            
+             //g2.dispose();
         }
-    
+         
     }
     
     public void drawFullMapScreen(Graphics2D g2){
@@ -109,7 +109,7 @@ public class Map extends TileManager {
         g2.drawString("Press M to close", 750, 550);
         
         
-        
+        //g2.dispose();
     }
     
     public void drawMiniMap(Graphics2D g2){
@@ -141,6 +141,7 @@ public class Map extends TileManager {
                 mapSpriteCounter=0;
             }
             mapSpriteCounter++;
+            //g2.dispose();
         }
     }
     

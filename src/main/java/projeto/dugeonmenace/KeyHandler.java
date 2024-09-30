@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed, shotKeyPressed;
+    public boolean upPressed, downPressed, leftPressed, rigthPressed, enterPressed, shotKeyPressed, spaceKeyPressed;
     public boolean showDebugText = false;
     GamePanel gp;
     
@@ -107,6 +107,10 @@ public class KeyHandler implements KeyListener {
             this.enterPressed = false;
         }
         
+        if (code == KeyEvent.VK_SPACE) {
+            this.spaceKeyPressed = false;
+        }
+        
         
         
     }
@@ -144,6 +148,10 @@ public class KeyHandler implements KeyListener {
                             gp.ui.commandNum = 0;
                             break;
                         case 2:
+                            gp.saveLoad.load();
+                            gp.gameState = gp.playState;
+                            gp.stopMusic(); // pausa a música Porque está entrando no jogo 
+                            gp.playMusic(0);
                             break;
                         case 3:
                             System.exit(0);
@@ -202,6 +210,12 @@ public class KeyHandler implements KeyListener {
             this.rigthPressed = true;
         }
         
+        // GUARD
+        if (code == KeyEvent.VK_SPACE) {
+            this.spaceKeyPressed = true;
+        }
+        
+        
         // FIREBALL
         if (code == KeyEvent.VK_F) {
             this.shotKeyPressed = true;
@@ -237,7 +251,7 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_X){
             if(gp.map.miniMapOn == false){
                 gp.map.miniMapOn = true;
-            }else{
+            }else if(gp.map.miniMapOn == true){
                 gp.map.miniMapOn = false;
             }
         
@@ -513,13 +527,13 @@ public class KeyHandler implements KeyListener {
                     switch (gp.ui.commandNum) {
                         case 0:
                             gp.stopMusic(); // pausa a música Porque está entrando no jogo 
-                            gp.retry();
+                            gp.resetGame(false);
                             gp.gameState = gp.playState;
                             gp.playMusic(0);
                             break;
                         case 1:
                             gp.gameState = gp.titleState;
-                            gp.restart();
+                            gp.resetGame(true);
                             
                             break;
                        

@@ -18,6 +18,7 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 import projeto.dugeonmenace.ai.PathFinder;
+import projeto.dugeonmenace.data.SaveLoad;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.entity.Player;
 import projeto.dugeonmenace.enviroment.EnviromentManager;
@@ -85,6 +86,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     
     // CONFIG
     Config config = new Config(this); 
+    SaveLoad saveLoad = new SaveLoad(this);
     
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
@@ -512,24 +514,19 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 //        }
 //        g2.dispose();
 //    }
-    public void retry(){
-        player.setDefaultPositions();
-        player.restoreLifeAndMana();
-        //dessa forma so reseta os npcs , mas status e itens se mantem
-        //player.setDefaultValues();
-        //player.setItems();
-        aSetter.setNPC();
-        //aSetter.setMonster();
     
-    }
-    
-    public void restart(){
-        player.restoreLifeAndMana();
+    public void resetGame(boolean restart){
         player.setDefaultPositions();
-        aSetter.setObject();
+        player.restoreStatus();
         aSetter.setNPC();
         aSetter.setMonster();
-        aSetter.setInteractiveTile();
+        if(restart == true){
+            player.setDefaultValues();
+            
+            aSetter.setObject();
+            aSetter.setInteractiveTile();
+            eManager.lighting.resetDay();
+        }
     }
     public void playMusic(int i) {
         music.setFile(i);

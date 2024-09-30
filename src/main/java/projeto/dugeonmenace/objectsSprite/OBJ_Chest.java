@@ -13,13 +13,12 @@ import projeto.dugeonmenace.entity.Entity;
  */
 public class OBJ_Chest extends Entity {
     
-    boolean opened = false;
-    Entity loot;
     
-    public OBJ_Chest(GamePanel gp,Entity loot) {
+    
+    public OBJ_Chest(GamePanel gp) {
         super(gp);
         
-        this.loot = loot;
+       
         
         collision =true;
         
@@ -40,6 +39,9 @@ public class OBJ_Chest extends Entity {
         
     }
     
+    public void setLoot(Entity loot){
+        this.loot = loot;
+    }
     public void interact(){
         gp.gameState = gp.dialogueState;
         if(opened == false){

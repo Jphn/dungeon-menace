@@ -19,6 +19,9 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
+        
+        
+        
         int entityLeftWorldX = entity.worldX + entity.solidArea.x;
         int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
         int entityTopWorldY = entity.worldY + entity.solidArea.y;
@@ -30,8 +33,15 @@ public class CollisionChecker {
         int entityBottomRow = entityBottomWorldY / gp.tileSize;
 
         int tileNum1, tileNum2;
-
-        switch (entity.direction) {
+        
+        //use a temporal direction when it's being knockbacked
+        String direction = entity.direction;
+        if(entity.knockBack== true){
+            direction = entity.knockBackDirection;
+        }
+        
+        
+        switch (direction) {
             case "up":
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNumber[gp.currentMap][entityLeftCol][entityTopRow];
@@ -78,6 +88,11 @@ public class CollisionChecker {
     public int checkObject(Entity entity, boolean player) {
 
         int index = 999;
+        
+        String direction = entity.direction;
+        if(entity.knockBack== true){
+            direction = entity.knockBackDirection;
+        }
         for (int i = 0; i < gp.obj[gp.currentMap].length; i++) {
             if (gp.obj[gp.currentMap][i] != null) {
                 // get entity solid area position
@@ -88,7 +103,7 @@ public class CollisionChecker {
                 gp.obj[gp.currentMap][i].solidArea.x = gp.obj[gp.currentMap][i].worldX + gp.obj[gp.currentMap][i].solidArea.x;
                 gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].solidArea.y;
 
-                switch (entity.direction) {
+                switch (direction) {
                     case "up":
                         entity.solidArea.y -= entity.speed;
                         break;
@@ -166,6 +181,12 @@ public class CollisionChecker {
 
     public int checkEntity(Entity entity, Entity[][] target) {
         int index = 999;
+        
+        String direction = entity.direction;
+        if(entity.knockBack== true){
+            direction = entity.knockBackDirection;
+        }
+        
         for (int i = 0; i < target[gp.currentMap].length; i++) {
                 if (target[gp.currentMap][i] != null) {
                 // get entity solid area position
@@ -175,8 +196,8 @@ public class CollisionChecker {
                 //GEt the object solid area position
                 target[gp.currentMap][i].solidArea.x = target[gp.currentMap][i].worldX + target[gp.currentMap][i].solidArea.x;
                 target[gp.currentMap][i].solidArea.y = target[gp.currentMap][i].worldY + target[gp.currentMap][i].solidArea.y;
-
-                switch (entity.direction) {
+                
+                switch (direction) {
                     case "up":
                         entity.solidArea.y -= entity.speed;
                         break;
@@ -187,7 +208,7 @@ public class CollisionChecker {
                         entity.solidArea.x -= entity.speed;
                         break;
                     case "right":
-                        entity.solidArea.y += entity.speed;
+                        entity.solidArea.x += entity.speed;
                         break;
                 }
 
