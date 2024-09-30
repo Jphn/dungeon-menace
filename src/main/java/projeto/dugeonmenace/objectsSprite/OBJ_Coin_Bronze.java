@@ -12,12 +12,13 @@ import projeto.dugeonmenace.entity.Entity;
  * @author natan
  */
 public class OBJ_Coin_Bronze extends Entity {
+    public static final String objName ="Bronze coin";
     public OBJ_Coin_Bronze(GamePanel gp) {
         super(gp);
         this.gp = gp;
         
         type = type_pickupOnly;
-        name = "Bronze coin";
+        name = objName;
         value = 1;
         down1 = setup("/objectsSprite/coin_bronze.png", gp.tileSize, gp.tileSize);
     }

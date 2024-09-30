@@ -15,12 +15,12 @@ import projeto.dugeonmenace.entity.Projectile;
  * @author T-GAMER
  */
 public class OBJ_Rock extends Projectile {
-    GamePanel gp;
+    public static final String objName = "Rock";
     public OBJ_Rock (GamePanel gp) {
         super(gp);
-        this.gp = gp;
         
-        name = "Rock";
+        
+        name = objName;
         speed = 8;
         maxLife = 80;
         life = maxLife;

@@ -84,9 +84,12 @@ public class Player extends Entity {
         getAttackImage();
         getGuardImage();
         setItems();
+        setDialogue();
     }
     
     public void setDefaultPositions() {
+        
+        gp.currentMap =0;
         this.worldX = gp.tileSize * 23; 
         this.worldY = gp.tileSize * 21; 
         this.direction = "down";
@@ -96,12 +99,18 @@ public class Player extends Entity {
     public void restoreStatus() {
         this.mana = maxMana;
         this.life = maxLife;
+        speed = defaultSpeed;
         invincible = false;
         transparent = false;
         attacking = false;
         guarding = false;
         knockBack = false;
         lightUpdated = true;
+    }
+    public void setDialogue(){
+    
+        dialogues[0][0] = "You are level: " + level + " now!\n"
+                    + "You feel stronger!";
     }
     
     public void setItems() {
@@ -192,7 +201,18 @@ public class Player extends Entity {
             attackLeft2 = setup("/player/" + "boy_axe_left_2" + ".png", gp.tileSize* 2, gp.tileSize);
             attackRight1 = setup("/player/" + "boy_axe_right_1" + ".png", gp.tileSize* 2, gp.tileSize);
             attackRight2 = setup("/player/" + "boy_axe_right_2" + ".png", gp.tileSize* 2, gp.tileSize);
-        }    
+        }
+        else if(currentWeapon.type == type_pickaxe)
+        {
+            attackUp1 = setup("/player/boy_pick_up_1.png",gp.tileSize, gp.tileSize * 2);         // 16x32 px
+            attackUp2 = setup("/player/boy_pick_up_2.png",gp.tileSize, gp.tileSize * 2);         // 16x32 px
+            attackDown1 = setup("/player/boy_pick_down_1.png",gp.tileSize, gp.tileSize * 2);     // 16x32 px
+            attackDown2 = setup("/player/boy_pick_down_2.png",gp.tileSize, gp.tileSize * 2);     // 16x32 px
+            attackLeft1 = setup("/player/boy_pick_left_1.png",gp.tileSize * 2, gp.tileSize);      // 32x16 px
+            attackLeft2 = setup("/player/boy_pick_left_2.png",gp.tileSize * 2, gp.tileSize);      // 32x16 px
+            attackRight1 = setup("/player/boy_pick_right_1.png",gp.tileSize * 2, gp.tileSize);    // 32x16 px
+            attackRight2 = setup("/player/boy_pick_right_2.png",gp.tileSize * 2, gp.tileSize);    // 32x16 px
+        }
     }
 
     /**
@@ -381,7 +401,6 @@ public class Player extends Entity {
         if (gp.keyH.enterPressed == true) {
             if (i != 999) {
                 attackCanceled = true;
-                gp.gameState = gp.dialogueState;
                 gp.npc[gp.currentMap][i].speak();       
             } 
         }
@@ -406,23 +425,23 @@ public class Player extends Entity {
     public boolean canObtainItem(Entity item){
         
         boolean canObtain = false;
-        
-        if(item.stackable==true){
-            int index = searchItemInInventory(item.name);
+        Entity newItem = gp.eGenerator.getObject(item.name);
+        if(newItem.stackable==true){
+            int index = searchItemInInventory(newItem.name);
             
             if(index != 999){
                 inventory.get(index).amount++;
                 canObtain = true;
             }else{ // New item need to check inventory
                 if(inventory.size() != maxInventorySize){
-                    inventory.add(item);
+                    inventory.add(newItem);
                     canObtain = true;
                 }
             }
             
         }else{ //NOT stackable
             if(inventory.size() != maxInventorySize){
-                    inventory.add(item);
+                    inventory.add(newItem);
                     canObtain = true;
                 }
         }
@@ -608,6 +627,7 @@ public class Player extends Entity {
         }
     }
     
+    
     public void checkUpLevel() {
         if (exp >= nextLevelExp) {
             level++; 
@@ -619,8 +639,8 @@ public class Player extends Entity {
             defense = getDefense();
             
             gp.gameState = gp.dialogueState;
-            gp.ui.currentDialogue = "You are level: " + level + " now!\n"
-                    + "You feel stronger!";
+            setDialogue();
+            startDialogue(this,0);
         }
     }
     
@@ -630,7 +650,7 @@ public class Player extends Entity {
         if(itemIndex < inventory.size()){
             Entity selectedItem = inventory.get(itemIndex);
             
-            if(selectedItem.type == type_sword || selectedItem.type == type_axe ){
+            if(selectedItem.type == type_sword || selectedItem.type == type_axe ||selectedItem.type == type_pickaxe){
                 currentWeapon = selectedItem;
                 attack = getAttack();// atualiza o ataque do player com o da nova arma
                 getAttackImage(); // atualiza sprite de ataque do player

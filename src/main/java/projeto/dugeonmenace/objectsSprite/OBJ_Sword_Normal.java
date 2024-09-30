@@ -12,9 +12,12 @@ import projeto.dugeonmenace.entity.Entity;
  * @author T-GAMER
  */
 public class OBJ_Sword_Normal extends Entity{
+            public static final String objName = "Normal sword";
+
+    
     public OBJ_Sword_Normal(GamePanel gp) {
         super(gp);
-        name = "Normal sword";
+        name = objName;
         type = type_sword;
         price = 45;
         down1= setup("/objectsSprite/sword_normal.png", gp.tileSize, gp.tileSize);

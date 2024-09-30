@@ -20,6 +20,8 @@ public class Npc_OldMan extends Entity {
         direction = "down";
         speed = 1;
         
+        dialogueSet = -1; //para começar do primeiro dialogo
+        
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
@@ -43,17 +45,36 @@ public class Npc_OldMan extends Entity {
     }
 
     public void setDialogue() {
-        dialogue[0] = "Hello lad.";
-        dialogue[1] = "So you come to this \nisland to find some treasure?";
-        dialogue[2] = "I used to be a great wizard but now... \nI´m a bit too old for taking a adventure.";
-        dialogue[3] = "Well, good luck on you.";
+        dialogues[0][0] = "Hello lad.";
+        dialogues[0][1] = "So you come to this \nisland to find some treasure?";
+        dialogues[0][2] = "I used to be a great wizard but now... \nI´m a bit too old for taking a adventure.";
+        dialogues[0][3] = "Well, good luck on you.";
+        
+        
+        dialogues[1][0] = "If you become tired, rest at the water";
+        dialogues[1][1] = "However, the monsters reapear if you rest.\nBe aware !";
+        dialogues[1][2] = "Don´t push yourself so hard.";
+        
+        dialogues[2][0]= "I wonder how i can open that door...";
+        
     }
 
     @Override
     public void speak() {
         // Do this caracter specific stuff
-        super.speak();
-        onPath = true;
+
+        facePlayer();
+        startDialogue(this,dialogueSet);
+        
+        dialogueSet++;
+        
+        if(dialogues[dialogueSet][0]==null){
+            
+            dialogueSet= 0;
+            ///dialogueSet--;// Trava na última mensagem, é legal pra npc genérico
+        }
+        
+        //onPath = true;
     }
 
     @Override

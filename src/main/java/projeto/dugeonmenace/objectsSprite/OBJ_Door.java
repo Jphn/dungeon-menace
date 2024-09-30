@@ -12,10 +12,10 @@ import projeto.dugeonmenace.entity.Entity;
  * @author LucianoNeto
  */
 public class OBJ_Door extends Entity {
-
+    public static final String objName ="Door";
     public OBJ_Door(GamePanel gp) {
         super(gp);
-        name = "Door";
+        name = objName;
         
         type = type_obstacle;
         
@@ -30,11 +30,17 @@ public class OBJ_Door extends Entity {
 
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
+        setDialogue();
+    }
+    
+    public void setDialogue(){
+        
+        dialogues[0][0] = "You need a key to open this";
     }
     @Override
     public void interact(){
-        gp.gameState = gp.dialogueState;
-        gp.ui.currentDialogue = "You need a key to open this";
+        startDialogue(this,0);
+        
     
     }
 }

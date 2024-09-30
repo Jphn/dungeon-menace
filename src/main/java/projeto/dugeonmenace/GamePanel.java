@@ -54,8 +54,8 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public boolean fullScreenOn = false;
 
     // WORLD SETTINGS
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public int maxWorldCol;
+    public int maxWorldRow;
     public final int maxMap=10;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
@@ -83,6 +83,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 
     // EVENT HANDLER
     public EventHandler eHandler = new EventHandler(this);
+    
+    // ENTITY GENERATOR
+    public EntityGenerator eGenerator = new EntityGenerator(this);
     
     // CONFIG
     Config config = new Config(this); 
@@ -121,7 +124,20 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int tradeState = 8;
     public final int sleepState = 9;
     public final int mapState = 10;
-
+    final int cutsceneState = 11;
+    
+    // AREA STATE 
+    
+   
+    public int nextArea;
+    public final int outside = 50;
+    public final int indoor = 51;
+    public final int dungeon = 52;
+    public int currentArea;
+    
+    //BOSS
+    public boolean bossBattleOn = false;
+    
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
@@ -145,6 +161,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         eManager.setup();
         playMusic(0);
         gameState = titleState;
+        currentArea=outside;
         
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D) tempScreen.getGraphics();
@@ -353,14 +370,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             ///
                 // Precisa ser revisado
             ///
-            
-            if(false || player.currentLight != null){
+            if(currentArea == indoor){
+                eManager.draw2(g2);
+            }else 
+                if(false || player.currentLight != null){
             //Draw light
-            eManager.draw(g2);
-            } else{
-                g2.setColor(CORTESTE);
-                g2.fillRect(0, 0, screenWidth, screenHeight);
-            }
+                eManager.draw(g2);
+                } else {
+                    g2.setColor(CORTESTE);
+                    g2.fillRect(0, 0, screenWidth, screenHeight);
+                }
             
             ///
                 // Precisa ser revisado
@@ -393,6 +412,8 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             System.out.println("Draw Time: " + passed);
         }
     }
+    
+    
     
     // Ele chama essa classe de drawToScreen()
     public void drawToFullScreen () { 
@@ -515,11 +536,39 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
 //        g2.dispose();
 //    }
     
+    public void changeArea()
+    {
+        if(nextArea != currentArea)
+        {
+            stopMusic();
+
+            if(nextArea == outside)
+            {
+                playMusic(0);
+            }
+            if(nextArea == indoor)
+            {
+                playMusic(18);
+            }
+            if(nextArea == dungeon)
+            {
+                playMusic(19);
+            }
+            aSetter.setNPC(); //reset for at the dungeon puzzle's stuck rocks.
+        }
+
+        currentArea = nextArea;
+        aSetter.setMonster();
+    }
+    
     public void resetGame(boolean restart){
+        
+        currentArea=outside;
         player.setDefaultPositions();
         player.restoreStatus();
         aSetter.setNPC();
         aSetter.setMonster();
+        player.resetCounter();
         if(restart == true){
             player.setDefaultValues();
             

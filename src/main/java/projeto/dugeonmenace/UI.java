@@ -42,7 +42,10 @@ public class UI {
     public int npcSlotCol = 0;
     public int npcSlotRow = 0;
     
+    //DIALOGUE 1CHAR/1CHAR
     
+    int charIndex=0;
+    public String combinedText="";
     
     // Ele chama só de subState
     int optionsSubState = 0;
@@ -212,27 +215,23 @@ public class UI {
     
     public void drawTrasition(){
         
+        
         counter++;
         g2.setColor(new Color(0,0,0,counter*5));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-        if(counter == 50){
-            counter=0;
+        g2.fillRect(0,0,gp.screenWidth2,gp.screenHeight2); // screen gets darker
+
+        if(counter == 50) //the transition is done
+        {
+            counter = 0;
             gp.gameState = gp.playState;
-            gp.currentMap = gp.eHandler.tempMap;
-            
-            gp.player.worldX = gp.tileSize * gp.eHandler.tempCol;
+            gp.player.worldX =  gp.tileSize * gp.eHandler.tempCol;
             gp.player.worldY = gp.tileSize * gp.eHandler.tempRow;
-            
+            gp.currentMap = gp.eHandler.tempMap;
             gp.eHandler.previousEventX = gp.player.worldX;
             gp.eHandler.previousEventY = gp.player.worldY;
-            
+            gp.changeArea();
         }
-        
-        
-            
-            
-        
-        
+    
     }
     
     public void drawTitleScreen() {
@@ -356,6 +355,39 @@ public class UI {
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
         x += gp.tileSize;
         y += gp.tileSize;
+        
+        
+        if(npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null){
+            //currentDialogue = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
+            
+            char characters[] = npc.dialogues[npc.dialogueSet][npc.dialogueIndex].toCharArray();
+            
+            if(charIndex < characters.length){
+                gp.playSE(17);
+                String s = String.valueOf(characters[charIndex]);
+                combinedText = combinedText + s;
+                currentDialogue = combinedText;
+                charIndex++;
+            }
+            
+            
+            if(gp.keyH.enterPressed==true){
+                
+                charIndex=0;
+                combinedText="";
+                if(gp.gameState==gp.dialogueState){
+                npc.dialogueIndex++;
+                gp.keyH.enterPressed=false;
+            }
+            }
+        }else{
+            npc.dialogueIndex=0;
+            if(gp.gameState==gp.dialogueState){
+                gp.gameState=gp.playState;
+            }
+        }
+        
+        
         
         for (String line : currentDialogue.split("\n")) {
             g2.drawString(line, x, y);
@@ -518,6 +550,7 @@ public class UI {
     }
     
     public void tradeSelect(){
+        npc.dialogueSet =0;
         drawDialogueScreen();
         
         //Draw Window
@@ -554,8 +587,7 @@ public class UI {
             g2.drawString(">", x-24, y);
             if(gp.keyH.enterPressed == true){
                 commandNum = 0;
-                gp.gameState=gp.dialogueState;
-                currentDialogue = "Come again, hehe!";
+                npc.startDialogue(npc,1);
             }
         }
         
@@ -609,8 +641,7 @@ public class UI {
                 
                 if(npc.inventory.get(itemIndex).price > gp.player.coin){
                     subState=0;
-                    gp.gameState = gp.dialogueState;
-                    currentDialogue = "You need more coins to buy that !";
+                    npc.startDialogue(npc,2);
                     drawDialogueScreen();
                     gp.gameState = gp.tradeState;
                 }else if(gp.player.canObtainItem(npc.inventory.get(itemIndex))==true){
@@ -620,8 +651,7 @@ public class UI {
                 
                 }else{
                     subState=0;
-                    gp.gameState = gp.dialogueState;
-                    currentDialogue = "You inventory is full !";
+                    npc.startDialogue(npc,3);
                     drawDialogueScreen();
                     gp.gameState = gp.tradeState;
                 }
@@ -692,8 +722,7 @@ public class UI {
                 || gp.player.inventory.get(itemIndex) == gp.player.currentLight ){
                 commandNum = 0;
                 subState = 0;
-                gp.gameState = gp.dialogueState;
-                currentDialogue = "You cannot sell an equipped item !";
+                npc.startDialogue(npc,4);
                 gp.gameState = gp.tradeState;
                 
             
@@ -711,6 +740,8 @@ public class UI {
     
     }
     }
+    
+    
     
     public void drawGameOverScreen(){
        g2.setColor(new Color(0,0,0,150));

@@ -29,13 +29,13 @@ public class MON_GreenSlime extends Entity {
         defaultSpeed = 1;
         speed = defaultSpeed;
         type = type_monster; //monstro
-        maxLife = 4;
+        maxLife = 3;
         life = maxLife;
-        attack = 3;
+        attack = 2;
         defense = 0;
-        exp = 2;
+        exp = 4;
         
-        projectile = new OBJ_Rock(gp);
+        //projectile = new OBJ_Rock(gp);
 
         solidArea.x = 3;
         solidArea.y = 18;
@@ -75,7 +75,7 @@ public class MON_GreenSlime extends Entity {
             searchPath(getGoalCol(gp.player), getGoalRow(gp.player));
             
             //---- PROJECTILE SHOOT 
-            checkShootOrNot(200,30);
+            //checkShootOrNot(200,30);
         }else{
             //CHECK IF IT STARTS CHASING
             checkStartChasingOrNot(gp.player,5,100);

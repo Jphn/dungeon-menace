@@ -12,13 +12,14 @@ import projeto.dugeonmenace.entity.Entity;
  * @author natan
  */
 public class OBJ_ManaCrystal extends Entity {
-    GamePanel gp;
+    public static final String objName = "Mana Crystal";
+
     public OBJ_ManaCrystal(GamePanel gp) {
         super(gp);
-        this.gp = gp;
+        
         
         type = type_pickupOnly;        
-        name = "Mana Crystal";
+        name = objName;
         value = 1;
         down1 = setup("/objectsSprite/manacrystal_full.png", gp.tileSize, gp.tileSize);
         image = setup("/objectsSprite/manacrystal_full.png", gp.tileSize, gp.tileSize);

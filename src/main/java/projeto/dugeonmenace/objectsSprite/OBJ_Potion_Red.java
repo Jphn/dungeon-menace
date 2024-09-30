@@ -12,13 +12,14 @@ import projeto.dugeonmenace.entity.Entity;
  * @author T-GAMER
  */
 public class OBJ_Potion_Red extends Entity {
-     
+         public static final String objName = "Red potion";
+
     public OBJ_Potion_Red(GamePanel gp) {
         super(gp);
-        this.gp = gp;
+        
         
         type = type_consumable;
-        name = "Red potion";
+        name = objName;
         value = 5;
         price = 25;
         stackable = true;
@@ -28,10 +29,15 @@ public class OBJ_Potion_Red extends Entity {
         description = "[" + name + "]\nHeals your life by "+ value+".";
         
     }
-    public boolean use(Entity entity){
-        gp.gameState = gp.dialogueState;
-        gp.ui.currentDialogue = "You drink the "+ name+ " !\n"+
+    public void setDialogue(){
+    dialogues[0][0] = "You drink the "+ name+ " !\n"+
                 "Your life has been recovered by "+ value +" !";
+    
+    }
+    
+    public boolean use(Entity entity){
+        startDialogue(this,0);
+        
         
         entity.life += value;
         gp.playSE(2);

@@ -4,6 +4,7 @@
  */
 package projeto.dugeonmenace;
 
+import projeto.dugeonmenace.data.Progress;
 import projeto.dugeonmenace.entity.Entity;
 
 /**
@@ -14,6 +15,9 @@ public class EventHandler {
 
     GamePanel gp;
     EventRect eventRect[][][];
+    
+    Entity eventMaster;
+    
     int previousEventX, previousEventY;
     boolean canTouchEvent = true;
     
@@ -21,7 +25,8 @@ public class EventHandler {
 
     public EventHandler(GamePanel gp) {
         this.gp = gp;
-
+        
+        this.eventMaster = new Entity(gp);
         /**
          * Aqui ele ta criando um pequeno
          *
@@ -58,8 +63,15 @@ public class EventHandler {
                 }
             }
         }
+        setDialogue();
     }
-
+    public void setDialogue(){
+        eventMaster.dialogues[0][0]="You fall into a pit !";
+        eventMaster.dialogues[1][0]="You drink the water. \nYour life and mana have been recoved."
+                    + "\n(The progress has been saved)";
+        
+    
+    }
     public void checkEvent() {
         int xDistance = Math.abs(gp.player.worldX - previousEventX);
         int yDistance = Math.abs(gp.player.worldY - previousEventY);
@@ -78,19 +90,33 @@ public class EventHandler {
             }
         
             else if (hit(0,10, 39, "any") == true) {
-                teleport(1,12,12,gp.playState);
+                teleport(1,12,12,gp.playState,gp.indoor);
             }
             
             else if (hit(1,12, 12, "any") == true) {
-                teleport(0,10,39,gp.playState);
+                teleport(0,10,39,gp.playState,gp.outside);
             }   
             else if (hit(1,12, 9, "up") == true) {
                 speak(gp.npc[1][0]);
+            }
+            else if (hit(0,12, 9, "any") == true) { // to the dungeon
+                teleport(2,9,41,gp.playState,gp.dungeon);
+            }   
+            else if (hit(2,9,41, "any") == true) { // to outside
+                teleport(0,12, 9,gp.playState,gp.outside);
+            }  
+            else if (hit(2,8,7, "any") == true) { // to the dungeon B2
+                teleport(3,26, 41,gp.playState,gp.dungeon);
+            }  
+            else if (hit(3,26, 41, "any") == true) { // to the dungeon B2
+                teleport(2,8,7,gp.playState,gp.dungeon);
             } 
+            
         }
     }
 
-    public void teleport(int map,int col, int row,int gameState) {
+    public void teleport(int map,int col, int row,int gameState,int area) {
+        gp.nextArea = area;
         
         gp.gameState = gp.trasitionState;
         
@@ -148,7 +174,9 @@ public class EventHandler {
         gp.gameState = gameState; // seta o jogo no modo dialogo
         gp.player.attackCanceled = true;
         gp.playSE(6);
-        gp.ui.currentDialogue = "You fall into a pit !"; //adiciona ao currentDialogue essa string
+        
+        
+        eventMaster.startDialogue(eventMaster, 0);
         gp.player.life -= 1; // diminui a vida do player
         //eventRect[col][row].eventDone = true; //Isso aqui faz o evento ocorrer somente uma vez
         canTouchEvent = false;
@@ -159,8 +187,8 @@ public class EventHandler {
             gp.gameState = gameState;
             gp.player.attackCanceled = true;
             gp.playSE(2);
-            gp.ui.currentDialogue = "You drink the water. \nYour life and mana have been recoved."
-                    + "\n(The progress has been saved)";
+            eventMaster.startDialogue(eventMaster, 1);
+            
             gp.player.life = gp.player.maxLife;
             gp.player.mana = gp.player.maxMana;
             gp.aSetter.setMonster();
@@ -179,5 +207,14 @@ public class EventHandler {
         }
         
         
+    }
+    
+    public void skeletonLord()
+    {
+        if(gp.bossBattleOn == false && Progress.skeletonLordDefeated == false)
+        {
+           // gp.gameState = gp.cutsceneState;
+           // gp.csManager.sceneNum = gp.csManager.skeletonLord;
+        }
     }
 }

@@ -15,18 +15,21 @@ import projeto.dugeonmenace.GamePanel;
  */
 public class EnviromentManager {
     GamePanel gp;
-    public Lighting lighting; 
+    public Lighting lighting,lighting2; 
 
     public EnviromentManager(GamePanel gp) {
         this.gp = gp;
         setup();
     }
     public void setup(){
-        lighting = new Lighting(gp,350);
+        lighting = new Lighting(gp,500);
+        lighting2 = new Lighting(gp,800);
     }
     
     public void draw(Graphics2D g2){
         lighting.draw(g2);
     }
-    
+    public void draw2(Graphics2D g2){
+        lighting2.draw(g2);
+    }
 }

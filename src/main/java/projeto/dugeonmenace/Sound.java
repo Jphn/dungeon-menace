@@ -23,6 +23,7 @@ public class Sound {
     float volume;
 
     public Sound() {
+        try{
         soundURL[0] = getClass().getResource("/sound/BlueBoyAdventure.wav");
         soundURL[1] = getClass().getResource("/sound/coin.wav");
         soundURL[2] = getClass().getResource("/sound/powerup.wav");
@@ -44,8 +45,20 @@ public class Sound {
         soundURL[14] = getClass().getResource("/sound/sleep.wav");
         soundURL[15] = getClass().getResource("/sound/blocked.wav");
         soundURL[16] = getClass().getResource("/sound/parry.wav");
+        soundURL[17] = getClass().getResource("/sound/speak.wav");
         
-    }
+        soundURL[18] = getClass().getResource("/sound/Merchant.wav");
+        soundURL[19] = getClass().getResource("/sound/Dungeon.wav");
+        soundURL[20] = getClass().getResource("/sound/chipwall.wav");
+        soundURL[21] = getClass().getResource("/sound/dooropen.wav");
+        soundURL[22] = getClass().getResource("/sound/Boss_fight.wav");
+        soundURL[23] = getClass().getResource("/sound/Jornada.wav");
+        }catch(Exception e){
+            
+            System.out.println("Sound Files error !");
+            }
+        }
+        
 
     public void setFile(int i) {
 

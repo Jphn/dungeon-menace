@@ -20,7 +20,7 @@ import projeto.dugeonmenace.objectsSprite.*;
 public class SaveLoad {
 
     GamePanel gp;
-
+    
     public SaveLoad(GamePanel gp) {
         this.gp = gp;
     }
@@ -52,12 +52,30 @@ public class SaveLoad {
             ds.currentWeaponSlot = gp.player.getCurrentWeaponSlot();
             ds.currentShieldSlot = gp.player.getCurrentShieldSlot();
             
-            String mapObjectNames[][];
-            int mapObjectWorldX[][];
-            int mapObjectWorldY[][];
+            ds.mapObjectNames = new String[gp.maxMap][gp.obj[1].length];           
+            ds.mapObjectWorldX = new int[gp.maxMap][gp.obj[1].length];
+            ds.mapObjectWorldY = new int[gp.maxMap][gp.obj[1].length];
+            ds.mapObjectLootNames = new String[gp.maxMap][gp.obj[1].length];
+            ds.mapObjectOpened = new boolean[gp.maxMap][gp.obj[1].length];
             
-            for(int i =0; i<gp.player.inventory.size();i++){
-            
+            for(int mapNum =0; mapNum<gp.player.inventory.size();mapNum++){
+                for(int i = 0; i<gp.obj[1].length;i++){
+                    
+                    if(gp.obj[mapNum][i]==null){
+                        ds.mapObjectNames[mapNum][i] = "NA";
+                        
+                    }else{
+                        ds.mapObjectNames[mapNum][i] = gp.obj[mapNum][i].name;
+                        
+                        ds.mapObjectWorldX[mapNum][i]=gp.obj[mapNum][i].worldX;
+                        ds.mapObjectWorldY[mapNum][i]=gp.obj[mapNum][i].worldY;
+                        if(gp.obj[mapNum][i].loot != null){
+                            ds.mapObjectLootNames[mapNum][i] = gp.obj[mapNum][i].loot.name;
+                        }
+                        ds.mapObjectOpened[mapNum][i] = gp.obj[mapNum][i].opened;
+                    }
+                    
+                }
             }
             
             //Write the DataStorage object
@@ -90,7 +108,7 @@ public class SaveLoad {
             
             gp.player.inventory.clear();
             for(int i =0; i<ds.itemNames.size();i++){
-                gp.player.inventory.add(getObject(ds.itemNames.get(i)));
+                gp.player.inventory.add(gp.eGenerator.getObject(ds.itemNames.get(i)));
                 gp.player.inventory.get(i).amount = ds.itemAmounts.get(i);
             
             }
@@ -103,6 +121,32 @@ public class SaveLoad {
             gp.player.getDefense();
             gp.player.getAttackImage();
             
+            //OBJECTS ON MAP
+            for(int mapNum =0; mapNum<gp.player.inventory.size();mapNum++){
+                for(int i = 0; i<gp.obj[1].length;i++){
+                    if(ds.mapObjectNames[mapNum][i].equals("NA")){
+                        gp.obj[mapNum][i] = null;
+                    
+                    
+                    }else{
+                        gp.obj[mapNum][i]= gp.eGenerator.getObject(ds.mapObjectNames[mapNum][i]);
+                        gp.obj[mapNum][i].worldX= ds.mapObjectWorldX[mapNum][i];
+                         gp.obj[mapNum][i].worldY= ds.mapObjectWorldY[mapNum][i];
+                         
+                         if(ds.mapObjectLootNames[mapNum][i]!=null){
+                             gp.obj[mapNum][i].setLoot(gp.eGenerator.getObject(ds.mapObjectNames[mapNum][i]) );
+                             
+                             
+                         }
+                         gp.obj[mapNum][i].opened = ds.mapObjectOpened[mapNum][i];
+                         if(gp.obj[mapNum][i].opened == true){
+                             gp.obj[mapNum][i].down1 = gp.obj[mapNum][i].image2;
+                         
+                         }
+                    }
+                        
+                }
+            }
             
             
         } catch (Exception e) {
@@ -111,26 +155,7 @@ public class SaveLoad {
 
     }
     
-    public Entity getObject(String itemName){
-        Entity obj = null;
-        
-        
-        switch(itemName){
-            case "Woodcutter's Axe": obj = new OBJ_Axe(gp);break;
-            case "Boots": obj = new OBJ_Boots(gp);break;
-            case "Key": obj = new OBJ_Key(gp);break;
-            case "Lantern": obj = new OBJ_Lantern(gp);break;
-            case "Red Potion": obj = new OBJ_Potion_Red(gp);break;
-            case "Blue Shield": obj = new OBJ_Shield_Blue(gp);break;
-            case "Wood Shield": obj = new OBJ_Shield_Wood(gp);break;
-            case "Normal Sword": obj = new OBJ_Sword_Normal(gp);break;
-            case "Tent": obj = new OBJ_Tent(gp);break;
-            case "Door": obj = new OBJ_Door(gp);break;
-            case "Chest": obj = new OBJ_Chest(gp);break;
-        }
-        
-        return obj;
-    }
+    
 }
 
 

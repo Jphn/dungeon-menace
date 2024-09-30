@@ -11,22 +11,24 @@ import projeto.dugeonmenace.entity.Entity;
  *
  * @author T-GAMER
  */
-public class OBJ_Lantern extends Entity{
-    
+public class OBJ_Lantern extends Entity {
+
+    public static final String objName = "Lantern";
+
     public OBJ_Lantern(GamePanel gp) {
         super(gp);
-        
-        this.name= "Lantern";
-        
+
+        this.name = objName;
+
         type = type_light;
-        this.down1 = setup("/objectsSprite/lantern.png",gp.tileSize,gp.tileSize);
-        
+        this.down1 = setup("/objectsSprite/lantern.png", gp.tileSize, gp.tileSize);
+
         description = "[" + name + "]\nIlluminates yours \nsurroundings.";
-        
+
         price = 200;
-        
+
         lightRadius = 250;
-        
+
     }
-    
+
 }

@@ -12,13 +12,16 @@ import projeto.dugeonmenace.entity.Entity;
  * @author T-GAMER
  */
 public class OBJ_Shield_Wood extends Entity {
+
+    public static final String objName = "Wooden shield";
+
     public OBJ_Shield_Wood(GamePanel gp) {
         super(gp);
-        name = "Wooden shield";
+        name = objName;
         type = type_shield;
-        down1= setup("/objectsSprite/shield_wood.png", gp.tileSize, gp.tileSize);
-        defenseValue =1;
-        price =45;
+        down1 = setup("/objectsSprite/shield_wood.png", gp.tileSize, gp.tileSize);
+        defenseValue = 1;
+        price = 45;
         description = "[" + name + "]\nMade by wood.";
     }
 }

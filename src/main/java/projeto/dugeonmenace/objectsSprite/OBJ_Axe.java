@@ -12,11 +12,11 @@ import projeto.dugeonmenace.entity.Entity;
  * @author T-GAMER
  */
 public class OBJ_Axe extends Entity {
-        
+    public static final String objName ="Woodcutter's Axe";   
     public OBJ_Axe(GamePanel gp) {
         super(gp);
         
-        name = "Woodcutter's Axe";
+        name = objName;
         type = type_axe;
         down1= setup("/objectsSprite/axe.png",gp.tileSize,gp.tileSize);
         attackValue = 2;

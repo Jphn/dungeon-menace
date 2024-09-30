@@ -33,6 +33,15 @@ public class DataStorage implements Serializable {
     
     int currentWeaponSlot;
     int currentShieldSlot;
+    //OBJECTS IN THE MAP
+    
+    String mapObjectNames[][];
+    
+    int mapObjectWorldX[][];
+    int mapObjectWorldY[][];
+    
+    String mapObjectLootNames[][];
+    boolean mapObjectOpened[][];
     
     
 }

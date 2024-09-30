@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import projeto.dugeonmenace.GamePanel;
 import projeto.dugeonmenace.UtilityTools;
@@ -24,23 +25,98 @@ public class TileManager {
     public Tile[] tile;
     public int mapTileNumber[][][];
     public boolean drawPath = true;
+    
+    ArrayList<String> fileNames = new ArrayList<>();
+    ArrayList<String> collisionStatus = new ArrayList<>();
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[50];
+//        tile = new Tile[50];
+//        getTileImage();
+//        this.mapTileNumber = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow]; // esse array vai guardar a informação contida nos mapas
+        
+         //READ TILE DATA FILE
+       
+        InputStream is = getClass().getResourceAsStream("/maps/tiledata.txt");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+         
+        //GETTING TILE NAMES AND COLLISION INFO FROM THE FILE
+        String line;
+        try {
+            while((line = br.readLine()) != null)
+            {
+                fileNames.add(line);
+                collisionStatus.add(br.readLine()); //read next line
+            }
+                br.close();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        //INITIALIZE THE TILE ARRAY BASED ON THE fileNames size
+        tile = new Tile[fileNames.size()]; // grass, wall, water00, water01...
         getTileImage();
-        this.mapTileNumber = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow]; // esse array vai guardar a informação contida nos mapas
-        loadMap("/maps/worldV3.txt",0);
-        loadMap("/maps/interior01.txt",1);
+
+         
+        
+        //GET THE maxWorldCol & Row
+        is = getClass().getResourceAsStream("/maps/dungeon02.txt");
+        br = new BufferedReader(new InputStreamReader(is));
+
+        try
+        {
+            String line2 = br.readLine();
+            String maxTile[] = line2.split(" ");
+
+            gp.maxWorldCol = maxTile.length;
+            gp.maxWorldRow = maxTile.length;
+
+            mapTileNumber = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
+
+            br.close();
+        }
+        catch(IOException e)
+        {
+            System.out.println("Exception!");
+        }
+        
+        loadMap("/maps/worldmap.txt",0);
+        loadMap("/maps/indoor01.txt",1);
+        loadMap("/maps/dungeon01.txt",2);
+        loadMap("/maps/dungeon02.txt",3);
     }
 
     public void getTileImage() {
+        
+        
+        for(int i = 0; i < fileNames.size(); i++)
+        {
+            String fileName;
+            boolean collision;
 
+            //Get a file name
+            fileName = fileNames.get(i);
+
+            //Get a collision status
+            if(collisionStatus.get(i).equals("true"))
+            {
+                collision = true;
+            }
+            else
+            {
+                collision = false;
+            }
+
+            setup(i, fileName, collision);
+
+        }
+        
         /**
          * da para adicionar a colisão pelo construtor
          *
          * Dando Scale antes nas imagens para otimizar
-         */
+         *
         //PLACEHOLDER
         setup(0, "grass00", false);
         setup(1, "grass00", false);
@@ -57,7 +133,7 @@ public class TileManager {
         /**
          * depois colocar isso em um loop, pois isso so precisa rodar 1 vez,
          * depois fica mais facil de adicionar novos blocos
-         */
+         
 
         setup(11, "grass01", false);
         setup(12, "water00", true);
@@ -94,6 +170,8 @@ public class TileManager {
         setup(42, "hut", false);
         setup(43, "floor01", false);
         setup(44, "table01", true);
+        */
+        
     }
 
     public void setup(int index, String imageName, boolean collision) {
@@ -101,7 +179,7 @@ public class TileManager {
 
         try {
             tile[index] = new Tile();
-            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName + ".png"));
+            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName ));
             tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
             tile[index].collision = collision;
 
