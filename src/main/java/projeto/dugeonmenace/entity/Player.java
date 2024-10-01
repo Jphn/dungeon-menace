@@ -66,7 +66,7 @@ public class Player extends Entity {
         this.maxMana = 4;
         this.ammo = 10;
         this.mana = maxMana;
-        this.strength = 1;
+        this.strength = 199;
         this.dexterity = 1;
         this.exp = 0;
         this.nextLevelExp = 5;
@@ -149,7 +149,7 @@ public class Player extends Entity {
     public int getCurrentWeaponSlot(){
         int currentWeaponSlot = 0;
         
-        for(int i = 0;i<inventory.size();i++){
+        for(int i = 0;i < inventory.size(); i++){
             if(inventory.get(i) == currentWeapon){
                 currentWeaponSlot=i;
             }
@@ -161,12 +161,11 @@ public class Player extends Entity {
     public int getCurrentShieldSlot(){
         int currentShieldSlot = 0;
         
-        for(int i = 0;i<inventory.size();i++){
+        for(int i = 0; i <inventory.size(); i++){
             if(inventory.get(i) == currentShield){
                 currentShieldSlot=i;
             }
         }
-        
         return currentShieldSlot;
     }
     
@@ -178,9 +177,9 @@ public class Player extends Entity {
         left1 = image;
         left2 = image;
         right1 = image;
-        right2 = image;
-        
+        right2 = image;    
     }
+    
     public void getAttackImage() {
         if(currentWeapon.type == type_sword){
             attackUp1 = setup("/player/boy_attack_up_1.png", gp.tileSize, gp.tileSize * 2);
@@ -202,8 +201,7 @@ public class Player extends Entity {
             attackRight1 = setup("/player/" + "boy_axe_right_1" + ".png", gp.tileSize* 2, gp.tileSize);
             attackRight2 = setup("/player/" + "boy_axe_right_2" + ".png", gp.tileSize* 2, gp.tileSize);
         }
-        else if(currentWeapon.type == type_pickaxe)
-        {
+        else if(currentWeapon.type == type_pickaxe) {
             attackUp1 = setup("/player/boy_pick_up_1.png",gp.tileSize, gp.tileSize * 2);         // 16x32 px
             attackUp2 = setup("/player/boy_pick_up_2.png",gp.tileSize, gp.tileSize * 2);         // 16x32 px
             attackDown1 = setup("/player/boy_pick_down_1.png",gp.tileSize, gp.tileSize * 2);     // 16x32 px
@@ -220,8 +218,6 @@ public class Player extends Entity {
      *
      */
     public void update() {
-        
-        
         if (knockBack == true) {
             
             collisionOn = false;
@@ -236,7 +232,7 @@ public class Player extends Entity {
                 knockBack = false;
                 speed = defaultSpeed;
             
-            }else if (collisionOn == false) {
+            } else if (collisionOn == false) {
                 
                 switch (knockBackDirection) {
                 case "up": this.worldY -= this.speed; break;
