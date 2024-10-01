@@ -59,14 +59,14 @@ public class Player extends Entity {
         this.speed = defaultSpeed;
         this.direction = "down";
 
-        //Player status
+        // Player status
         this.maxLife = 6;
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
         this.maxMana = 4;
         this.ammo = 10;
         this.mana = maxMana;
-        this.strength = 199;
+        this.strength = 1;
         this.dexterity = 1;
         this.exp = 0;
         this.nextLevelExp = 5;
@@ -88,12 +88,10 @@ public class Player extends Entity {
     }
     
     public void setDefaultPositions() {
-        
-        gp.currentMap =0;
+        gp.currentMap = 0;
         this.worldX = gp.tileSize * 23; 
         this.worldY = gp.tileSize * 21; 
         this.direction = "down";
-        
     }
     
     public void restoreStatus() {
@@ -107,25 +105,24 @@ public class Player extends Entity {
         knockBack = false;
         lightUpdated = true;
     }
-    public void setDialogue(){
     
+    public void setDialogue() {
         dialogues[0][0] = "You are level: " + level + " now!\n"
                     + "You feel stronger!";
     }
     
     public void setItems() {
-        
         inventory.clear();
         inventory.add(currentWeapon);
         inventory.add(currentShield);
     }
     
-    public int getAttack(){
+    public int getAttack() {
         attackArea = currentWeapon.attackArea;
         return attack = strength  * currentWeapon.attackValue;
     }
     
-    public int getDefense(){
+    public int getDefense() {
         return defense = dexterity * currentShield.defenseValue;
     }
     
@@ -139,14 +136,15 @@ public class Player extends Entity {
         right1 = setup("/player/" + "boy_right_1" + ".png", gp.tileSize, gp.tileSize);
         right2 = setup("/player/" + "boy_right_2" + ".png", gp.tileSize, gp.tileSize);
     }
-    public void getGuardImage(){
+    
+    public void getGuardImage() {
         guardUp = setup("/player/" + "boy_guard_up" + ".png", gp.tileSize, gp.tileSize);
         guardDown = setup("/player/" + "boy_guard_down" + ".png", gp.tileSize, gp.tileSize);
         guardLeft = setup("/player/" + "boy_guard_left" + ".png", gp.tileSize, gp.tileSize);
         guardRight = setup("/player/" + "boy_guard_right" + ".png", gp.tileSize, gp.tileSize);
     }
     
-    public int getCurrentWeaponSlot(){
+    public int getCurrentWeaponSlot() {
         int currentWeaponSlot = 0;
         
         for(int i = 0;i < inventory.size(); i++){
@@ -154,7 +152,6 @@ public class Player extends Entity {
                 currentWeaponSlot=i;
             }
         }
-        
         return currentWeaponSlot;
     }
     
@@ -190,8 +187,7 @@ public class Player extends Entity {
             attackLeft2 = setup("/player/boy_attack_left_2.png", gp.tileSize * 2, gp.tileSize);
             attackRight1 = setup("/player/boy_attack_right_1.png", gp.tileSize * 2, gp.tileSize);
             attackRight2 = setup("/player/boy_attack_right_2.png", gp.tileSize * 2, gp.tileSize);
-        }else if(currentWeapon.type == type_axe){
-            
+        } else if(currentWeapon.type == type_axe){
             attackUp1 = setup("/player/" + "boy_axe_up_1" + ".png", gp.tileSize, gp.tileSize* 2);
             attackUp2 = setup("/player/" + "boy_axe_up_2" + ".png", gp.tileSize, gp.tileSize* 2);
             attackDown1 = setup("/player/" + "boy_axe_down_1" + ".png", gp.tileSize, gp.tileSize* 2);
@@ -402,9 +398,7 @@ public class Player extends Entity {
         }
     }
     
-    public int searchItemInInventory(String itemName){
-        
-        
+    public int searchItemInInventory(String itemName) {
         int itemIndex= 999;
         
         for(int i=0;i<gp.player.inventory.size();i++){
@@ -413,13 +407,10 @@ public class Player extends Entity {
                break;
             }
         }
-        
-        
         return itemIndex;
     }
     
-    public boolean canObtainItem(Entity item){
-        
+    public boolean canObtainItem(Entity item) {
         boolean canObtain = false;
         Entity newItem = gp.eGenerator.getObject(item.name);
         if(newItem.stackable==true){
@@ -428,18 +419,18 @@ public class Player extends Entity {
             if(index != 999){
                 inventory.get(index).amount++;
                 canObtain = true;
-            }else{ // New item need to check inventory
+            } else{ // New item need to check inventory
                 if(inventory.size() != maxInventorySize){
                     inventory.add(newItem);
                     canObtain = true;
                 }
             }
             
-        }else{ //NOT stackable
-            if(inventory.size() != maxInventorySize){
+        } else { //NOT stackable
+            if(inventory.size() != maxInventorySize) {
                     inventory.add(newItem);
                     canObtain = true;
-                }
+            }
         }
         
         return canObtain;
@@ -452,20 +443,20 @@ public class Player extends Entity {
             if (gp.obj[gp.currentMap][i].type == type_pickupOnly) {
                 gp.obj[gp.currentMap][i].use(this);
                 gp.obj[gp.currentMap][i] = null;
-            }else if (gp.obj[gp.currentMap][i].type == type_obstacle){
-                if(keyH.enterPressed == true){
+            } else if (gp.obj[gp.currentMap][i].type == type_obstacle) {
+                if(keyH.enterPressed == true) {
                     attackCanceled = true;
                     gp.obj[gp.currentMap][i].interact();
                 }
             }
             // INVENTORY ITEMS
-            else if (gp.obj[gp.currentMap][i].unpickable == false){
+            else if (gp.obj[gp.currentMap][i].unpickable == false) {
                 String text;
                 if(canObtainItem(gp.obj[gp.currentMap][i]) == true) {
                     
                     gp.playSE(1);
                     text = "Got a "+ gp.obj[gp.currentMap][i].name + "!";
-                } else{
+                } else {
                     text = "You cannot carry any more ! ";
                 }
                 gp.ui.addMessage(text); 
@@ -474,7 +465,7 @@ public class Player extends Entity {
         }
     }
     
-    public void damageMonster(int i,Entity attacker ,int attack, int knockBackPower) {
+    public void damageMonster(int i, Entity attacker, int attack, int knockBackPower) {
         if (i != 999) {
             if (gp.monster[gp.currentMap][i].invincible == false) {
                 
@@ -587,8 +578,9 @@ public class Player extends Entity {
             //transparente
         }
         
-        
-        g2.drawImage(image, tempScreenX, tempScreenY, null); // null ali pq aquilo aparentemente n vamos usar
+        if (drawing == true) {
+            g2.drawImage(image, tempScreenX, tempScreenY, null);
+        }
         //reset alpha
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
@@ -613,12 +605,9 @@ public class Player extends Entity {
                 if (damage < 1) {
                     damage = 1;
                 }
-                
                 life -= damage;
-                
                 invincible = true;               
                 gp.player.transparent = true;
-                    
             }   
         }
     }

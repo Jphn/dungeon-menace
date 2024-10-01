@@ -9,6 +9,7 @@ import projeto.dugeonmenace.GamePanel;
 import projeto.dugeonmenace.data.Progress;
 import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.objectsSprite.OBJ_Coin_Bronze;
+import projeto.dugeonmenace.objectsSprite.OBJ_Door_Iron;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
 import projeto.dugeonmenace.objectsSprite.OBJ_ManaCrystal;
 
@@ -19,9 +20,9 @@ import projeto.dugeonmenace.objectsSprite.OBJ_ManaCrystal;
 public class MON_SkeletonLord extends Entity {
     GamePanel gp; // cuz of different package
     public static final String monName = "Skeleton Lord";
+    
     public MON_SkeletonLord(GamePanel gp) {
         super(gp);
-
         this.gp = gp;
 
         type = type_monster;
@@ -54,12 +55,9 @@ public class MON_SkeletonLord extends Entity {
         setDialogue();
     }
 
-    public void getImage()
-    {
-
+    public void getImage() {
         int i = 5;
-        if(inRage == false)
-        {
+        if (inRage == false) {
             up1 = setup("/monster/skeletonlord_up_1.png",gp.tileSize * i,gp.tileSize * i);
             up2 = setup("/monster/skeletonlord_up_2.png",gp.tileSize * i,gp.tileSize * i);
             down1 = setup("/monster/skeletonlord_down_1.png",gp.tileSize * i,gp.tileSize * i);
@@ -69,8 +67,8 @@ public class MON_SkeletonLord extends Entity {
             right1 = setup("/monster/skeletonlord_right_1.png",gp.tileSize * i,gp.tileSize * i);
             right2 = setup("/monster/skeletonlord_right_2.png",gp.tileSize * i,gp.tileSize * i);
         }
-        if(inRage == true)
-        {
+        
+        if (inRage == true) {
             up1 = setup("/monster/skeletonlord_phase2_up_1.png",gp.tileSize * i,gp.tileSize * i);
             up2 = setup("/monster/skeletonlord_phase2_up_2.png",gp.tileSize * i,gp.tileSize * i);
             down1 = setup("/monster/skeletonlord_phase2_down_1.png",gp.tileSize * i,gp.tileSize * i);
@@ -81,13 +79,10 @@ public class MON_SkeletonLord extends Entity {
             right2 = setup("/monster/skeletonlord_phase2_right_2.png",gp.tileSize * i,gp.tileSize * i);
         }
     }
-    public void getAttackImage()
-    {
-
+    
+    public void getAttackImage() {
         int i = 5;
-
-        if(inRage == false)
-        {
+        if (inRage == false) {
             attackUp1 = setup("/monster/skeletonlord_attack_up_1.png",gp.tileSize * i, gp.tileSize * 2 * i);
             attackUp2 = setup("/monster/skeletonlord_attack_up_2.png",gp.tileSize * i, gp.tileSize * 2 * i);
             attackDown1 = setup("/monster/skeletonlord_attack_down_1.png",gp.tileSize * i, gp.tileSize * 2 * i);
@@ -97,8 +92,7 @@ public class MON_SkeletonLord extends Entity {
             attackRight1 = setup("/monster/skeletonlord_attack_right_1.png",gp.tileSize * 2 * i, gp.tileSize * i);
             attackRight2 = setup("/monster/skeletonlord_attack_right_2.png",gp.tileSize * 2 * i, gp.tileSize * i);
         }
-        if(inRage == true)
-        {
+        if (inRage == true) {
             attackUp1 = setup("/monster/skeletonlord_phase2_attack_up_1.png",gp.tileSize * i, gp.tileSize * 2 * i);
             attackUp2 = setup("/monster/skeletonlord_phase2_attack_up_2.png",gp.tileSize * i, gp.tileSize * 2 * i);
             attackDown1 = setup("/monster/skeletonlord_phase2_attack_down_1.png",gp.tileSize * i, gp.tileSize * 2 * i);
@@ -109,79 +103,69 @@ public class MON_SkeletonLord extends Entity {
             attackRight2 = setup("/monster/skeletonlord_phase2_attack_right_2.png",gp.tileSize * 2 * i, gp.tileSize * i);
         }
     }
-    public void setDialogue()
-    {
-        dialogues[0][0] = "No one can steal my treasure.";
-        dialogues[0][1] = "You will die here.";
+    
+    public void setDialogue() {
+        dialogues[0][0] = "No one can steal my treasure!";
+        dialogues[0][1] = "You will die here!";
         dialogues[0][2] = "WELCOME TO YOUR DOOM!";
-
     }
-    public void setAction()
-    {
-
-        if(inRage==false && life < maxLife/2)
-        {
+    
+    public void setAction() {
+        if (inRage == false && life < maxLife / 2) {
             inRage = true;
             getImage();
             getAttackImage();
             defaultSpeed++;
             speed = defaultSpeed;
             attack += 4;
-
         }
-        if(getTileDistance(gp.player) < 10)
-        {
+        
+        if (getTileDistance(gp.player) < 10) {
             moveTowardPlayer(60);
         }
-        else
-        {
+        else {
             getRandomDirection(120);
         }
 
         //Check if it is attacks
-        if(attacking == false)
-        {
-            checkAttackOrNot(60, gp.tileSize*7, gp.tileSize*5); //Small rate = More agressive
+        if (attacking == false) {
+            checkAttackOrNot(60, gp.tileSize * 7, gp.tileSize * 5); // Small rate = More agressive
         }
     }
 
     public void damageReaction() {
         actionLockCounter = 0;
     }
-    public void checkDrop()
-    {
+    
+    public void checkDrop() {
         gp.bossBattleOn = false;
         Progress.skeletonLordDefeated = true;
 
-        //Restore the previous music
+        // Restore the previous music
         gp.stopMusic();
         gp.playMusic(19);
 
         // Remove the iron doors
-        /*
-        for(int i = 0; i < gp.obj[1].length; i++)
-        {
-            if(gp.obj[gp.currentMap][i] != null && gp.obj[gp.currentMap][i].name.equals(OBJ_Door_Iron.objName))
-            {
+        for(int i = 0; i < gp.obj[1].length; i++) {
+            if (gp.obj[gp.currentMap][i] != null && 
+                    gp.obj[gp.currentMap][i].name.equals(OBJ_Door_Iron.objName)) {
+                
                 gp.playSE(21);
                 gp.obj[gp.currentMap][i] = null;
             }
         }
-        */
+        
         //CAST A DIE
         int i = new Random().nextInt(100)+1;
 
         //SET THE MONSTER DROP
-        if(i < 50)
-        {
+        if(i < 50) {
             dropItem(new OBJ_Coin_Bronze(gp));
         }
-        if(i >= 50 && i < 75)
-        {
+        if(i >= 50 && i < 75) {
             dropItem(new OBJ_Heart(gp));
         }
-        if(i >= 75 && i < 100)
-        {
+        if(i >= 75 && i < 100) {
             dropItem(new OBJ_ManaCrystal(gp));
         }
     }

@@ -9,8 +9,5 @@ package projeto.dugeonmenace.data;
  * @author T-GAMER
  */
 public class Progress {
-
     public static boolean skeletonLordDefeated;
-
 }
-

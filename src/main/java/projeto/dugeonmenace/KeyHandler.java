@@ -49,7 +49,7 @@ public class KeyHandler implements KeyListener {
         } 
         
         // DIALOGUE STATE
-        else if (gp.gameState == gp.dialogueState) {
+        else if (gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState) {
             dialogueState(code);
         }
         
@@ -66,17 +66,15 @@ public class KeyHandler implements KeyListener {
         else if (gp.gameState == gp.gameOverState) {
            gameOverState(code);
         }
-        //  TRADE STATE
+        // TRADE STATE
         else if (gp.gameState == gp.tradeState) {
            
            tradeState(code);
         }
         // MAP STATE
         else if (gp.gameState == gp.mapState) {
-           
            mapState(code);
         }
-        
     }
     
     @Override
@@ -271,12 +269,10 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_R) {
             switch(gp.currentMap){
                 case 0:
-                    gp.tileM.loadMap("/maps/worldV3.txt",0);break;
+                    gp.tileM.loadMap("/maps/worldV3.txt",0); break;
                 case 1:
-                    gp.tileM.loadMap("/maps/interior01.txt",1);break;
-            
+                    gp.tileM.loadMap("/maps/interior01.txt",1); break;
             }
-            
         }
     }
     
@@ -292,74 +288,58 @@ public class KeyHandler implements KeyListener {
     
     public void dialogueState(int code) {
         if (code == KeyEvent.VK_ENTER) {
-            enterPressed=true;
-            //gp.gameState = gp.playState;
+            enterPressed = true;
         }
     } 
     
-    public void tradeState(int code){
-        
+    public void tradeState(int code) {
         if (code == KeyEvent.VK_ENTER) {
             this.enterPressed = true;
             gp.playSE(1); // coin sound
 
-
             switch (gp.ui.commandNum) {
                 case 0:
-
                     break;
                 case 1:
-
                     break;
                case 2:
                     gp.gameState = gp.playState;
                     break;
-
             }
         }
         
-        if(gp.ui.subState==0){
+        if (gp.ui.subState == 0) {
             if (code == KeyEvent.VK_W) {
-                        this.upPressed = true;
-                        gp.ui.commandNum -= 1;
-                        if (gp.ui.commandNum < 0) {
-                            gp.ui.commandNum = 2;
-                        }
-                    }
-
-            if (code == KeyEvent.VK_S) {
-                 this.downPressed = true;
-                 gp.ui.commandNum += 1;
-                 if (gp.ui.commandNum > 2) {
-                        gp.ui.commandNum = 0;
-                 }
+                this.upPressed = true;
+                gp.ui.commandNum -= 1;
+                
+                if (gp.ui.commandNum < 0) {
+                gp.ui.commandNum = 2;
+                }
             }
 
-            
+            if (code == KeyEvent.VK_S) {
+                this.downPressed = true;
+                gp.ui.commandNum += 1;
+                if (gp.ui.commandNum > 2) {
+                    gp.ui.commandNum = 0;
+                }
+            } 
         } 
-        if(gp.ui.subState==1){
+        
+        if (gp.ui.subState == 1) {
             npcInventory(code);
             if(code == KeyEvent.VK_ESCAPE){
                 gp.ui.subState = 0;
-                
-            
             }
-            
-        
         }
-        if(gp.ui.subState==2){
+        
+        if (gp.ui.subState == 2) {
             playerInventory(code);
             if(code == KeyEvent.VK_ESCAPE){
                 gp.ui.subState = 0;
-                
-            
             }
-            
-        
         }
-                
-                
-    
     }
    
     public void characterState(int code) {

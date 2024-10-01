@@ -346,7 +346,7 @@ public class UI {
     }
 
     public void drawDialogueScreen() {
-        //window
+        // window
         int x = gp.tileSize * 3;
         int y = gp.tileSize / 2;
         int width = gp.screenWidth - (gp.tileSize * 6);
@@ -357,13 +357,12 @@ public class UI {
         x += gp.tileSize;
         y += gp.tileSize;
         
-        
-        if(npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null){
+        if (npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null) {
             //currentDialogue = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
             
             char characters[] = npc.dialogues[npc.dialogueSet][npc.dialogueIndex].toCharArray();
             
-            if(charIndex < characters.length){
+            if( charIndex < characters.length) {
                 gp.playSE(17);
                 String s = String.valueOf(characters[charIndex]);
                 combinedText = combinedText + s;
@@ -371,24 +370,26 @@ public class UI {
                 charIndex++;
             }
             
-            
-            if(gp.keyH.enterPressed==true){
+            if (gp.keyH.enterPressed == true) {
+                charIndex = 0 ;
+                combinedText = "";
                 
-                charIndex=0;
-                combinedText="";
-                if(gp.gameState==gp.dialogueState){
-                npc.dialogueIndex++;
-                gp.keyH.enterPressed=false;
+                if (gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState) {
+                    npc.dialogueIndex++;
+                    gp.keyH.enterPressed = false;
+                }
             }
+        } else {
+            npc.dialogueIndex = 0;
+            
+            if (gp.gameState == gp.dialogueState) {
+                gp.gameState = gp.playState;
             }
-        }else{
-            npc.dialogueIndex=0;
-            if(gp.gameState==gp.dialogueState){
-                gp.gameState=gp.playState;
+            
+            if (gp.gameState == gp.cutsceneState) {
+                gp.csManager.scenePhase++;
             }
         }
-        
-        
         
         for (String line : currentDialogue.split("\n")) {
             g2.drawString(line, x, y);
@@ -396,32 +397,30 @@ public class UI {
         }
     }
     
-    public void drawSleepScreen(){
+    public void drawSleepScreen() {
         counter++;
         
-        if (counter < 120){
+        if (counter < 120) {
             gp.eManager.lighting.filterAlpha +=0.01f;
             if(gp.eManager.lighting.filterAlpha>1f){
                 gp.eManager.lighting.filterAlpha = 1f;
             
             }
         }
-        if(counter >= 120){
-            gp.eManager.lighting.filterAlpha-=0.01f;
-            if(gp.eManager.lighting.filterAlpha<0f){
-                gp.eManager.lighting.filterAlpha=0f;
+        if (counter >= 120) {
+            gp.eManager.lighting.filterAlpha -= 0.01f;
+            if(gp.eManager.lighting.filterAlpha < 0f){
+                gp.eManager.lighting.filterAlpha = 0f;
                 counter = 0;
                 gp.eManager.lighting.dayState = gp.eManager.lighting.day;
                 
-                gp.eManager.lighting.dayCounter=0;
+                gp.eManager.lighting.dayCounter = 0;
                 
                 gp.gameState = gp.playState;
                 
                 gp.player.getImage();
             }
-        
         }
-    
     }
     
     public void drawInventory(Entity entity,boolean cursor){

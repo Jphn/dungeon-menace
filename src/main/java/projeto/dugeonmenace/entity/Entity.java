@@ -37,25 +37,23 @@ public class Entity {
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
 
     public String dialogues[][] = new String[20][20];
-    public int dialogueSet=0;
+    public int dialogueSet = 0;
+    
     // ENTITY STATUS
     public int maxLife;
     public int life;
     public int defaultSpeed;
     public int speed;
     public int level;
-
     public int maxMana;
     public int mana;
     public int ammo;
-
     public int strength;
     public int dexterity;
     public int attack;
     public int defense;
     public int exp;
     public int nextLevelExp;
-
     public int coin;
     public int price;
 
@@ -71,7 +69,7 @@ public class Entity {
     public Projectile projectile;
     public int useCost;
 
-    //ITEM ATTRIBUTES
+    // ITEM ATTRIBUTES
     public int value;
     public int attackValue;
     public int defenseValue;
@@ -80,7 +78,6 @@ public class Entity {
     public int lightRadius; // aqui é para o caso de diferentes fontes de luz gerarem diferentes areas luminosas (teremos isso)
     public boolean stackable = false;
     public int amount = 1;
-    
     public int motion1_duration;
     public int motion2_duration;
 
@@ -96,7 +93,6 @@ public class Entity {
     // NOVOS ATRIBUTOS
     public BufferedImage image, image2, image3;
     public String name;
-
     public boolean collision = false;
 
     // ENTITY INVENTORY
@@ -119,7 +115,6 @@ public class Entity {
     public boolean onPath = false;
     public boolean knockBack = false;
     public boolean guarding = false;
-
     public boolean transparent = false;
 
     // ALIVE AND DEATH
@@ -144,15 +139,14 @@ public class Entity {
     public int guardCounter = 0;
     public int offBalanceCounter = 0;
     public boolean offBalance = false;
-
     public boolean unpickable = false; // Eu que fiz esse para o caso da porta
     
-    //
-    public boolean sleep = false;
     // BOSS
     public boolean inRage = false;
     public boolean boss;
-    
+    public boolean sleep = false;
+    public boolean temp = false;
+    public boolean drawing = true;
 
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -201,91 +195,93 @@ public class Entity {
     }
 
     public void update() {
-
-        if (knockBack == true) {
+        if (sleep == false) {
+            if (knockBack == true) {
             checkCollision();
 
-            if (collisionOn == true) {
-                knockBackCounter = 0;
-                knockBack = false;
-                speed = defaultSpeed;
+                if (collisionOn == true) {
+                    knockBackCounter = 0;
+                    knockBack = false;
+                    speed = defaultSpeed;
 
-            } else if (collisionOn == false) {
+                } else if (collisionOn == false) {
 
-                switch (knockBackDirection) {
-                    case "up":
-                        this.worldY -= this.speed;
-                        break;
-                    case "down":
-                        this.worldY += this.speed;
-                        break;
-                    case "left":
-                        this.worldX -= this.speed;
-                        break;
-                    case "right":
-                        this.worldX += this.speed;
-                        break;
+                    switch (knockBackDirection) {
+                        case "up":
+                            this.worldY -= this.speed;
+                            break;
+                        case "down":
+                            this.worldY += this.speed;
+                            break;
+                        case "left":
+                            this.worldX -= this.speed;
+                            break;
+                        case "right":
+                            this.worldX += this.speed;
+                            break;
+                    }
+                }
+
+                knockBackCounter++;
+                if (knockBackCounter == 10) {
+                    knockBackCounter = 0;
+                    knockBack = false;
+                    speed = defaultSpeed;
+                }
+                
+            } else if (attacking == true) {
+                attacking();
+
+            } else {
+                setAction();
+                checkCollision();
+
+                if (collisionOn == false) {
+                    switch (direction) {
+                        case "up":
+                            this.worldY -= this.speed;
+                            break;
+                        case "down":
+                            this.worldY += this.speed;
+                            break;
+                        case "left":
+                            this.worldX -= this.speed;
+                            break;
+                        case "right":
+                            this.worldX += this.speed;
+                            break;
+                    }
+                }
+
+                spriteCounter++;
+                if (spriteCounter > 24) { // quando atinge 12 frames ele muda o sprite
+                    if (spriteNumber == 1) {
+                        spriteNumber = 2;
+                    } else if (spriteNumber == 2) {
+                        spriteNumber = 1;
+                    }
+                    spriteCounter = 0;
                 }
             }
 
-            knockBackCounter++;
-            if (knockBackCounter == 10) {
-                knockBackCounter = 0;
-                knockBack = false;
-                speed = defaultSpeed;
-            }
-        } else if (attacking == true) {
-            attacking();
-
-        } else {
-            setAction();
-            checkCollision();
-
-            if (collisionOn == false) {
-                switch (direction) {
-                    case "up":
-                        this.worldY -= this.speed;
-                        break;
-                    case "down":
-                        this.worldY += this.speed;
-                        break;
-                    case "left":
-                        this.worldX -= this.speed;
-                        break;
-                    case "right":
-                        this.worldX += this.speed;
-                        break;
+            if (invincible == true) {
+                invincibleCounter++;
+                if (invincibleCounter > 60) { // FRAMES DE INVENCIBILIDADE DO PLAYER
+                    invincibleCounter = 0;
+                    invincible = false;
                 }
             }
 
-            spriteCounter++;
-            if (spriteCounter > 24) { // quando atinge 12 frames ele muda o sprite
-                if (spriteNumber == 1) {
-                    spriteNumber = 2;
-                } else if (spriteNumber == 2) {
-                    spriteNumber = 1;
+            if (shotAvailableCounter < 30) {
+                shotAvailableCounter++;
+            }
+
+            if (offBalance == true) {
+                offBalanceCounter++;
+                if (offBalanceCounter > 60) {
+                    offBalance = false;
+                    offBalanceCounter = 0;
                 }
-                spriteCounter = 0;
-            }
-        }
-
-        if (invincible == true) {
-            invincibleCounter++;
-            if (invincibleCounter > 60) { // FRAMES DE INVENCIBILIDADE DO PLAYER
-                invincibleCounter = 0;
-                invincible = false;
-            }
-        }
-
-        if (shotAvailableCounter < 30) {
-            shotAvailableCounter++;
-        }
-
-        if (offBalance == true) {
-            offBalanceCounter++;
-            if (offBalanceCounter > 60) {
-                offBalance = false;
-                offBalanceCounter = 0;
             }
         }
     }

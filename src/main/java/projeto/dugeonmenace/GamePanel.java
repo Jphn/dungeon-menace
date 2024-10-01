@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 import javax.swing.JPanel;
 import projeto.dugeonmenace.ai.PathFinder;
 import projeto.dugeonmenace.data.SaveLoad;
@@ -59,8 +58,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int maxMap=10;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
-    
-    public int currentMap=0; 
+    public int currentMap = 0; 
            
     // FPS
     int FPS = 60;
@@ -102,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public ArrayList<Entity> particleList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
     
-    //PATHFINDER
+    // PATHFINDER
     public PathFinder pFinder = new PathFinder(this);
     
     //MAP
@@ -110,6 +108,9 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     
     // EnviromentManager
     EnviromentManager eManager = new EnviromentManager(this);
+    
+    // CutsceneManager
+    public CutsceneManager csManager = new CutsceneManager(this);
 
     // GAME STATE
     public int gameState;
@@ -124,18 +125,16 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int tradeState = 8;
     public final int sleepState = 9;
     public final int mapState = 10;
-    final int cutsceneState = 11;
+    public final int cutsceneState = 11;
     
     // AREA STATE 
-    
-   
     public int nextArea;
     public final int outside = 50;
     public final int indoor = 51;
     public final int dungeon = 52;
     public int currentArea;
     
-    //BOSS
+    // BOSS
     public boolean bossBattleOn = false;
     
     public GamePanel() {
@@ -173,12 +172,10 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     //Run utilizando Delta para a atualização do draw
     @Override
     public void run() {
-
         double drawInterval = 1000000000 / FPS; // equivalente a 0.01666 segundo
         double delta = 0;
         long lastTime = System.nanoTime();
         long timer = 0;
-
         long currentTime;
         int drawnCount = 0;
 
@@ -294,7 +291,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         } else if(gameState == mapState){
             map.drawFullMapScreen(g2);
          
-        }else {
+        } else {
             /**
              * Temos que nos certificar que os tiles serão pintados antes do
              * player, para que o player fique uma camada acima
@@ -365,8 +362,6 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             //Remove entitys from list
             entityList.clear();
             
-            
-            
             ///
                 // Precisa ser revisado
             ///
@@ -388,12 +383,14 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             // MAP
             map.drawMiniMap(g2);
             
+            // CUTSCENE
+            csManager.draw(g2);
             
             //UI
             ui.draw(g2);
         }
 
-        //DEBUG
+        // DEBUG
         if (keyH.showDebugText) {
             long drawEnd = System.nanoTime();
             long passed = drawEnd - drawStart;
@@ -412,8 +409,6 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
             System.out.println("Draw Time: " + passed);
         }
     }
-    
-    
     
     // Ele chama essa classe de drawToScreen()
     public void drawToFullScreen () { 
@@ -562,21 +557,23 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     }
     
     public void resetGame(boolean restart){
-        
-        currentArea=outside;
+        currentArea = outside;
+        removeTempEntity();
+        bossBattleOn = false;
         player.setDefaultPositions();
         player.restoreStatus();
         aSetter.setNPC();
         aSetter.setMonster();
         player.resetCounter();
+        
         if(restart == true){
             player.setDefaultValues();
-            
             aSetter.setObject();
             aSetter.setInteractiveTile();
             eManager.lighting.resetDay();
         }
     }
+    
     public void playMusic(int i) {
         music.setFile(i);
         music.play();
@@ -591,5 +588,15 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public void playSE(int i) {
         soundEffects.setFile(i);
         soundEffects.play();
+    }
+    
+    public void removeTempEntity() {
+        for(int mapNum = 0; mapNum < maxMap; mapNum++) {
+            for(int i = 0; i < obj[1].length; i++) {
+                if (obj[mapNum][i] != null && obj[mapNum][i].temp == true) {
+                    obj[mapNum][i] = null;
+                }
+            }
+        }
     }
 }

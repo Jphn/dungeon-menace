@@ -51,14 +51,12 @@ public class Sound {
         soundURL[19] = getClass().getResource("/sound/Dungeon.wav");
         soundURL[20] = getClass().getResource("/sound/chipwall.wav");
         soundURL[21] = getClass().getResource("/sound/dooropen.wav");
-        soundURL[22] = getClass().getResource("/sound/Boss_fight.wav");
+        soundURL[22] = getClass().getResource("/sound/FinalBattle.wav");
         soundURL[23] = getClass().getResource("/sound/Jornada.wav");
-        }catch(Exception e){
-            
-            System.out.println("Sound Files error !");
+        } catch(Exception e) {
+                System.out.println("Sound Files error !");
             }
         }
-        
 
     public void setFile(int i) {
 

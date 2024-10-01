@@ -65,13 +65,13 @@ public class EventHandler {
         }
         setDialogue();
     }
-    public void setDialogue(){
+    
+    public void setDialogue() {
         eventMaster.dialogues[0][0]="You fall into a pit !";
         eventMaster.dialogues[1][0]="You drink the water. \nYour life and mana have been recoved."
                     + "\n(The progress has been saved)";
-        
-    
     }
+    
     public void checkEvent() {
         int xDistance = Math.abs(gp.player.worldX - previousEventX);
         int yDistance = Math.abs(gp.player.worldY - previousEventY);
@@ -81,41 +81,20 @@ public class EventHandler {
             canTouchEvent = true;
         }
         if (canTouchEvent) {
-            if (hit(0,27, 16, "right") == true) {
-                damagePit(gp.dialogueState);
-            }
-            
-            else if (hit(0,23, 12, "up") == true) {
-            healingPoll(gp.dialogueState);
-            }
-        
-            else if (hit(0,10, 39, "any") == true) {
-                teleport(1,12,12,gp.playState,gp.indoor);
-            }
-            
-            else if (hit(1,12, 12, "any") == true) {
-                teleport(0,10,39,gp.playState,gp.outside);
-            }   
-            else if (hit(1,12, 9, "up") == true) {
-                speak(gp.npc[1][0]);
-            }
-            else if (hit(0,12, 9, "any") == true) { // to the dungeon
-                teleport(2,9,41,gp.playState,gp.dungeon);
-            }   
-            else if (hit(2,9,41, "any") == true) { // to outside
-                teleport(0,12, 9,gp.playState,gp.outside);
-            }  
-            else if (hit(2,8,7, "any") == true) { // to the dungeon B2
-                teleport(3,26, 41,gp.playState,gp.dungeon);
-            }  
-            else if (hit(3,26, 41, "any") == true) { // to the dungeon B2
-                teleport(2,8,7,gp.playState,gp.dungeon);
-            } 
-            
+            if (hit(0, 27, 16, "right") == true) {damagePit(gp.dialogueState);}
+            else if (hit(0, 23, 12, "up") == true) {healingPoll(gp.dialogueState);}
+            else if (hit(0, 10, 39, "any") == true) {teleport(1, 12, 12, gp.playState, gp.indoor);}
+            else if (hit(1, 12, 12, "any") == true) {teleport(0, 10, 39, gp.playState, gp.outside);}   
+            else if (hit(1, 12, 9, "up") == true) {speak(gp.npc[1][0]);}
+            else if (hit(0, 12, 9, "any") == true) {teleport(2, 9, 41, gp.playState, gp.dungeon);} // to the dungeon   
+            else if (hit(2, 9, 41, "any") == true) {teleport(0, 12, 9, gp.playState, gp.outside);} // to outside
+            else if (hit(2, 8, 7, "any") == true) {teleport(3, 26, 41, gp.playState, gp.dungeon);} // to the dungeon B2
+            else if (hit(3, 26, 41, "any") == true) {teleport(2, 8, 7, gp.playState, gp.dungeon);} // to the dungeon B1
+            else if (hit(3, 25, 27, "any") == true) {skeletonLord();} // BOSS
         }
     }
 
-    public void teleport(int map,int col, int row,int gameState,int area) {
+    public void teleport(int map,int col, int row, int gameState, int area) {
         gp.nextArea = area;
         
         gp.gameState = gp.trasitionState;
@@ -138,7 +117,6 @@ public class EventHandler {
         canTouchEvent = false;
         
         gp.playSE(13);
-        
     }
 
     public boolean hit(int map,int col, int row, String reqDirection) {
@@ -175,7 +153,6 @@ public class EventHandler {
         gp.player.attackCanceled = true;
         gp.playSE(6);
         
-        
         eventMaster.startDialogue(eventMaster, 0);
         gp.player.life -= 1; // diminui a vida do player
         //eventRect[col][row].eventDone = true; //Isso aqui faz o evento ocorrer somente uma vez
@@ -197,24 +174,19 @@ public class EventHandler {
         }
     }
     
-    public void speak(Entity entity){
-        
-        if(gp.keyH.enterPressed==true){
+    public void speak(Entity entity) {
+        if(gp.keyH.enterPressed == true){
             gp.gameState = gp.dialogueState;
-            gp.player.attackCanceled=true;
+            gp.player.attackCanceled = true;
             entity.speak();
             canTouchEvent = false;
         }
-        
-        
     }
     
-    public void skeletonLord()
-    {
-        if(gp.bossBattleOn == false && Progress.skeletonLordDefeated == false)
-        {
-           // gp.gameState = gp.cutsceneState;
-           // gp.csManager.sceneNum = gp.csManager.skeletonLord;
+    public void skeletonLord() {
+        if(gp.bossBattleOn == false && Progress.skeletonLordDefeated == false) {
+           gp.gameState = gp.cutsceneState;
+           gp.csManager.sceneNum = gp.csManager.skeletonLord;
         }
     }
 }

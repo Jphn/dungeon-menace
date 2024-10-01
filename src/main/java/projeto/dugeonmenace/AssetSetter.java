@@ -98,21 +98,25 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldY = gp.tileSize * 12;
         i++;
         
-        
-        
-        mapNum=1;
+        mapNum = 1;
         gp.obj[mapNum][i] = new OBJ_Door(gp);
         gp.obj[mapNum][i].worldX = gp.tileSize * 12;
         gp.obj[mapNum][i].worldY = gp.tileSize * 13;
         i++;
-        mapNum=2;
-        i=0;
+        
+        mapNum = 2;
+        i = 0;
         gp.obj[mapNum][i] = new OBJ_Chest(gp);
         gp.obj[mapNum][i].setLoot(new OBJ_Pickaxe(gp));
         gp.obj[mapNum][i].worldX = gp.tileSize * 20;
         gp.obj[mapNum][i].worldY = gp.tileSize * 37;
         
-        
+        mapNum = 3;
+        i = 0;
+        gp.obj[mapNum][i] = new OBJ_Door_Iron(gp);
+        gp.obj[mapNum][i].worldX = gp.tileSize * 25;
+        gp.obj[mapNum][i].worldY = gp.tileSize * 15;
+        i++;
     }
 
     public void setNPC() {
