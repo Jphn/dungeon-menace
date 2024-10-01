@@ -1,5 +1,6 @@
 package projeto.dugeonmenace;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -17,6 +18,7 @@ public class DugeonMenace {
         window.setResizable(false);
         window.setTitle("2D Dungeon Menace");
 //        window.setUndecorated(true); // tira a barra superior do jogo
+//        new DugeonMenace().setIcon;
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel); // como o gamePanel herda o JPanel, eu posso fazer isso e adicionar um JPanel ao JFrame
@@ -34,5 +36,10 @@ public class DugeonMenace {
         gamePanel.setupGame();
 
         gamePanel.startGameThread();
+    }
+    
+    public void setIcon() {
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("/player/boy_down1.png"));
+        window.setIconImage(icon.getImage());
     }
 }

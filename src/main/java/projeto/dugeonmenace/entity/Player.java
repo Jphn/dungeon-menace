@@ -60,13 +60,13 @@ public class Player extends Entity {
         this.direction = "down";
 
         // Player status
-        this.maxLife = 6;
+        this.maxLife = 36;
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
         this.maxMana = 4;
         this.ammo = 10;
         this.mana = maxMana;
-        this.strength = 1;
+        this.strength = 999;
         this.dexterity = 1;
         this.exp = 0;
         this.nextLevelExp = 5;
