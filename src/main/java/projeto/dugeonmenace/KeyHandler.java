@@ -75,6 +75,11 @@ public class KeyHandler implements KeyListener {
         else if (gp.gameState == gp.mapState) {
            mapState(code);
         }
+        
+        // username STATE
+        else if (gp.gameState == gp.usernameState) {
+           usernameState(code);
+        }
     }
     
     @Override
@@ -361,6 +366,115 @@ public class KeyHandler implements KeyListener {
         }
     }
     
+    public void usernameState(int code){
+        
+        switch (code) {
+           
+            case KeyEvent.VK_BACK_SPACE:
+                if(!gp.username.isEmpty()){
+                    gp.username.removeLast();
+                    
+                }
+                break;
+            case KeyEvent.VK_ENTER:
+                gp.gameState = gp.scoreboardState;
+                gp.playSE(1);
+                /*
+                    COLOCAR O POST
+                    
+                */
+                
+                
+                break;
+
+            case KeyEvent.VK_A:
+                
+                this.gp.username.add("A");
+                break;
+            case KeyEvent.VK_B:
+                this.gp.username.add("B");
+                break;
+            case KeyEvent.VK_C:
+                this.gp.username.add("C");
+                break;
+            case KeyEvent.VK_D:
+                this.gp.username.add("D");
+                break;
+            case KeyEvent.VK_E:
+                this.gp.username.add("E");
+                break;
+            case KeyEvent.VK_F:
+                this.gp.username.add("F");
+                break;
+            case KeyEvent.VK_G:
+                this.gp.username.add("G");
+                break;
+            case KeyEvent.VK_H:
+                this.gp.username.add("H");
+                break;
+            case KeyEvent.VK_I:
+                this.gp.username.add("I");
+                break;
+            case KeyEvent.VK_J:
+                this.gp.username.add("J");
+                break;
+            case KeyEvent.VK_K:
+                this.gp.username.add("K");
+                break;
+            case KeyEvent.VK_L:
+                this.gp.username.add("L");
+                break;
+            case KeyEvent.VK_M:
+                this.gp.username.add("M");
+                break;
+            case KeyEvent.VK_N:
+                this.gp.username.add("N");
+                break;
+            case KeyEvent.VK_O:
+                this.gp.username.add("O");
+                break;
+            case KeyEvent.VK_P:
+                this.gp.username.add("P");
+                break;
+            case KeyEvent.VK_Q:
+                this.gp.username.add("Q");
+                break;
+            case KeyEvent.VK_R:
+                this.gp.username.add("R");
+                break;
+            case KeyEvent.VK_S:
+                this.gp.username.add("S");
+                break;
+            case KeyEvent.VK_T:
+                this.gp.username.add("T");
+                break;
+            case KeyEvent.VK_U:
+                this.gp.username.add("U");
+                break;
+            case KeyEvent.VK_V:
+                this.gp.username.add("V");
+                break;
+            case KeyEvent.VK_W:
+                this.gp.username.add("W");
+                break;
+            case KeyEvent.VK_X:
+                this.gp.username.add("X");
+                break;
+            case KeyEvent.VK_Y:
+                this.gp.username.add("Y");
+                break;
+            case KeyEvent.VK_Z:
+                this.gp.username.add("Z");
+                break;
+
+            default:
+                // Ação padrão para teclas não identificadas
+                break;
+            
+        }
+        
+        
+    }
     public void playerInventory(int code){
         if (code == KeyEvent.VK_W) {
             if (gp.ui.playerSlotRow != 0) {

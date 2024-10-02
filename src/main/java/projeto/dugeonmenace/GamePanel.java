@@ -127,6 +127,13 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
     public final int mapState = 10;
     public final int cutsceneState = 11;
     
+    //ScoreBoardState
+    public final int usernameState=12;
+    
+    public final int scoreboardState=13;
+    public ArrayList<String> username = new ArrayList<>();
+    //RESQUET AND POST
+    public int requestCounter=0;
     // AREA STATE 
     public int nextArea;
     public final int outside = 50;
@@ -159,7 +166,7 @@ public class GamePanel extends JPanel implements Runnable { // A ideia é funcio
         aSetter.setInteractiveTile();
         eManager.setup();
         playMusic(0);
-        gameState = titleState;
+        gameState = titleState;//titleState
         currentArea=outside;
         
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);

@@ -33,8 +33,7 @@ public class CutsceneManager {
     
     public CutsceneManager(GamePanel gp) {
         this.gp = gp;
-        endCredit = "Program/Muscic/Art\n"
-                + "RyiSnow"
+        endCredit = "Program:\nNatan \nLuciano |Server/API: \nJoão\nBrendo\nLucas\n|Muscic: \nBeto\n|Art: \nBibi \n"
                 + "\n\n\n\n\n\n\n\n\n\n"
                 + "Thanks you for playing!";
     }
@@ -181,9 +180,8 @@ public class CutsceneManager {
             }
            
             String text = "After the fierce battle with the Skeleton Lord,\n"
-                    + "the Blue Boy finally found the legendary treasure.\n"
-                    + "But this is not the end of his journey.\n"
-                    + "The Blue Boy's adventure has just begun";
+                    + "the adventurer finally found the legendary treasure.\n"
+                    + "But this is not the end of his journey.\n";
             
             drawString(alpha, 38f, 200, text, 70);
             
@@ -195,26 +193,19 @@ public class CutsceneManager {
         
         if (scenePhase == 6) {
             drawBlackBackground(1f);
-            drawString(1f, 120f, gp.screenHeight / 2, "Blue Boy Adventure", 40);
+            drawString(1f, 120f, gp.screenHeight / 2, "Dungeon Menace", 40);
             
             if (counterReached(480) == true) {
+                gp.stopMusic();
                 gp.playMusic(0);
+                gp.gameState = gp.usernameState;
                 scenePhase++;
             }
-        }
-        
-        if (scenePhase == 7) {
-            drawBlackBackground(1f);
             
-            y = gp.screenHeight / 2;
-            drawString(1f, 38f, y, endCredit, 40); 
+            
+            
         }
         
-        if (scenePhase == 8) {
-            drawBlackBackground(1f);
-            y--;
-            drawString(1f, 38f, y, endCredit, 40);
-        }
     }
     
     public boolean counterReached(int target) {

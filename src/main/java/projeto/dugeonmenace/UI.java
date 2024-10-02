@@ -18,6 +18,7 @@ import projeto.dugeonmenace.entity.Entity;
 import projeto.dugeonmenace.objectsSprite.OBJ_Coin_Bronze;
 import projeto.dugeonmenace.objectsSprite.OBJ_Heart;
 import projeto.dugeonmenace.objectsSprite.OBJ_ManaCrystal;
+import projeto.dugeonmenace.objectsSprite.OBJ_Star;
 
 /**
  *
@@ -27,7 +28,7 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
     public Font pixelOperator;
-    BufferedImage heartFull, heartHalf, heartBlank, crystalFull, crystalBlank, coinImage;
+    BufferedImage heartFull, heartHalf, heartBlank, crystalFull, crystalBlank, coinImage,starImage;
     
     public boolean messageOn = false;
 //    int messageCounter = 0;
@@ -82,9 +83,12 @@ public class UI {
         
         // CREATE HUD OBJECT
         Entity heart = new OBJ_Heart(gp);
+        Entity star = new OBJ_Star(gp);
+        this.starImage = star.image;
         this.heartFull = heart.image;
         this.heartHalf = heart.image2;
         this.heartBlank = heart.image3;
+        
         
         Entity crystal = new OBJ_ManaCrystal(gp);
         crystalFull = crystal.image;
@@ -157,6 +161,13 @@ public class UI {
         // SLEEP STATE
         if(gp.gameState == gp.sleepState){
             drawSleepScreen();
+        }
+        
+        if(gp.gameState == gp.usernameState){
+            drawUsernameScreen();
+        }
+        if(gp.gameState == gp.scoreboardState){
+            drawScoreboardScreen();
         }
         
     }
@@ -539,6 +550,102 @@ public class UI {
         }
     }
     
+    public void drawUsernameScreen(){
+            //Setting Background color
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+            // TYPE YOUR USERNAME
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
+            String text = "TYPE YOUR USERNAME:";
+
+            int x = getXforCenteredText(text);
+            int y = gp.tileSize * 3;
+
+           
+            //MAIN COLOR
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, x, y);
+
+            
+            String concName = "";
+            //Array desenhando
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+            
+            for(String letra : gp.username){
+                concName += letra;    
+            }
+            
+            text = concName;
+            x = getXforCenteredText(text);
+            y += gp.tileSize * 2;
+            g2.drawString(text, x + 5, y);
+            
+            text="";
+        
+        
+    
+    }
+    
+    public void drawScoreboardScreen(){
+        //Setting Background color
+        g2.setColor(new Color(0, 0, 0));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        // TYPE YOUR USERNAME
+
+        //MAIN COLOR
+        g2.setColor(Color.WHITE);
+        
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80F));
+        String text = "SCOREBOARD";
+
+        int x = getXforCenteredText(text);
+        int y = gp.tileSize * 3;
+        g2.drawString(text, x, y);
+        
+        //Star IMAGE
+        x -= gp.tileSize;
+        
+        g2.drawImage(starImage, x-gp.tileSize, y-gp.tileSize*2+10, gp.tileSize * 2, gp.tileSize * 2, null);
+        
+        //Star IMAGE
+        x += gp.tileSize*9;
+        
+        g2.drawImage(starImage, x, y-gp.tileSize*2+10, gp.tileSize * 2, gp.tileSize * 2, null);
+        x = getXforCenteredText(text);
+        
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 50F));
+        
+        
+        /*
+            TIRAR ANTES OS 10 PRIMEIROS
+        */
+        
+        gp.requestCounter++;    
+        if( gp.requestCounter < 808){
+            y=gp.tileSize*4;
+            for(int i=0;i<10;i++){
+                
+                y+=32;
+                String s = "casa: "+i;
+                g2.drawString(s, getXforCenteredText(s), y);
+                
+            }
+            
+        }else{
+            /*
+                GET
+                varComLista <- novaListaDoGET
+            */
+            
+            gp.requestCounter=0;
+        }
+        
+        
+
+    
+    }
     public void drawTradeScreen(){
         switch(subState){
             case 0:tradeSelect();break;
@@ -740,8 +847,6 @@ public class UI {
     
     }
     }
-    
-    
     
     public void drawGameOverScreen(){
        g2.setColor(new Color(0,0,0,150));
