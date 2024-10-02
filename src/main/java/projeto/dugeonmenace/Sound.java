@@ -48,10 +48,10 @@ public class Sound {
         soundURL[17] = getClass().getResource("/sound/speak.wav");
         
         soundURL[18] = getClass().getResource("/sound/Merchant.wav");
-        soundURL[19] = getClass().getResource("/sound/Dungeon.wav");// muda essa para musica da dungeon
+        soundURL[19] = getClass().getResource("/sound/Dungeon_1.wav");// muda essa para musica da dungeon
         soundURL[20] = getClass().getResource("/sound/chipwall.wav");
         soundURL[21] = getClass().getResource("/sound/dooropen.wav");
-        soundURL[22] = getClass().getResource("/sound/FinalBattle.wav");// muda essa para a musica do minotauro
+        soundURL[22] = getClass().getResource("/sound/Boss.wav");// muda essa para a musica do minotauro
         soundURL[23] = getClass().getResource("/sound/Jornada.wav");
         } catch(Exception e) {
                 System.out.println("Sound Files error !");

@@ -174,6 +174,10 @@ public class Entity {
                     // Normal guard
                     damage /= 3; // divide o dano por 3
                     gp.playSE(15);
+                    
+                    if (damage < 1) {
+                        damage = 1;
+                    }
                 }
             } else {
                 //Entity can give damage when touching

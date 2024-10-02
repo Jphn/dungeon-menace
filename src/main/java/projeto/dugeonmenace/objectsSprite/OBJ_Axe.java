@@ -18,7 +18,7 @@ public class OBJ_Axe extends Entity {
         
         name = objName;
         type = type_axe;
-        down1= setup("/objectsSprite/axe.png",gp.tileSize,gp.tileSize);
+        down1= setup("/objectsSprite/axe2.png",gp.tileSize,gp.tileSize);
         attackValue = 2;
         attackArea.width = 30;
         attackArea.height = 30;

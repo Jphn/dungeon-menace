@@ -32,8 +32,8 @@ public class MON_SkeletonLord extends Entity {
         speed = defaultSpeed;
         maxLife = 40;
         life = maxLife;
-        attack = 6;
-        defense = 1;
+        attack = 4;
+        defense = 2;
         exp = 40;
         knockBackPower = 5;
         sleep = true;

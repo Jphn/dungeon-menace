@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import projeto.dugeonmenace.*;
 import projeto.dugeonmenace.objectsSprite.OBJ_Fireball;
 import projeto.dugeonmenace.objectsSprite.OBJ_Key;
+import projeto.dugeonmenace.objectsSprite.OBJ_Potion_Red;
 import projeto.dugeonmenace.objectsSprite.OBJ_Shield_Wood;
 import projeto.dugeonmenace.objectsSprite.OBJ_Sword_Normal;
 
@@ -60,7 +61,7 @@ public class Player extends Entity {
         this.direction = "down";
 
         // Player status
-        this.maxLife = 8;
+        this.maxLife = 12;
         this.life = maxLife; // 6 de vida = 3 corações
         this.level = 1;
         this.maxMana = 4;
@@ -76,6 +77,8 @@ public class Player extends Entity {
         this.currentShield= new OBJ_Shield_Wood(gp);
         this.projectile = new OBJ_Fireball(gp);
         this.currentLight = null;
+        
+        
         
         attack = getAttack();
         defense = getDefense();

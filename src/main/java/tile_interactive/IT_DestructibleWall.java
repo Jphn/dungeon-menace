@@ -26,7 +26,7 @@ public class IT_DestructibleWall extends InteractiveTile{
         this.worldX = gp.tileSize * col;
         this.worldY = gp.tileSize * row;
 
-        down1 = setup("/tiles_interactive/destructiblewall.png",gp.tileSize,gp.tileSize);
+        down1 = setup("/tiles_interactive/bloco_dungeon_musgo01.png",gp.tileSize,gp.tileSize);
         destructible = true;
         life = 3;
     }
