@@ -15,19 +15,19 @@ public class Scoreboard {
     private URI uri;
     private HttpClient client = HttpClient.newHttpClient();
 
-    Scoreboard(String uri) {
+    public Scoreboard(String uri) {
         this.setUri(uri);
     }
 
-    void setUri(String uri) {
+    public void setUri(String uri) {
         this.uri = URI.create(uri);
     }
 
-    String getUri() {
+    public String getUri() {
         return this.uri.toString();
     }
 
-    void post(Score score) throws IOException, InterruptedException {
+    public void post(Score score) throws IOException, InterruptedException {
         String body = score.toJson();
 
         HttpRequest post = HttpRequest.newBuilder()
@@ -40,7 +40,7 @@ public class Scoreboard {
                 HttpResponse.BodyHandlers.ofString());
     }
 
-    List<Score> get() throws IOException, InterruptedException {
+    public List<Score> get() throws IOException, InterruptedException {
         HttpRequest get = HttpRequest.newBuilder()
                 .uri(uri)
                 .GET()

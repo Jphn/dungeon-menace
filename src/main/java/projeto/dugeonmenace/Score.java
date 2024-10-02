@@ -6,23 +6,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Score {
 
     private String username;
-    private int score;
+    private long score;
 
     @JsonCreator
-    Score(@JsonProperty("score") int score, @JsonProperty("username") String username) {
+    public Score(@JsonProperty("score") long score, @JsonProperty("username") String username) {
         this.score = score;
         this.username = username;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return this.username;
     }
 
-    Integer getScore() {
+    public long getScore() {
         return this.score;
     }
 
-    String toJson() {
+    public String toJson() {
         return String.format("{\"username\": \"%s\", \"score\": %d}", this.username, this.score);
     }
 }
